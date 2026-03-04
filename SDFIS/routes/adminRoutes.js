@@ -1,0 +1,438 @@
+const express = require('express');
+const Order = require('../models/Order');
+const User = require('../models/User');
+const DoorUnit = require('../models/DoorUnit');
+const { protect, authorize } = require('../middleware/authMiddleware');
+
+const router = express.Router();
+
+/**
+ * @route   GET /admin/orders
+ * @desc    Fetch ALL orders with full details for Factory Admin
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ * 
+ * Returns:
+ *   - orderId
+ *   - customer.name
+ *   - customerType
+ *   - doors.length (total doors)
+ *   - status
+ *   - createdAt
+ *   - totalAmount
+ */
+router.get('/orders', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    // Fetch all orders sorted by createdAt (latest first)
+    const orders = await Order.find()
+      .populate('customer._id', 'name email phone')
+      .populate('createdBy', 'name email role')
+      .populate('approvedBy', 'name email')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // Transform response to match frontend requirements
+    const formattedOrders = orders.map(order => ({
+      orderId: order.orderId,
+      customerName: order.customer?.name || 'Unknown',
+      customerType: order.customerType || 'Individual',
+      totalDoors: order.doors?.length || 0,
+      status: order.status,
+      createdAt: order.createdAt,
+      totalAmount: order.totalAmount,
+      _id: order._id,
+      rejectionReason: order.rejectionReason || null,
+      approvedBy: order.approvedBy?.name || null
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully.',
+      count: formattedOrders.length,
+      data: formattedOrders
+    });
+
+  } catch (error) {
+    console.error('Get Admin Orders Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error fetching orders.',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /admin/production-queue
+ * @desc    Fetch APPROVED and IN_PRODUCTION orders sorted by priority and creation date
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ * 
+ * Returns orders for production queue with:
+ *   - orderId
+ *   - customer.name
+ *   - totalDoors (doors.length)
+ *   - priority
+ *   - status
+ *   - createdAt
+ *   - totalAmount
+ * 
+ * Sorting: Priority (High → Normal → Low), then by createdAt (oldest first)
+ */
+router.get('/production-queue', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    console.log('\n=== 📥 GET /admin/production-queue REQUEST ===');
+
+    // Define priority order for sorting
+    const priorityOrder = { 'High': 0, 'Normal': 1, 'Low': 2 };
+
+    // Fetch orders that are APPROVED or IN_PRODUCTION
+    const orders = await Order.find({
+      status: { $in: ['APPROVED', 'IN_PRODUCTION'] }
+    })
+      .select('orderId customer doors priority status totalAmount createdAt')
+      .lean();
+
+    console.log(`📦 Found ${orders.length} orders in production queue`);
+
+    // Sort by priority (High first) then by createdAt (oldest first)
+    const sortedOrders = orders.sort((a, b) => {
+      const priorityCompare = (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2);
+      if (priorityCompare !== 0) {
+        return priorityCompare;
+      }
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+
+    // Format response - include full doors array
+    const formattedOrders = sortedOrders.map(order => ({
+      orderId: order.orderId,
+      customerName: order.customer?.name || 'Unknown',
+      totalDoors: order.doors?.length || 0,
+      priority: order.priority || 'Normal',
+      status: order.status,
+      createdAt: order.createdAt,
+      totalAmount: order.totalAmount || 0,
+      doors: order.doors || [],  // Include full doors array with all details
+      _id: order._id
+    }));
+
+    console.log(`✅ Returning ${formattedOrders.length} formatted orders`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Production queue fetched successfully.',
+      count: formattedOrders.length,
+      data: formattedOrders
+    });
+
+  } catch (error) {
+    console.error('❌ Get Production Queue Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error fetching production queue.',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   PUT /admin/orders/:orderId/approve
+ * @desc    Approve an order for production
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ * 
+ * AUTO-CREATE: When order is approved, DoorUnit documents are created automatically
+ * for each door in the order, initialized to CUTTING stage
+ */
+router.put('/orders/:orderId/approve', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findOneAndUpdate(
+      { orderId },
+      {
+        status: 'APPROVED',
+        approvedBy: req.user._id,
+        approvedAt: new Date()
+      },
+      { new: true, runValidators: true }
+    ).populate('customer._id').populate('createdBy', 'name email');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found.'
+      });
+    }
+
+    // AUTO-CREATE: Generate DoorUnit documents for production tracking
+    try {
+      const totalDoors = order.doors?.length || 1;
+      const doorsToCreate = [];
+
+      for (let i = 1; i <= totalDoors; i++) {
+        doorsToCreate.push({
+          orderId,
+          doorNumber: i,
+          currentStage: 'CUTTING',
+          isRejected: false,
+          stageHistory: []
+        });
+      }
+
+      // Check if door units already exist
+      const existingDoors = await DoorUnit.countDocuments({ orderId });
+      
+      if (existingDoors === 0) {
+        await DoorUnit.insertMany(doorsToCreate);
+        console.log(`✅ Auto-created ${totalDoors} door units for order ${orderId}`);
+      } else {
+        console.log(`⚠️ Door units already exist for order ${orderId}, skipping auto-create`);
+      }
+    } catch (doorError) {
+      console.error('⚠️ Error creating door units:', doorError);
+      // Don't fail the request, just log the error
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Order approved successfully.',
+      data: order
+    });
+
+  } catch (error) {
+    console.error('Approve Order Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error approving order.',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   PUT /admin/orders/:orderId/reject
+ * @desc    Reject an order with reason
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ */
+router.put('/orders/:orderId/reject', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+
+    if (!reason || reason.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: 'Rejection reason is required.'
+      });
+    }
+
+    const order = await Order.findOneAndUpdate(
+      { orderId },
+      {
+        status: 'REJECTED',
+        rejectionReason: reason,
+        approvedBy: req.user._id,
+        approvedAt: new Date()
+      },
+      { new: true, runValidators: true }
+    ).populate('customer._id').populate('createdBy', 'name email');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found.'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Order rejected successfully.',
+      data: order
+    });
+
+  } catch (error) {
+    console.error('Reject Order Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error rejecting order.',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /admin/priority-orders
+ * @desc    Fetch APPROVED and IN_PRODUCTION orders, optionally filtered by door priority
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ * 
+ * Query Parameters:
+ *   priority (optional): 'High', 'Normal', or 'Low' - filters doors by priority
+ * 
+ * Returns:
+ *   - orderId
+ *   - customerName
+ *   - doors (filtered by priority if specified)
+ *   - status
+ *   - createdAt
+ */
+router.get('/priority-orders', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    console.log('\n=== 📥 GET /admin/priority-orders REQUEST ===');
+    console.log('Query Parameters:', req.query);
+
+    const { priority } = req.query;
+
+    // Validate priority parameter if provided
+    if (priority && !['High', 'Normal', 'Low'].includes(priority)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid priority value. Must be: High, Normal, or Low.'
+      });
+    }
+
+    // Fetch orders that are APPROVED or IN_PRODUCTION
+    const orders = await Order.find({
+      status: { $in: ['APPROVED', 'IN_PRODUCTION'] }
+    })
+      .select('orderId customer doors status totalAmount createdAt')
+      .lean();
+
+    console.log(`📦 Found ${orders.length} orders with APPROVED or IN_PRODUCTION status`);
+
+    // Format response
+    const formattedOrders = orders.map(order => {
+      let filteredDoors = order.doors || [];
+
+      // If priority parameter is provided, filter doors by that priority
+      if (priority) {
+        filteredDoors = filteredDoors.filter(door => door.priority === priority);
+        console.log(`🔍 Filtering for priority "${priority}": ${filteredDoors.length} doors found in order ${order.orderId}`);
+      }
+
+      return {
+        orderId: order.orderId,
+        customerName: order.customer?.name || 'Unknown',
+        status: order.status,
+        createdAt: order.createdAt,
+        totalAmount: order.totalAmount || 0,
+        doors: filteredDoors,
+        totalDoors: filteredDoors.length
+      };
+    });
+
+    // Filter out orders with no doors (only if priority filter is applied and no matching doors)
+    const nonEmptyOrders = formattedOrders.filter(order => order.doors.length > 0);
+
+    console.log(`✅ Returning ${nonEmptyOrders.length} orders with matching criteria`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Priority orders fetched successfully.',
+      count: nonEmptyOrders.length,
+      filter: priority || 'All',
+      data: nonEmptyOrders
+    });
+
+  } catch (error) {
+    console.error('❌ Get Priority Orders Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error fetching priority orders.',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   PUT /admin/update-door-priority
+ * @desc    Update priority of a specific door in an order
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ * 
+ * Body:
+ *   {
+ *     orderId: "ORD-123",
+ *     doorIndex: 0,
+ *     newPriority: "High" | "Normal" | "Low"
+ *   }
+ */
+router.put('/update-door-priority', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    console.log('\n=== 📥 PUT /admin/update-door-priority REQUEST ===');
+    
+    const { orderId, doorIndex, newPriority } = req.body;
+
+    // Validate required fields
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Order ID is required.'
+      });
+    }
+
+    if (doorIndex === undefined || doorIndex === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'Door index is required.'
+      });
+    }
+
+    if (!newPriority || !['High', 'Normal', 'Low'].includes(newPriority)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Priority must be: High, Normal, or Low.'
+      });
+    }
+
+    console.log(`🔄 Updating door priority: Order=${orderId}, Door Index=${doorIndex}, New Priority=${newPriority}`);
+
+    // Find the order
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found.'
+      });
+    }
+
+    // Check if door index is valid
+    if (doorIndex < 0 || doorIndex >= order.doors.length) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid door index. Order has ${order.doors.length} door(s).`
+      });
+    }
+
+    // Update the door priority
+    const oldPriority = order.doors[doorIndex].priority || 'Normal';
+    order.doors[doorIndex].priority = newPriority;
+
+    console.log(`✏️ Door priority updated: ${oldPriority} → ${newPriority}`);
+
+    // Save the order
+    await order.save();
+
+    console.log(`✅ Order saved successfully`);
+
+    res.status(200).json({
+      success: true,
+      message: `Door priority updated from ${oldPriority} to ${newPriority}.`,
+      data: {
+        orderId: order.orderId,
+        doorIndex: doorIndex,
+        oldPriority: oldPriority,
+        newPriority: newPriority,
+        door: order.doors[doorIndex]
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Update Door Priority Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating door priority.',
+      error: error.message
+    });
+  }
+});
+
+module.exports = router;
