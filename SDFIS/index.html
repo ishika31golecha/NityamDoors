@@ -1212,265 +1212,320 @@
             <div id="module-productionsupervisor" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Production Supervisor Dashboard</h2>
-                        <p>Stage-wise production tracking and door completion</p>
+                        <h2>Production Supervisor <span class="gold-text">Dashboard</span></h2>
                     </div>
                     <div class="card-body">
 
-                        <div class="ps-tabs">
-                            <button class="ps-tab active" onclick="switchPsTab('production')">
-                                Door Production
-                            </button>
+                    <div class="ps-tabs">
+                        <button class="ps-tab active" onclick="switchPsTab('production')">
+                            Door Production
+                        </button>
 
-                            <button class="ps-tab" onclick="switchPsTab('workers')">
-                                Worker Management
-                            </button>
-                        </div>
-                        
-                        <!-- ========== ORDER SELECTOR ========== -->
-                        <div class="ps-card ps-order">
-                            <h3 style="margin-top: 0; color: #FFD700;">Select Approved Order</h3>
+                        <button class="ps-tab" onclick="switchPsTab('workers')">
+                            Worker Management
+                        </button>
+                    </div>                   
+                    
+                        <div id ="ps-production">
+                            <!-- ========== ORDER SELECTOR ========== -->
                             
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div>
-                                    <label for="psMainOrderSelect" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Order ID</label>
-                                    <select id="psMainOrderSelect" onchange="loadStageWiseDoors()" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer;">
-                                        <option value="">-- Select APPROVED Order --</option>
+                                <div style="display:flex; align-items:center; gap:20px; margin-bottom:25px;">
+
+                                    <h3 style="margin:0; color:#fff; white-space:nowrap;">
+                                        Select the Order
+                                    </h3>
+
+                                    <select id="psMainOrderSelect"
+                                        onchange="loadStageWiseDoors()"
+                                        style="width:280px; padding:10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer;">
+                                        <option value="">Select Order ID --</option>
                                     </select>
+
                                 </div>
-                                <div>
+                            
+
+                            <div class="production-flow">
+                                <!-- ========== STAGE 1: CUTTING ========== -->
+                                <div class="ps-card ps-stage cutting">
+                                    <div class="stage-header">
+
+                                        <div class="stage-title">
+                                            <h3>STAGE 1: CUTTING</h3>
+                                            <span class="stage-count" id="cuttingCount">Doors: 0</span>
+                                        </div>
+
+                                        <button onclick="submitStageUpdate('cuttingTableBody')" class="stage-submit">
+                                            Submit
+                                        </button>
+
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #0b0b0b;">
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                    <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cuttingTableBody" style="color: #ccc;">
+                                                <tr style="background: #1e1e2e;">
+                                                    <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Select an order to see doors...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- ========== STAGE 2: PROCESSING ========== -->
+                                <div class="ps-card ps-stage processing">
+                                    <div class="stage-header">
+
+                                        <div class="stage-title">
+                                            <h3>STAGE 2: PROCESSING</h3>
+                                            <span class="stage-count" id="processingCount">Doors: 0</span>
+                                        </div>
+
+                                        <button onclick="submitStageUpdate('processingTableBody')" class="stage-submit">
+                                            Submit
+                                        </button>
+
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #0b0b0b;">
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                    <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="processingTableBody" style="color: #ccc;">
+                                                <tr style="background: #1e1e2e;">
+                                                    <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- ========== STAGE 3: POLISHING ========== -->
+                                <div class="ps-card ps-stage polishing">
+                                    <div class="stage-header">
+
+                                        <div class="stage-title">
+                                            <h3>STAGE 3: POLISHING</h3>
+                                            <span class="stage-count" id="polishingCount">Doors: 0</span>
+                                        </div>
+
+                                        <button onclick="submitStageUpdate('polishingTableBody')" class="stage-submit">
+                                            Submit
+                                        </button>
+
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #0b0b0b;">
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                    <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="polishingTableBody" style="color: #ccc;">
+                                                <tr style="background: #1e1e2e;">
+                                                    <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- ========== STAGE 4: PACKING ========== -->
+                                <div class="ps-card ps-stage packing">
+                                    <div class="stage-header">
+
+                                        <div class="stage-title">
+                                            <h3>STAGE 4: PACKING</h3>
+                                            <span class="stage-count" id="packingCount">Doors: 0</span>
+                                        </div>
+
+                                        <button onclick="submitStageUpdate('packingTableBody')" class="stage-submit">
+                                            Submit
+                                        </button>
+
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #0b0b0b;">
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                    <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="packingTableBody" style="color: #ccc;">
+                                                <tr style="background: #1e1e2e;">
+                                                    <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- ========== STAGE 5: LOADING ========== -->
+                                <div class="ps-card ps-stage loading">
+                                    <div class="stage-header">
+
+                                        <div class="stage-title">
+                                            <h3>STAGE 5: LOADING</h3>
+                                            <span class="stage-count" id="loadingCount">Doors: 0</span>
+                                        </div>
+
+                                        <button onclick="submitStageUpdate('loadingTableBody')" class="stage-submit">
+                                            Submit
+                                        </button>
+
+                                    </div>
+                                    <div style="overflow-x: auto;">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #0b0b0b;">
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                    <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                    <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="loadingTableBody" style="color: #ccc;">
+                                                <tr style="background: #1e1e2e;">
+                                                    <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- ========== WORKER MANAGEMENT ========== -->
-                        <div class="ps-card ps-workers">
-                            <h3 style="margin-top: 0; color: #FFD700;">Worker Management</h3>
-                            
-                            <!-- Add New Worker Form -->
-                            <div style="background: #252535; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-                                <h4 style="margin: 0 0 12px 0; color: #FFD700; font-size: 14px;">+ Add New Worker</h4>
+
+                        <div id="ps-workers-section" style="display:none">
+                            <!-- ========== WORKER MANAGEMENT ========== -->
+                            <div class="ps-card ps-workers">
+                                <h3 style="margin-top: 0; color: #FFD700;">Worker Management</h3>
                                 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                                    <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Worker ID*</label>
-                                        <input type="text" id="workerIdInput" placeholder="W001" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                <!-- Add New Worker Form -->
+                                <div style="background: #252535; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                                    <h4 style="margin: 0 0 12px 0; color: #FFD700; font-size: 14px;">+ Add New Worker</h4>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                        <div>
+                                            <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Worker ID*</label>
+                                            <input type="text" id="workerIdInput" placeholder="W001" style="width: 100%; padding: 8px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Name*</label>
+                                            <input type="text" id="workerNameInput" placeholder="Full Name" style="width: 100%; padding: 8px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Phone</label>
+                                            <input type="text" id="workerPhoneInput" placeholder="9876543210" style="width: 100%; padding: 8px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Name*</label>
-                                        <input type="text" id="workerNameInput" placeholder="Full Name" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                    
+                                    <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px; margin-bottom: 12px;">
+                                        <div>
+                                            <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Aadhaar Number</label>
+                                            <input type="text" id="workerAadhaarInput" placeholder="XXXX-XXXX-1234" style="width: 100%; padding: 8px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Status</label>
+                                            <select id="workerStatusSelect" style="width: 100%; padding: 8px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                                <option value="ACTIVE">ACTIVE</option>
+                                                <option value="INACTIVE">INACTIVE</option>
+                                            </select>
+                                        </div>
+                                        <button onclick="createWorker()" style="padding: 8px 16px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; align-self: flex-end;">Save</button>
                                     </div>
+                                    <p id="workerCreateMsg" style="margin: 0; font-size: 12px; color: #999;"></p>
+                                </div>
+
+                                <!-- Worker List -->
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                        <thead>
+                                            <tr style="background: #0b0b0b;">
+                                                <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Worker ID</th>
+                                                <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Name</th>
+                                                <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Phone</th>
+                                                <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="workerListTable" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="4" style="padding: 15px; text-align: center; color: #666;">Loading workers...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- ========== WORKER HISTORY SECTION ========== -->
+                            <div class="ps-card ps-workers">
+                                <h3 style="margin-top: 0; color: #FFD700;">Daily Worker Performance</h3>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
                                     <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Phone</label>
-                                        <input type="text" id="workerPhoneInput" placeholder="9876543210" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
+                                        <label for="psWorkerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
+                                        <input type="date" id="psWorkerHistoryDate" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                                    </div>
+                                    <button onclick="loadProductionSupervisorWorkerHistory()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Load</button>
+                                </div>
+
+                                <div style="overflow-x: auto;">
+                                    <div id="workerHistorySummary" style="color: #ccc;">
+                                        <p style="text-align: center; color: #999; padding: 20px;">Select a date and click Load to view worker performance...</p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- ========== WORKER PERFORMANCE REPORT SECTION ========== -->
+                            <div class="ps-card ps-workers">
+                                <h3 style="margin-top: 0; color: #FFD700;">Worker Performance Report</h3>
                                 
-                                <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px; margin-bottom: 12px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
                                     <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Aadhaar Number</label>
-                                        <input type="text" id="workerAadhaarInput" placeholder="XXXX-XXXX-1234" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
-                                    </div>
-                                    <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Status</label>
-                                        <select id="workerStatusSelect" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
-                                            <option value="ACTIVE">ACTIVE</option>
-                                            <option value="INACTIVE">INACTIVE</option>
+                                        <label for="reportType" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Report Type</label>
+                                        <select id="reportType" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                                            <option value="daily">Daily</option>
+                                            <option value="monthly">Monthly</option>
+                                            <option value="yearly">Yearly</option>
                                         </select>
                                     </div>
-                                    <button onclick="createWorker()" style="padding: 8px 16px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; align-self: flex-end;">Save</button>
+                                    <div>
+                                        <label for="reportDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
+                                        <input type="date" id="reportDate" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                                    </div>
+                                    <button onclick="loadWorkerPerformanceReport()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Generate</button>
                                 </div>
-                                <p id="workerCreateMsg" style="margin: 0; font-size: 12px; color: #999;"></p>
-                            </div>
 
-                            <!-- Worker List -->
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Worker ID</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Name</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Phone</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="workerListTable" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="4" style="padding: 15px; text-align: center; color: #666;">Loading workers...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div id ="ps-production">
-                            <!-- ========== STAGE 1: CUTTING ========== -->
-                            <div class="ps-card ps-stage cutting">
-                                <h3 style="margin-top: 0; color: #FFD700;">CUTTING</h3>
                                 <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="background: #2a2a3e;">
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="cuttingTableBody" style="color: #ccc;">
-                                            <tr style="background: #1e1e2e;">
-                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Select an order to see doors...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button onclick="submitStageUpdate('cuttingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                            </div>
-
-                            <!-- ========== STAGE 2: PROCESSING ========== -->
-                            <div class="ps-card ps-stage processing">
-                                <h3 style="margin-top: 0; color: #FFD700;">PROCESSING</h3>
-                                <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="background: #2a2a3e;">
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="processingTableBody" style="color: #ccc;">
-                                            <tr style="background: #1e1e2e;">
-                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button onclick="submitStageUpdate('processingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                            </div>
-
-                            <!-- ========== STAGE 3: POLISHING ========== -->
-                            <div class="ps-card ps-stage polishing">
-                                <h3 style="margin-top: 0; color: #FFD700;">POLISHING</h3>
-                                <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="background: #2a2a3e;">
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="polishingTableBody" style="color: #ccc;">
-                                            <tr style="background: #1e1e2e;">
-                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button onclick="submitStageUpdate('polishingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                            </div>
-
-                            <!-- ========== STAGE 4: PACKING ========== -->
-                            <div class="ps-card ps-stage packing">
-                                <h3 style="margin-top: 0; color: #FFD700;">PACKING</h3>
-                                <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="background: #2a2a3e;">
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="packingTableBody" style="color: #ccc;">
-                                            <tr style="background: #1e1e2e;">
-                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button onclick="submitStageUpdate('packingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                            </div>
-
-                            <!-- ========== STAGE 5: LOADING ========== -->
-                            <div class="ps-card ps-stage loading">
-                                <h3 style="margin-top: 0; color: #FFD700;">LOADING</h3>
-                                <div style="overflow-x: auto;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <thead>
-                                            <tr style="background: #2a2a3e;">
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="loadingTableBody" style="color: #ccc;">
-                                            <tr style="background: #1e1e2e;">
-                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <button onclick="submitStageUpdate('loadingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                            </div>
-                        </div>
-
-                        <!-- ========== WORKER HISTORY SECTION ========== -->
-                        <div class="ps-card ps-workers">
-                            <h3 style="margin-top: 0; color: #FFD700;">Daily Worker Performance</h3>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
-                                <div>
-                                    <label for="psWorkerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
-                                    <input type="date" id="psWorkerHistoryDate" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                                </div>
-                                <button onclick="loadProductionSupervisorWorkerHistory()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Load</button>
-                            </div>
-
-                            <div style="overflow-x: auto;">
-                                <div id="workerHistorySummary" style="color: #ccc;">
-                                    <p style="text-align: center; color: #999; padding: 20px;">Select a date and click Load to view worker performance...</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ========== WORKER PERFORMANCE REPORT SECTION ========== -->
-                        <div class="ps-card ps-workers">
-                            <h3 style="margin-top: 0; color: #FFD700;">Worker Performance Report</h3>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
-                                <div>
-                                    <label for="reportType" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Report Type</label>
-                                    <select id="reportType" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                                        <option value="daily">Daily</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="yearly">Yearly</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="reportDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
-                                    <input type="date" id="reportDate" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                                </div>
-                                <button onclick="loadWorkerPerformanceReport()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Generate</button>
-                            </div>
-
-                            <div style="overflow-x: auto;">
-                                <div id="workerPerformanceResult" style="color: #ccc;">
-                                    <p style="text-align: center; color: #999; padding: 20px;">Select report type and date, then click Generate...</p>
+                                    <div id="workerPerformanceResult" style="color: #ccc;">
+                                        <p style="text-align: center; color: #999; padding: 20px;">Select report type and date, then click Generate...</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1496,7 +1551,7 @@
                             <div style="display: grid; grid-template-columns: 1fr 200px; gap: 15px; align-items: flex-end;">
                                 <div>
                                     <label for="workerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Date</label>
-                                    <input type="date" id="workerHistoryDate" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                                    <input type="date" id="workerHistoryDate" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
                                 </div>
                                 <button onclick="loadWorkerHistory()" style="padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">🔍 Search</button>
                             </div>
@@ -1508,7 +1563,7 @@
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
-                                        <tr style="background: #2a2a3e;">
+                                        <tr style="background: #0b0b0b;">
                                             <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
                                             <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">✂️ Cutting</th>
                                             <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">⚙️ Processing</th>
@@ -1533,11 +1588,11 @@
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🏭 Stage</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">🚪 Doors</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">✅ Quality</th>
+                                        <tr style="background: #0b0b0b;">
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Stage</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Doors</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Quality</th>
                                         </tr>
                                     </thead>
                                     <tbody id="workerDetailTableBody" style="color: #ccc;">
@@ -1681,6 +1736,25 @@
 
         // ==================== HELPER FUNCTIONS ====================
 
+        //=====SWITCH TABS FOR PRODUCTION (DOOR PRODUCTION UPDATE VS WORKER UPDATE)=====
+        function switchPsTab(tab){
+
+            document.getElementById("ps-production").style.display="none";
+            document.getElementById("ps-workers-section").style.display="none";
+
+            document.querySelectorAll(".ps-tab").forEach(t=>t.classList.remove("active"));
+
+            if(tab==="production"){
+            document.getElementById("ps-production").style.display="block";
+            document.querySelectorAll(".ps-tab")[0].classList.add("active");
+            }
+            else{
+            document.getElementById("ps-workers-section").style.display="block";
+            document.querySelectorAll(".ps-tab")[1].classList.add("active");
+            }
+
+            }
+
         //======= toggle function ===========
         function toggleAccessMenu() {
             const menu = document.getElementById("accessMenu");
@@ -1732,7 +1806,7 @@
          * UPDATED: Now calls real backend API instead of mock login
          */
         async function handleLogin() {
-            console.log('--- 🔐 Login Attempt ---');
+            console.log('--- Login Attempt ---');
             
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
@@ -1746,7 +1820,7 @@
 
             // Simple validation
             if (!email || !password) {
-                errorEl.textContent = '⚠️ Please fill in all fields';
+                errorEl.textContent = 'Please fill in all fields';
                 return;
             }
 
@@ -1789,18 +1863,18 @@
                     localStorage.setItem('sdfis_user', JSON.stringify(currentUser));
                     localStorage.setItem('sdfis_token', token);
 
-                    console.log('✅ User logged in:', currentUser);
-                    console.log('🎫 Token stored from backend');
-                    console.log('👤 User Role:', currentUser.role);
+                    console.log('User logged in:', currentUser);
+                    console.log('Token stored from backend');
+                    console.log('User Role:', currentUser.role);
 
                     // FIXED: Ensure permissions are initialized from DEFAULT_PERMISSIONS
-                    console.log('🔍 Checking localStorage permissions...');
+                    console.log('Checking localStorage permissions...');
                     const storedPerms = localStorage.getItem('sdfis_permissions');
                     if (!storedPerms) {
-                        console.log('🔧 Initializing permissions from DEFAULT_PERMISSIONS');
+                        console.log('Initializing permissions from DEFAULT_PERMISSIONS');
                         localStorage.setItem('sdfis_permissions', JSON.stringify(DEFAULT_PERMISSIONS));
                     } else {
-                        console.log('📦 Found existing permissions in localStorage:', JSON.parse(storedPerms));
+                        console.log('Found existing permissions in localStorage:', JSON.parse(storedPerms));
                     }
                     console.log('👤 Current user role:', currentUser.role);
                     console.log('🔑 Expected permissions for', currentUser.role + ':', DEFAULT_PERMISSIONS[currentUser.role]);
@@ -1974,7 +2048,7 @@
          * Handle logout button click
          */
         function handleLogout() {
-            console.log('--- 🚪 Logout ---');
+            console.log('--- Logout ---');
             
             currentUser = null;
             localStorage.removeItem('sdfis_user');
@@ -3966,7 +4040,7 @@
 
                 if (data.success && data.data) {
                     const select = document.getElementById('psMainOrderSelect');
-                    select.innerHTML = '<option value="">-- Select APPROVED Order --</option>';
+                    select.innerHTML = '<option value="">-- Select Order ID --</option>';
 
                     data.data.forEach(order => {
                         const option = document.createElement('option');
@@ -3996,11 +4070,19 @@
                 psCurrentOrder = null;
                 psCurrentDoors = [];
                 psOrderDetails = null;
+
+                // Reset stage counts
+                ["cuttingCount","processingCount","polishingCount","packingCount","loadingCount"]
+                .forEach(id=>{
+                    const el=document.getElementById(id);
+                    if(el) el.innerText="Doors: 0";
+                });
+
                 return;
             }
 
             psCurrentOrder = orderId;
-            console.log('--- 🚪 Loading Stage-Wise Doors for Order:', orderId, '---');
+            console.log('--- Loading Stage-Wise Doors for Order:', orderId, '---');
 
             try {
                 const token = localStorage.getItem('sdfis_token');
@@ -4046,6 +4128,33 @@
                 // Populate all stage sections
                 populateStageSections();
 
+                // ===============================
+                // UPDATE STAGE DOOR COUNTS
+                // ===============================
+
+                const cuttingCount = psCurrentDoors.filter(d => !d.currentStage || d.currentStage === 'PENDING').length;
+                const processingCount = psCurrentDoors.filter(d => d.currentStage === 'CUTTING').length;
+                const polishingCount = psCurrentDoors.filter(d => d.currentStage === 'PROCESSING').length;
+                const packingCount = psCurrentDoors.filter(d => d.currentStage === 'POLISHING').length;
+                const loadingCount = psCurrentDoors.filter(d => d.currentStage === 'PACKING').length;
+
+                const cuttingEl = document.getElementById("cuttingCount");
+                if(cuttingEl) cuttingEl.innerText = "Doors: " + cuttingCount;
+
+                const processingEl = document.getElementById("processingCount");
+                if(processingEl) processingEl.innerText = "Doors: " + processingCount;
+
+                const polishingEl = document.getElementById("polishingCount");
+                if(polishingEl) polishingEl.innerText = "Doors: " + polishingCount;
+
+                const packingEl = document.getElementById("packingCount");
+                if(packingEl) packingEl.innerText = "Doors: " + packingCount;
+
+                const loadingEl = document.getElementById("loadingCount");
+                if(loadingEl) loadingEl.innerText = "Doors: " + loadingCount;
+
+                
+
             } catch (error) {
                 console.error('❌ Error loading doors:', error);
                 showToast('Error loading doors: ' + error.message, 'error');
@@ -4053,19 +4162,27 @@
             }
         }
 
+
         /**
          * Clear all stage section tables
          */
         function clearAllStageSections() {
             const stageTableIds = ['cuttingTableBody', 'processingTableBody', 'polishingTableBody', 'packingTableBody', 'loadingTableBody'];
+
             stageTableIds.forEach(tableId => {
                 const tbody = document.getElementById(tableId);
+
                 if (tbody) {
-                    tbody.innerHTML = '<tr style="background: #1e1e2e;"><td colspan="6" style="padding: 20px; text-align: center; color: #666;">Select an order to see doors...</td></tr>';
+                    tbody.innerHTML = `
+                        <tr style="background: #1e1e2e;">
+                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">
+                                Select an order to see doors...
+                            </td>
+                        </tr>
+                    `;
                 }
             });
         }
-
         /**
          * Populate all stage sections with filtered doors
          * 
@@ -4153,13 +4270,13 @@
                 
                 return `
                     <tr style="background: #1e1e2e; border-bottom: 1px solid #333;">
-                        <td style="padding: 12px; color: #4caf50; font-weight: bold;">🚪 ${door.doorNumber}</td>
+                        <td style="padding: 12px; color: #aaa; font-weight: bold;"> ${door.doorNumber}</td>
                         <td style="padding: 12px; color: #aaa;">${heightDisplay}</td>
                         <td style="padding: 12px; color: #aaa;">${widthDisplay}</td>
                         <td style="padding: 12px; color: #999; font-size: 12px;">${typeDisplay}</td>
                         <td style="padding: 12px;">
                             <select id="${workerSelectId}" class="worker-dropdown"
-                                style="width: 100%; padding: 6px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 3px; box-sizing: border-box;">
+                                style="width: 100%; padding: 6px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 3px; box-sizing: border-box;">
                                 <option value="">-- Select Worker --</option>
                                 ${workerOptions}
                             </select>
@@ -4312,8 +4429,8 @@
                 
                 if (allSuccess) {
                     const uniqueNextStages = [...new Set(checkedDoors.map(d => d.nextStage))].join(', ');
-                    showToast(`✅ ${checkedDoors.length} door(s) moved to: ${uniqueNextStages}`, 'success');
-                    console.log('✅ All door stages updated successfully');
+                    showToast(`${checkedDoors.length} door(s) moved to: ${uniqueNextStages}`, 'success');
+                    console.log('All door stages updated successfully');
                     
                     // Reload all sections to show updated stages
                     await loadStageWiseDoors();
@@ -4418,7 +4535,7 @@
                             .join('');
 
                         return `
-                            <div style="background: #2a2a3e; padding: 15px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #2196f3;">
+                            <div style="background: #0b0b0b; padding: 15px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #2196f3;">
                                 <div style="color: #4caf50; font-weight: bold; font-size: 14px;">👤 ${worker.workerName || 'Unknown'}</div>
                                 <div style="margin-top: 10px;">
                                     ${stagesList}
@@ -4742,7 +4859,7 @@
                         console.log(`  Worker ${index + 1}: ${worker.worker} - Total: ${worker.totalDoorsForWorker}`);
 
                         return `
-                            <tr style="background: #2a2a3e; border-bottom: 1px solid #444;">
+                            <tr style="background: #0b0b0b; border-bottom: 1px solid #444;">
                                 <td style="padding: 12px; color: #4caf50; font-weight: bold;">${worker.worker}</td>
                                 <td style="padding: 12px; text-align: center; color: #fff;">${cutting}</td>
                                 <td style="padding: 12px; text-align: center; color: #fff;">${processing}</td>
@@ -4770,7 +4887,7 @@
                         console.log(`  Record ${index + 1}: ${record.worker} - ${record.stage} - ${record.totalDoors} doors`);
 
                         return `
-                            <tr style="background: #2a2a3e; border-bottom: 1px solid #444;">
+                            <tr style="background: #0b0b0b; border-bottom: 1px solid #444;">
                                 <td style="padding: 12px; color: #4caf50; font-weight: bold;">${record.worker}</td>
                                 <td style="padding: 12px; color: #aaa;">
                                     ${record.stage === 'CUTTING' ? '✂️' : ''}

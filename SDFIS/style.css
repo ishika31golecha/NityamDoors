@@ -863,29 +863,167 @@ cursor:pointer;
 PRODUCTION SUPERVISOR UI
 ================================================= */
 
-.ps-card{
-background:#121212;
-border-radius:14px;
-padding:22px;
-margin-bottom:22px;
-border:1px solid #262626;
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
+/* ===============================
+HEADER
+=============================== */
+
+.card-header{
+display:flex;
+flex-direction:column;
+gap:6px;
+margin-bottom:25px;
+}
+
+.card-header h2{
+font-size:32px;
+font-weight:700;
+letter-spacing:0.5px;
+}
+
+.card-header p{
+color:#8a8a8a;
+font-size:14px;
+}
+
+
+/* ===============================
+TABS
+=============================== */
+
+.ps-tabs{
+display:flex;
+gap:12px;
+margin-bottom:25px;
+border-bottom:1px solid #2a2a2a;
+padding-bottom:12px;
+}
+
+.ps-tab{
+background:#0f0f0f;
+border:1px solid #2a2a2a;
+color:#9a9a9a;
+padding:10px 22px;
+border-radius:6px;
+cursor:pointer;
+font-weight:600;
+font-size:14px;
 transition:0.2s;
 }
 
-.ps-card:hover{
+.ps-tab:hover{
+border-color:#FFD700;
+color:#FFD700;
+}
+
+.ps-tab.active{
+background:#FFD700;
+color:black;
 border-color:#FFD700;
 }
 
-/* titles */
 
-.ps-card h3{
-font-size:18px;
-margin-bottom:18px;
-font-weight:600;
+/* ===============================
+PRODUCTION FLOW GRID
+=============================== */
+
+.production-flow{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+margin-top:25px;
 }
 
-/* stage colors */
+
+/* ===============================
+CARDS
+=============================== */
+
+.ps-card{
+background:#0d0d0d;
+border-radius:14px;
+padding:22px;
+margin-bottom:20px;
+border:1px solid #1f1f1f;
+box-shadow:0 12px 30px rgba(0,0,0,0.8);
+transition:0.2s;
+}
+
+
+/* ===============================
+CARD TITLES
+=============================== */
+
+.ps-card h3{
+font-size:16px;
+font-weight:700;
+letter-spacing:1px;
+color:#FFD700;
+margin-bottom:15px;
+}
+
+
+
+/* ===============================
+SUBMIT BUTTON
+==================================*/
+
+/* STAGE HEADER */
+
+.stage-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:12px;
+}
+
+/* title + counter */
+
+.stage-title{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+/* stage name */
+
+.stage-title h3{
+margin:0;
+color:#FFD700;
+font-size:15px;
+letter-spacing:1px;
+}
+
+/* door counter */
+
+.stage-count{
+font-size:12px;
+color:#aaa;
+background:#141414;
+padding:4px 10px;
+border-radius:6px;
+border:1px solid #2a2a2a;
+}
+
+/* submit button */
+
+.stage-submit{
+background:#FFD700;
+color:black;
+border:none;
+padding:6px 14px;
+border-radius:6px;
+font-weight:600;
+cursor:pointer;
+font-size:12px;
+}
+
+.stage-submit:hover{
+background:#ffe34d;
+}
+
+/* ===============================
+STAGE LEFT BORDERS
+=============================== */
 
 .ps-stage.cutting{
 border-left:4px solid #FFD700;
@@ -907,57 +1045,77 @@ border-left:4px solid #FFD700;
 border-left:4px solid #FFD700;
 }
 
-/* order selector */
+
+/* ===============================
+ORDER SELECTOR
+=============================== */
 
 .ps-order{
 border-left:4px solid #FFD700;
+background:#0f0f0f;
 }
 
-/* worker */
+
+/* ===============================
+WORKER SECTION
+=============================== */
 
 .ps-workers{
 border-left:4px solid #FFD700;
 }
 
-/* tables */
+
+/* ===============================
+TABLES
+=============================== */
 
 .ps-card table{
 width:100%;
 border-collapse:collapse;
 font-size:13px;
+background:#0f0f0f;
+border-radius:8px;
+overflow:hidden;
 }
 
 .ps-card thead{
-background:#1a1a1a;
+background:#141414;
 }
 
 .ps-card th{
 padding:14px;
 text-align:left;
-color:#9a9a9a;
+color:#b5b5b5;
 font-weight:600;
 border-bottom:1px solid #2a2a2a;
+font-size:12px;
+letter-spacing:0.5px;
 }
 
 .ps-card td{
 padding:14px;
 border-bottom:1px solid #1f1f1f;
+color:#ddd;
 }
 
 .ps-card tbody tr:hover{
 background:#181818;
 }
 
-/* inputs */
+
+/* ===============================
+INPUTS
+=============================== */
 
 .ps-card input,
 .ps-card select{
 width:100%;
 padding:10px;
-background:#0f0f0f;
+background:#141414;
 border:1px solid #2a2a2a;
 border-radius:6px;
 color:white;
+font-size:13px;
 }
 
 .ps-card input:focus,
@@ -966,40 +1124,53 @@ outline:none;
 border-color:#FFD700;
 }
 
-/* buttons */
+
+/* ===============================
+BUTTONS
+=============================== */
 
 .ps-card button{
 background:#FFD700;
 color:black;
 border:none;
 padding:10px 18px;
-border-radius:8px;
-font-weight:600;
+border-radius:6px;
+font-weight:700;
 cursor:pointer;
+font-size:13px;
 transition:0.2s;
 }
 
 .ps-card button:hover{
-background:#ffe44d;
+background:#ffdf33;
 }
 
-/* worker form */
+
+/* ===============================
+WORKER FORM
+=============================== */
 
 .ps-workers .worker-form{
-background:#171717;
+background:#141414;
 padding:18px;
 border-radius:10px;
 margin-bottom:15px;
 border:1px solid #262626;
 }
 
-/* worker table */
+
+/* ===============================
+WORKER TABLE
+=============================== */
 
 #workerListTable tr td{
 color:#ddd;
 }
 
-/* performance cards */
+
+/* ===============================
+REPORT / PERFORMANCE CARDS
+=============================== */
 
 #workerHistorySummary,
 #workerPerformanceResult{
@@ -1009,12 +1180,40 @@ border-radius:10px;
 border:1px solid #2a2a2a;
 }
 
-/* responsive */
 
-@media(max-width:900px){
+/* ===============================
+MODULE SECTION LAYOUT
+=============================== */
+
+.module-section{
+display:none;
+width:100%;
+max-width:1300px;
+margin:0 auto;
+padding:30px 20px;
+}
+
+.module-section.active{
+display:block;
+}
+
+.module-section.hidden{
+display:none !important;
+}
+
+
+/* ===============================
+RESPONSIVE
+=============================== */
+
+@media(max-width:1000px){
+
+.production-flow{
+grid-template-columns:1fr;
+}
 
 .ps-card{
-padding:16px;
+padding:18px;
 }
 
 .ps-card table{
@@ -1023,25 +1222,28 @@ font-size:12px;
 
 }
 
-/* ==================== 
-MODULE SECTIONS 
-==================== */
-.module-section {
-    display: none;
-    width:100%;
-    max-width:1200px;
-    margin:0 auto;
-    padding:30px 40px;
+/* FORCE TABLE TO PURE BLACK */
+
+.ps-card table{
+background:#0b0b0b !important;
 }
 
-.module-section.active {
-    display: block;
+.ps-card thead tr{
+background:#141414 !important;
 }
 
-.module-section.hidden {
-    display: none !important;
+.ps-card tbody tr{
+background:#0b0b0b !important;
 }
 
+.ps-card tbody tr td{
+background:#0b0b0b !important;
+color:#e5e5e5;
+}
+
+.ps-card tbody tr:hover td{
+background:#161616 !important;
+}
 
 
 
