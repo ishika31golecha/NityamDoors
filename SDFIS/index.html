@@ -1212,14 +1212,14 @@
             <div id="module-productionsupervisor" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>🏭 Production Supervisor Dashboard</h2>
+                        <h2>Production Supervisor Dashboard</h2>
                         <p>Stage-wise production tracking and door completion</p>
                     </div>
                     <div class="card-body">
                         
                         <!-- ========== ORDER SELECTOR ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4caf50;">
-                            <h3 style="margin-top: 0; color: #4caf50;">📋 Select Approved Order</h3>
+                        <div class="ps-card ps-order">
+                            <h3 style="margin-top: 0; color: #FFD700;">Select Approved Order</h3>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                 <div>
@@ -1229,21 +1229,17 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Order Status</label>
-                                    <div style="padding: 10px; background: #2a2a3e; border-radius: 4px; color: #4caf50; font-weight: bold;">
-                                        Ready for Production ✅
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- ========== WORKER MANAGEMENT ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #9c27b0;">
-                            <h3 style="margin-top: 0; color: #9c27b0;">👥 Worker Management</h3>
+                        <div class="ps-card ps-workers">
+                            <h3 style="margin-top: 0; color: #FFD700;">Worker Management</h3>
                             
                             <!-- Add New Worker Form -->
                             <div style="background: #252535; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-                                <h4 style="margin: 0 0 12px 0; color: #9c27b0; font-size: 14px;">➕ Add New Worker</h4>
+                                <h4 style="margin: 0 0 12px 0; color: #FFD700; font-size: 14px;">+ Add New Worker</h4>
                                 
                                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                                     <div>
@@ -1262,7 +1258,7 @@
                                 
                                 <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px; margin-bottom: 12px;">
                                     <div>
-                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Aadhaar Number (Masked)</label>
+                                        <label style="display: block; margin-bottom: 5px; color: #aaa; font-weight: bold; font-size: 12px;">Aadhaar Number</label>
                                         <input type="text" id="workerAadhaarInput" placeholder="XXXX-XXXX-1234" style="width: 100%; padding: 8px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 13px;">
                                     </div>
                                     <div>
@@ -1272,7 +1268,7 @@
                                             <option value="INACTIVE">INACTIVE</option>
                                         </select>
                                     </div>
-                                    <button onclick="createWorker()" style="padding: 8px 16px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; align-self: flex-end;">💾 Save</button>
+                                    <button onclick="createWorker()" style="padding: 8px 16px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; align-self: flex-end;">Save</button>
                                 </div>
                                 <p id="workerCreateMsg" style="margin: 0; font-size: 12px; color: #999;"></p>
                             </div>
@@ -1282,10 +1278,10 @@
                                 <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">🆔 Worker ID</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">👤 Name</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">📞 Phone</th>
-                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">📊 Status</th>
+                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Worker ID</th>
+                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Name</th>
+                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Phone</th>
+                                            <th style="padding: 10px; text-align: left; color: #aaa; border-bottom: 1px solid #444;">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="workerListTable" style="color: #ccc;">
@@ -1298,18 +1294,18 @@
                         </div>
 
                         <!-- ========== STAGE 1: CUTTING ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ff9800;">
-                            <h3 style="margin-top: 0; color: #ff9800;">✂️ CUTTING</h3>
+                        <div class="ps-card ps-stage cutting">
+                            <h3 style="margin-top: 0; color: #FFD700;">CUTTING</h3>
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🚪 Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📏 Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📐 Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🎨 Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">✂️ Done</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cuttingTableBody" style="color: #ccc;">
@@ -1319,22 +1315,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button onclick="submitStageUpdate('cuttingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 Submit Cutting</button>
+                            <button onclick="submitStageUpdate('cuttingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== STAGE 2: PROCESSING ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
-                            <h3 style="margin-top: 0; color: #2196f3;">⚙️ PROCESSING</h3>
+                        <div class="ps-card ps-stage processing">
+                            <h3 style="margin-top: 0; color: #FFD700;">PROCESSING</h3>
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🚪 Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📏 Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📐 Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🎨 Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">⚙️ Done</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
                                         </tr>
                                     </thead>
                                     <tbody id="processingTableBody" style="color: #ccc;">
@@ -1344,22 +1340,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button onclick="submitStageUpdate('processingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 Submit Processing</button>
+                            <button onclick="submitStageUpdate('processingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== STAGE 3: POLISHING ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #9c27b0;">
-                            <h3 style="margin-top: 0; color: #9c27b0;">✨ POLISHING</h3>
+                        <div class="ps-card ps-stage polishing">
+                            <h3 style="margin-top: 0; color: #FFD700;">POLISHING</h3>
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🚪 Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📏 Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📐 Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🎨 Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">✨ Done</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
                                         </tr>
                                     </thead>
                                     <tbody id="polishingTableBody" style="color: #ccc;">
@@ -1369,22 +1365,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button onclick="submitStageUpdate('polishingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 Submit Polishing</button>
+                            <button onclick="submitStageUpdate('polishingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== STAGE 4: PACKING ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ff5722;">
-                            <h3 style="margin-top: 0; color: #ff5722;">📦 PACKING</h3>
+                        <div class="ps-card ps-stage packing">
+                            <h3 style="margin-top: 0; color: #FFD700;">PACKING</h3>
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🚪 Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📏 Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📐 Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🎨 Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">📦 Done</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
                                         </tr>
                                     </thead>
                                     <tbody id="packingTableBody" style="color: #ccc;">
@@ -1394,22 +1390,22 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button onclick="submitStageUpdate('packingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #ff5722; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 Submit Packing</button>
+                            <button onclick="submitStageUpdate('packingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== STAGE 5: LOADING ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4caf50;">
-                            <h3 style="margin-top: 0; color: #4caf50;">🚚 LOADING</h3>
+                        <div class="ps-card ps-stage loading">
+                            <h3 style="margin-top: 0; color: #FFD700;">LOADING</h3>
                             <div style="overflow-x: auto;">
                                 <table style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🚪 Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📏 Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">📐 Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">🎨 Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">🚚 Done</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
                                         </tr>
                                     </thead>
                                     <tbody id="loadingTableBody" style="color: #ccc;">
@@ -1419,35 +1415,35 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button onclick="submitStageUpdate('loadingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 Submit Loading</button>
+                            <button onclick="submitStageUpdate('loadingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== WORKER HISTORY SECTION ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #2196f3;">
-                            <h3 style="margin-top: 0; color: #2196f3;">📊 Daily Worker Performance</h3>
+                        <div class="ps-card ps-workers">
+                            <h3 style="margin-top: 0; color: #FFD700;">Daily Worker Performance</h3>
                             
                             <div style="display: grid; grid-template-columns: 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
                                 <div>
-                                    <label for="psWorkerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">📅 Select Date</label>
+                                    <label for="psWorkerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
                                     <input type="date" id="psWorkerHistoryDate" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
                                 </div>
-                                <button onclick="loadProductionSupervisorWorkerHistory()" style="padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🔍 Load</button>
+                                <button onclick="loadProductionSupervisorWorkerHistory()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Load</button>
                             </div>
 
                             <div style="overflow-x: auto;">
                                 <div id="workerHistorySummary" style="color: #ccc;">
-                                    <p style="text-align: center; color: #999; padding: 20px;">📅 Select a date and click Load to view worker performance...</p>
+                                    <p style="text-align: center; color: #999; padding: 20px;">Select a date and click Load to view worker performance...</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- ========== WORKER PERFORMANCE REPORT SECTION ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #4caf50;">
-                            <h3 style="margin-top: 0; color: #4caf50;">📈 Worker Performance Report</h3>
+                        <div class="ps-card ps-workers">
+                            <h3 style="margin-top: 0; color: #FFD700;">Worker Performance Report</h3>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr 150px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
                                 <div>
-                                    <label for="reportType" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">📋 Report Type</label>
+                                    <label for="reportType" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Report Type</label>
                                     <select id="reportType" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
                                         <option value="daily">Daily</option>
                                         <option value="monthly">Monthly</option>
@@ -1455,15 +1451,15 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="reportDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">📅 Select Date</label>
+                                    <label for="reportDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Date</label>
                                     <input type="date" id="reportDate" style="width: 100%; padding: 10px; background: #2a2a3e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
                                 </div>
-                                <button onclick="loadWorkerPerformanceReport()" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">📊 Generate</button>
+                                <button onclick="loadWorkerPerformanceReport()" style="padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Generate</button>
                             </div>
 
                             <div style="overflow-x: auto;">
                                 <div id="workerPerformanceResult" style="color: #ccc;">
-                                    <p style="text-align: center; color: #999; padding: 20px;">📋 Select report type and date, then click Generate...</p>
+                                    <p style="text-align: center; color: #999; padding: 20px;">Select report type and date, then click Generate...</p>
                                 </div>
                             </div>
                         </div>
@@ -1582,7 +1578,6 @@
 
                                 <select id="userStatusFilter" onchange="loadUsers()">
                                     <option value="">All Users</option>
-                                    <option value="PENDING">PENDING</option>
                                     <option value="active">ACTIVE</option>
                                     <option value="inactive">INACTIVE</option>
                                 </select>
@@ -4541,17 +4536,17 @@
          * Render Worker Performance Report
          */
         function renderWorkerPerformanceReport(summary, reportType, date) {
-            console.log('🎨 Rendering worker performance report...');
+            console.log('Rendering worker performance report...');
 
             const container = document.getElementById('workerPerformanceResult');
 
             if (!summary || summary.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #ff9800; padding: 20px;">⚠️ No worker data found for selected period</p>';
+                container.innerHTML = '<p style="text-align: center; color: #ff9800; padding: 20px;">No worker data found for selected period</p>';
                 return;
             }
 
             // Get type indicator
-            const typeLabel = reportType === 'daily' ? '📅 Daily' : reportType === 'monthly' ? '📆 Monthly' : '📊 Yearly';
+            const typeLabel = reportType === 'daily' ? 'Daily' : reportType === 'monthly' ? 'Monthly' : '📊 Yearly';
             const typeEmoji = reportType === 'daily' ? '📅' : reportType === 'monthly' ? '📆' : '📊';
 
             // Build HTML report
@@ -4600,7 +4595,7 @@
                 html += `
                     <div style="background: #1e1e2e; padding: 15px; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #2196f3;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <h4 style="margin: 0; color: #fff;">👤 ${workerDisplay}</h4>
+                            <h4 style="margin: 0; color: #fff;">${workerDisplay}</h4>
                             <span style="background: #4caf50; color: white; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 13px;">Total: ${workerData.totalDoorsForWorker}</span>
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -4611,7 +4606,7 @@
             });
 
             container.innerHTML = html;
-            console.log('✅ Report rendered successfully');
+            console.log('Report rendered successfully');
         }
 
         /**
@@ -4623,10 +4618,10 @@
                 const dateInput = document.getElementById('reportDate');
                 if (dateInput) {
                     dateInput.value = today;
-                    console.log('✅ Worker performance report date picker initialized to:', today);
+                    console.log('Worker performance report date picker initialized to:', today);
                 }
             } catch (error) {
-                console.error('⚠️ Error initializing report date picker:', error);
+                console.error('Error initializing report date picker:', error);
             }
         }
 
@@ -4637,18 +4632,18 @@
          */
         function initWorkerHistoryDate() {
             try {
-                console.log('🔧 initWorkerHistoryDate called');
+                console.log('initWorkerHistoryDate called');
                 const today = new Date().toISOString().split('T')[0];
                 const dateInput = document.getElementById('workerHistoryDate');
                 
                 if (dateInput) {
                     dateInput.value = today;
-                    console.log('✅ Worker History date picker initialized to:', today);
+                    console.log('Worker History date picker initialized to:', today);
                 } else {
-                    console.error('❌ Worker History date input element not found (id: workerHistoryDate)');
+                    console.error('Worker History date input element not found (id: workerHistoryDate)');
                 }
             } catch (error) {
-                console.error('❌ Error initializing Worker History date picker:', error);
+                console.error('Error initializing Worker History date picker:', error);
             }
         }
 
@@ -4660,10 +4655,10 @@
             try {
                 // Get selected date
                 const dateInput = document.getElementById('workerHistoryDate').value;
-                console.log('📅 Selected date:', dateInput);
+                console.log('Selected date:', dateInput);
                 
                 if (!dateInput) {
-                    showToast('⚠️ Please select a date', 'warning');
+                    showToast('Please select a date', 'warning');
                     return;
                 }
 
@@ -4678,13 +4673,13 @@
                 const summaryBody = document.getElementById('workerSummaryTableBody');
                 const detailBody = document.getElementById('workerDetailTableBody');
                 
-                console.log('🔄 Clearing tables and showing loading state...');
+                console.log('Clearing tables and showing loading state...');
                 summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">⏳ Loading worker data...</td></tr>';
                 detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">⏳ Loading worker data...</td></tr>';
 
                 // Fetch worker history
                 const apiUrl = `${API_BASE_URL}/production/worker-history?date=${dateInput}`;
-                console.log('🔗 Fetching from:', apiUrl);
+                console.log('Fetching from:', apiUrl);
                 
                 const response = await fetch(apiUrl, {
                     method: 'GET',
@@ -4694,17 +4689,17 @@
                     }
                 });
 
-                console.log('📡 Response status:', response.status);
+                console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const responseData = await response.json();
-                console.log('📥 Full response data:', responseData);
+                console.log('Full response data:', responseData);
 
                 if (!responseData.success) {
-                    console.error('❌ API error:', responseData.message);
+                    console.error('API error:', responseData.message);
                     showToast('❌ ' + (responseData.message || 'Failed to fetch worker history'), 'error');
                     summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">No data available</td></tr>';
                     detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">No data available</td></tr>';
@@ -4715,17 +4710,17 @@
                 const workerData = responseData.data || [];
                 const workerSummary = responseData.summary || [];
                 
-                console.log('📊 Worker data records:', workerData.length);
-                console.log('📈 Worker summary entries:', workerSummary.length);
+                console.log('Worker data records:', workerData.length);
+                console.log('Worker summary entries:', workerSummary.length);
                 console.log('Data:', workerData);
                 console.log('Summary:', workerSummary);
 
                 // Render summary table
                 if (workerSummary.length === 0) {
-                    console.log('⚠️ No summary data to display');
+                    console.log('No summary data to display');
                     summaryBody.innerHTML = '<tr style="background: #1e1e2e;"><td colspan="7" style="padding: 20px; text-align: center; color: #999;">📭 No worker activity recorded for this date</td></tr>';
                 } else {
-                    console.log('✅ Rendering summary table with', workerSummary.length, 'workers');
+                    console.log('Rendering summary table with', workerSummary.length, 'workers');
                     const summaryHtml = workerSummary.map((worker, index) => {
                         const cutting = worker.stages?.CUTTING || 0;
                         const processing = worker.stages?.PROCESSING || 0;
@@ -4748,18 +4743,18 @@
                         `;
                     }).join('');
                     summaryBody.innerHTML = summaryHtml;
-                    console.log('✅ Summary table rendered');
+                    console.log('Summary table rendered');
                 }
 
                 // Render detailed activity table
                 if (workerData.length === 0) {
-                    console.log('⚠️ No detailed activity data to display');
+                    console.log('No detailed activity data to display');
                     detailBody.innerHTML = '<tr style="background: #1e1e2e;"><td colspan="4" style="padding: 20px; text-align: center; color: #999;">📭 No detailed activity recorded for this date</td></tr>';
                 } else {
-                    console.log('✅ Rendering detail table with', workerData.length, 'records');
+                    console.log('Rendering detail table with', workerData.length, 'records');
                     const detailHtml = workerData.map((record, index) => {
                         const qualityColor = record.quality === 'OK' ? '#4caf50' : '#ff5252';
-                        const qualityText = record.quality === 'OK' ? '✅ OK' : '❌ REJECTED';
+                        const qualityText = record.quality === 'OK' ? 'OK' : 'REJECTED';
                         
                         console.log(`  Record ${index + 1}: ${record.worker} - ${record.stage} - ${record.totalDoors} doors`);
 
@@ -4780,19 +4775,19 @@
                         `;
                     }).join('');
                     detailBody.innerHTML = detailHtml;
-                    console.log('✅ Detail table rendered');
+                    console.log('Detail table rendered');
                 }
 
-                showToast(`✅ Loaded ${workerData.length} records for ${dateInput}`, 'success');
-                console.log('🎉 Worker history loaded successfully');
+                showToast(`Loaded ${workerData.length} records for ${dateInput}`, 'success');
+                console.log('Worker history loaded successfully');
 
             } catch (error) {
-                console.error('❌ Error loading worker history:', error);
+                console.error('Error loading worker history:', error);
                 console.error('   Error name:', error.name);
                 console.error('   Error message:', error.message);
                 console.error('   Stack:', error.stack);
                 
-                showToast('❌ Failed to load worker history: ' + error.message, 'error');
+                showToast('Failed to load worker history: ' + error.message, 'error');
                 
                 const summaryBody = document.getElementById('workerSummaryTableBody');
                 const detailBody = document.getElementById('workerDetailTableBody');
@@ -5354,20 +5349,20 @@
 
             const orderData = soCollectOrderData();
 
-            console.log('=== 📋 SALES EXECUTIVE ORDER COLLECTED ===');
+            console.log('=== SALES EXECUTIVE ORDER COLLECTED ===');
             console.log(JSON.stringify(orderData, null, 2));
             console.log('=========================================');
 
             // Get authentication token
             const token = localStorage.getItem('sdfis_token');
             if (!token) {
-                showToast('❌ Authentication token not found. Please login again.', 'error');
-                console.error('❌ No token in localStorage');
+                showToast('Authentication token not found. Please login again.', 'error');
+                console.error('No token in localStorage');
                 return;
             }
 
-            console.log('🎫 Token found, preparing to send data...');
-            console.log('📤 Sending POST request to http://localhost:5000/api/orders');
+            console.log('Token found, preparing to send data...');
+            console.log('Sending POST request to http://localhost:5000/api/orders');
 
             try {
                 // Prepare payload - send only the data fields, not orderMeta
@@ -5378,7 +5373,7 @@
                     doors: orderData.doors
                 };
 
-                console.log('📝 Payload to send:', JSON.stringify(payload, null, 2));
+                console.log('Payload to send:', JSON.stringify(payload, null, 2));
 
                 // Make fetch request to backend
                 const response = await fetch(`${API_BASE_URL}/orders`, {
@@ -5390,20 +5385,20 @@
                     body: JSON.stringify(payload)
                 });
 
-                console.log('📡 Response received. Status:', response.status);
+                console.log('Response received. Status:', response.status);
 
                 // Parse response
                 const data = await response.json();
-                console.log('✅ Response data:', JSON.stringify(data, null, 2));
+                console.log('Response data:', JSON.stringify(data, null, 2));
 
                 // Check if successful
                 if (response.ok && data.success) {
-                    console.log('✅ ORDER SAVED SUCCESSFULLY TO MONGODB!');
+                    console.log('ORDER SAVED SUCCESSFULLY TO MONGODB!');
                     console.log('   Order ID:', data.data.orderId);
                     console.log('   MongoDB ID:', data.data.mongoId);
 
                     // Show success message
-                    showToast('✅ Order saved successfully! Order #' + data.data.orderId, 'success');
+                    showToast('Order saved successfully! Order #' + data.data.orderId, 'success');
 
                     // Reset form
                     setTimeout(() => {
@@ -5412,21 +5407,21 @@
                 } else {
                     // Handle error response
                     const errorMsg = data.message || 'Unknown error from backend';
-                    console.error('❌ Backend error:', errorMsg);
-                    showToast('❌ Error: ' + errorMsg, 'error');
+                    console.error('Backend error:', errorMsg);
+                    showToast('Error: ' + errorMsg, 'error');
                 }
 
             } catch (error) {
-                console.error('❌ Fetch Error:', error);
+                console.error('Fetch Error:', error);
                 console.error('   Error name:', error.name);
                 console.error('   Error message:', error.message);
                 console.error('   Stack:', error.stack);
 
                 // Show error message to user
                 if (error.message.includes('fetch')) {
-                    showToast('❌ Cannot connect to backend. Ensure server is running on http://localhost:5000', 'error');
+                    showToast('Cannot connect to backend. Ensure server is running on http://localhost:5000', 'error');
                 } else {
-                    showToast('❌ Error: ' + error.message, 'error');
+                    showToast('Error: ' + error.message, 'error');
                 }
             }
         }

@@ -272,8 +272,7 @@ MAIN CONTENT
 
 .main-content{
 flex:1;
-padding:30px 40px;
-margin-left:0;
+padding:30px 40px 30px 0px;
 background:#000;
 max-width:100%;
 overflow-x:hidden;
@@ -642,7 +641,6 @@ line-height:1.6;
 /* ===============================
 HEADER BUTTONS
 =============================== */
-
 .users-header-actions{
 display:flex;
 gap:15px;
@@ -722,36 +720,77 @@ color:#FFD700;
 }
 
 /* ===============================
-TABLE
+USER TABLE
 =============================== */
 
 .data-table{
 width:100%;
 border-collapse:collapse;
-background:#111;
-border-radius:14px;
+background:#0f0f0f;
+border-radius:12px;
 overflow:hidden;
+border:1px solid #2a2a2a;
 }
 
 .data-table thead{
-background:#1a1a1a;
+background:linear-gradient(90deg,#141414,#1b1b1b);
 }
 
 .data-table th{
-padding:18px;
 text-align:left;
+padding:16px 18px;
 font-size:12px;
 letter-spacing:1px;
-color:#9a9a9a;
+color:#9ca3af;
+font-weight:600;
+border-bottom:1px solid #2a2a2a;
 }
 
 .data-table td{
-padding:20px;
-border-top:1px solid #1f1f1f;
+padding:18px;
+border-bottom:1px solid #1e1e1e;
+vertical-align:middle;
 }
 
 .data-table tbody tr:hover{
-background:#181818;
+background:#141414;
+transition:0.2s;
+}
+
+/* USER IDENTIFICATION */
+
+.user-cell{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.user-avatar{
+width:38px;
+height:38px;
+border-radius:8px;
+background:#2a2a2a;
+color:#FFD700;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+}
+
+.user-info{
+display:flex;
+flex-direction:column;
+}
+
+.user-name{
+font-weight:600;
+color:#fff;
+font-size:14px;
+}
+
+.user-email{
+font-size:12px;
+color:#8a8a8a;
 }
 
 /* ===============================
@@ -820,11 +859,192 @@ font-weight:600;
 cursor:pointer;
 }
 
+/* =================================================
+PRODUCTION SUPERVISOR UI
+================================================= */
+
+.ps-card{
+background:#121212;
+border-radius:14px;
+padding:22px;
+margin-bottom:22px;
+border:1px solid #262626;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+transition:0.2s;
+}
+
+.ps-card:hover{
+border-color:#FFD700;
+}
+
+/* titles */
+
+.ps-card h3{
+font-size:18px;
+margin-bottom:18px;
+font-weight:600;
+}
+
+/* stage colors */
+
+.ps-stage.cutting{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.processing{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.polishing{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.packing{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.loading{
+border-left:4px solid #FFD700;
+}
+
+/* order selector */
+
+.ps-order{
+border-left:4px solid #FFD700;
+}
+
+/* worker */
+
+.ps-workers{
+border-left:4px solid #FFD700;
+}
+
+/* tables */
+
+.ps-card table{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+}
+
+.ps-card thead{
+background:#1a1a1a;
+}
+
+.ps-card th{
+padding:14px;
+text-align:left;
+color:#9a9a9a;
+font-weight:600;
+border-bottom:1px solid #2a2a2a;
+}
+
+.ps-card td{
+padding:14px;
+border-bottom:1px solid #1f1f1f;
+}
+
+.ps-card tbody tr:hover{
+background:#181818;
+}
+
+/* inputs */
+
+.ps-card input,
+.ps-card select{
+width:100%;
+padding:10px;
+background:#0f0f0f;
+border:1px solid #2a2a2a;
+border-radius:6px;
+color:white;
+}
+
+.ps-card input:focus,
+.ps-card select:focus{
+outline:none;
+border-color:#FFD700;
+}
+
+/* buttons */
+
+.ps-card button{
+background:#FFD700;
+color:black;
+border:none;
+padding:10px 18px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+}
+
+.ps-card button:hover{
+background:#ffe44d;
+}
+
+/* worker form */
+
+.ps-workers .worker-form{
+background:#171717;
+padding:18px;
+border-radius:10px;
+margin-bottom:15px;
+border:1px solid #262626;
+}
+
+/* worker table */
+
+#workerListTable tr td{
+color:#ddd;
+}
+
+/* performance cards */
+
+#workerHistorySummary,
+#workerPerformanceResult{
+background:#141414;
+padding:18px;
+border-radius:10px;
+border:1px solid #2a2a2a;
+}
+
+/* responsive */
+
+@media(max-width:900px){
+
+.ps-card{
+padding:16px;
+}
+
+.ps-card table{
+font-size:12px;
+}
+
+}
+
+/* ==================== 
+MODULE SECTIONS 
+==================== */
+.module-section {
+    display: none;
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:30px 40px;
+}
+
+.module-section.active {
+    display: block;
+}
+
+.module-section.hidden {
+    display: none !important;
+}
 
 
 
 
-    
 
 
 
@@ -878,20 +1098,44 @@ cursor:pointer;
 
 
 
-   
 
-    /* ==================== MODULE SECTIONS ==================== */
-    .module-section {
-        display: none;
-    }
 
-    .module-section.active {
-        display: block;
-    }
 
-    .module-section.hidden {
-        display: none !important;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
     /* ==================== ROLE LABELS ==================== */
