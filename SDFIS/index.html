@@ -176,6 +176,16 @@
                         <div class="stat-label">Revenue (MTD)</div>
                     </div>
                 </div>
+
+                <div class="dashboard-section">
+                    <div class="pipeline-header">
+                        <h3>Production Queue</h3>
+                        <button class="view-log-btn" onclick="showModule('productionsupervisor')">View Full Log →</button>
+                    </div>
+
+                    <div id="ordersPipelineContainer"></div>
+
+                </div>
             </div>
 
             <!-- ==================== ORDERS MODULE ==================== -->
@@ -2217,6 +2227,119 @@
             }
         }
 
+        //========== LOAD PRODUCTION PIPELINE ON DASHBOARD FUNCTION ============
+
+        async function loadDashboardPipelines(){
+
+            const container = document.getElementById("ordersPipelineContainer");
+            if(!container) return;
+
+            try{
+
+                const token = localStorage.getItem("sdfis_token");
+
+                const res = await fetch(`${API_BASE_URL}/production/approved-orders`,{
+                    headers:{
+                        "Authorization":`Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                container.innerHTML = "";
+
+                const orders = data.data.slice(0,4); // 👈 show only first 4
+
+                for(const order of orders){
+
+                    const full = await fetch(`${API_BASE_URL}/production/order-full-details/${order.orderId}`,{
+                        headers:{
+                            "Authorization":`Bearer ${token}`
+                        }
+                    });
+
+                    const fullData = await full.json();
+                    const doors = fullData.data.doors;
+
+                    const progress = calculateOrderPipelineProgress(doors);
+
+                    container.innerHTML += renderPipeline(order, progress);
+
+                }
+
+            }catch(err){
+                console.error(err);
+            }
+        }
+
+
+        //============= Calculate for Production Pipeline on dashboard ===========
+        function calculateOrderPipelineProgress(doors){
+
+            const stageWeight={
+                PENDING:0,
+                CUTTING:20,
+                PROCESSING:40,
+                POLISHING:60,
+                PACKING:80,
+                LOADING:100
+            };
+
+            let total=0;
+
+            doors.forEach(d=>{
+                total += stageWeight[d.currentStage] || 0;
+            });
+
+            return doors.length ? Math.round(total / doors.length) : 0;
+        }
+
+
+
+        //=========== RENDER PIPELINE UI ==================
+        function renderPipeline(order,progress){
+
+            return `
+            <div class="pipeline-card">
+
+                <div class="pipeline-top">
+                    <div>
+                        <div class="pipeline-id">${order.orderId}</div>
+                        <div class="pipeline-company">${order.customerName || ""}</div>
+                    </div>
+
+                    <div class="pipeline-progress">
+                        ${progress}%
+                    </div>
+                </div>
+
+                <div class="pipeline-bar">
+                    <div class="pipeline-fill" style="width:${progress}%"></div>
+                </div>
+
+            </div>
+            `;
+        }
+
+
+
+        //========== INITIAL LOAD ==========
+        document.addEventListener("DOMContentLoaded", function(){
+            loadDashboardPipelines();
+        });
+
+
+
+        //========== AUTO REFRESH EVERY 4 SECONDS (ONLY IF DASHBOARD OPEN) ==========
+        // setInterval(()=>{
+
+        //     const dashboard = document.getElementById("module-dashboard");
+
+        //     if(dashboard && dashboard.classList.contains("active")){
+        //         loadDashboardPipelines();
+        //     }
+
+        // },4000);
 
         // ==================== PERMISSION FUNCTIONS ====================
 
