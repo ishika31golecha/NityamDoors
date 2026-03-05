@@ -1216,6 +1216,16 @@
                         <p>Stage-wise production tracking and door completion</p>
                     </div>
                     <div class="card-body">
+
+                        <div class="ps-tabs">
+                            <button class="ps-tab active" onclick="switchPsTab('production')">
+                                Door Production
+                            </button>
+
+                            <button class="ps-tab" onclick="switchPsTab('workers')">
+                                Worker Management
+                            </button>
+                        </div>
                         
                         <!-- ========== ORDER SELECTOR ========== -->
                         <div class="ps-card ps-order">
@@ -1232,7 +1242,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- ========== WORKER MANAGEMENT ========== -->
                         <div class="ps-card ps-workers">
                             <h3 style="margin-top: 0; color: #FFD700;">Worker Management</h3>
@@ -1292,130 +1302,131 @@
                                 </table>
                             </div>
                         </div>
-
-                        <!-- ========== STAGE 1: CUTTING ========== -->
-                        <div class="ps-card ps-stage cutting">
-                            <h3 style="margin-top: 0; color: #FFD700;">CUTTING</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cuttingTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Select an order to see doors...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div id ="ps-production">
+                            <!-- ========== STAGE 1: CUTTING ========== -->
+                            <div class="ps-card ps-stage cutting">
+                                <h3 style="margin-top: 0; color: #FFD700;">CUTTING</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #2a2a3e;">
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cuttingTableBody" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Select an order to see doors...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button onclick="submitStageUpdate('cuttingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                             </div>
-                            <button onclick="submitStageUpdate('cuttingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                        </div>
 
-                        <!-- ========== STAGE 2: PROCESSING ========== -->
-                        <div class="ps-card ps-stage processing">
-                            <h3 style="margin-top: 0; color: #FFD700;">PROCESSING</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="processingTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <!-- ========== STAGE 2: PROCESSING ========== -->
+                            <div class="ps-card ps-stage processing">
+                                <h3 style="margin-top: 0; color: #FFD700;">PROCESSING</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #2a2a3e;">
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="processingTableBody" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button onclick="submitStageUpdate('processingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                             </div>
-                            <button onclick="submitStageUpdate('processingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                        </div>
 
-                        <!-- ========== STAGE 3: POLISHING ========== -->
-                        <div class="ps-card ps-stage polishing">
-                            <h3 style="margin-top: 0; color: #FFD700;">POLISHING</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="polishingTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <!-- ========== STAGE 3: POLISHING ========== -->
+                            <div class="ps-card ps-stage polishing">
+                                <h3 style="margin-top: 0; color: #FFD700;">POLISHING</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #2a2a3e;">
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="polishingTableBody" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button onclick="submitStageUpdate('polishingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                             </div>
-                            <button onclick="submitStageUpdate('polishingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                        </div>
 
-                        <!-- ========== STAGE 4: PACKING ========== -->
-                        <div class="ps-card ps-stage packing">
-                            <h3 style="margin-top: 0; color: #FFD700;">PACKING</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="packingTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <!-- ========== STAGE 4: PACKING ========== -->
+                            <div class="ps-card ps-stage packing">
+                                <h3 style="margin-top: 0; color: #FFD700;">PACKING</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #2a2a3e;">
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="packingTableBody" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button onclick="submitStageUpdate('packingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                             </div>
-                            <button onclick="submitStageUpdate('packingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
-                        </div>
 
-                        <!-- ========== STAGE 5: LOADING ========== -->
-                        <div class="ps-card ps-stage loading">
-                            <h3 style="margin-top: 0; color: #FFD700;">LOADING</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #2a2a3e;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="loadingTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <!-- ========== STAGE 5: LOADING ========== -->
+                            <div class="ps-card ps-stage loading">
+                                <h3 style="margin-top: 0; color: #FFD700;">LOADING</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #2a2a3e;">
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Height</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Type</th>
+                                                <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
+                                                <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="loadingTableBody" style="color: #ccc;">
+                                            <tr style="background: #1e1e2e;">
+                                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No doors in this stage yet...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button onclick="submitStageUpdate('loadingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                             </div>
-                            <button onclick="submitStageUpdate('loadingTableBody')" style="margin-top: 15px; padding: 10px 20px; background: #FFD700; color: rgb(0, 0, 0); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
                         </div>
 
                         <!-- ========== WORKER HISTORY SECTION ========== -->
