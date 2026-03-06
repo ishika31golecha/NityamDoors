@@ -5,6 +5,18 @@ const mongoose = require('mongoose');
  * Tracks each door through production stages with worker information
  * Collection: production
  */
+const STAGES = [
+  'PENDING',
+  'CUTTING',
+  'BTC',
+  'LAMINATE',
+  'PRESS',
+  'FINISH',
+  'PACKING',
+  'DELIVERY',
+  'COMPLETED'
+];
+
 const doorUnitSchema = new mongoose.Schema(
   {
     orderId: {
@@ -20,7 +32,7 @@ const doorUnitSchema = new mongoose.Schema(
 
     currentStage: {
       type: String,
-      enum: ['PENDING', 'CUTTING', 'PROCESSING', 'POLISHING', 'PACKING', 'LOADING', 'COMPLETED'],
+      enum: STAGES,
       default: 'PENDING',
       index: true
     },
@@ -34,7 +46,7 @@ const doorUnitSchema = new mongoose.Schema(
       {
         stage: {
           type: String,
-          enum: ['PENDING', 'CUTTING', 'PROCESSING', 'POLISHING', 'PACKING', 'LOADING', 'COMPLETED'],
+          enum: STAGES,
           required: true
         },
         worker: {

@@ -85,7 +85,7 @@ async function migrateProductionData() {
 
     // Schema information
     console.log('📚 Updated Schema Information:');
-    console.log('   Stage Order: PENDING → CUTTING → PROCESSING → POLISHING → PACKING → LOADING → COMPLETED');
+    console.log('   Stage Order: PENDING → CUTTING → BTC → LAMINATE → PRESS → FINISH → PACKING → DELIVERY → COMPLETED');
     console.log('   - New documents start with: currentStage = "PENDING"');
     console.log('   - Workers update stages sequentially (no skipping)');
     console.log('   - Rejected items stay in same stage\n');

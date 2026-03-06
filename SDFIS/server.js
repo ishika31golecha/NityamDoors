@@ -141,51 +141,51 @@ const PORT = process.env.PORT || 5000;
 // Start server
 const server = app.listen(PORT, () => {
   console.log(`
-🚪 ===================================== 🚪
+ ===================================== 
    Smart Door ERP Backend Server
-🚪 ===================================== 🚪
+ ===================================== 
 
-✅ Server running on port ${PORT}
-🌍 Environment: ${process.env.NODE_ENV || 'development'}
-📱 Health check: http://localhost:${PORT}/health
-📚 API docs: http://localhost:${PORT}/
-🔐 Auth endpoint: http://localhost:${PORT}/api/auth
-📊 Records endpoint: http://localhost:${PORT}/api/records
+Server running on port ${PORT}
+Environment: ${process.env.NODE_ENV || 'development'}
+Health check: http://localhost:${PORT}/health
+API docs: http://localhost:${PORT}/
+Auth endpoint: http://localhost:${PORT}/api/auth
+Records endpoint: http://localhost:${PORT}/api/records
 
-🚪 Ready to handle manufacturing ERP requests! 🚪
+Ready to handle manufacturing ERP requests! 
   `);
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-  console.error('❌ Unhandled Promise Rejection:', err.message);
+  console.error('Unhandled Promise Rejection:', err.message);
   
   // Close server & exit process
   server.close(() => {
-    console.log('🔄 Server closed due to unhandled promise rejection');
+    console.log('Server closed due to unhandled promise rejection');
     process.exit(1);
   });
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
-  console.error('❌ Uncaught Exception:', err.message);
-  console.log('🔄 Shutting down server due to uncaught exception');
+  console.error('Uncaught Exception:', err.message);
+  console.log('Shutting down server due to uncaught exception');
   process.exit(1);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('📴 SIGTERM received, shutting down gracefully');
+  console.log('SIGTERM received, shutting down gracefully');
   server.close(() => {
-    console.log('🔄 Process terminated');
+    console.log('Process terminated');
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('📴 SIGINT received, shutting down gracefully');
+  console.log('SIGINT received, shutting down gracefully');
   server.close(() => {
-    console.log('🔄 Process terminated');
+    console.log('Process terminated');
   });
 });
 

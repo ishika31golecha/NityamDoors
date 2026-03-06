@@ -1066,11 +1066,19 @@ STAGE LEFT BORDERS
 border-left:4px solid #FFD700;
 }
 
-.ps-stage.processing{
+.ps-stage.BTC{
 border-left:4px solid #FFD700;
 }
 
-.ps-stage.polishing{
+.ps-stage.laminate{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.press{
+border-left:4px solid #FFD700;
+}
+
+.ps-stage.finish{
 border-left:4px solid #FFD700;
 }
 
@@ -1078,7 +1086,7 @@ border-left:4px solid #FFD700;
 border-left:4px solid #FFD700;
 }
 
-.ps-stage.loading{
+.ps-stage.delivery{
 border-left:4px solid #FFD700;
 }
 
@@ -2567,12 +2575,12 @@ transition:width 0.3s ease;
         color: #c62828;
     }
 
-    .ps-stage-badge.processing {
+    .ps-stage-badge.BTC {
         background: #f3e5f5;
         color: #7b1fa2;
     }
 
-    .ps-stage-badge.polishing {
+    .ps-stage-badge.laminate {
         background: #e0f2f1;
         color: #00695c;
     }

@@ -6,6 +6,18 @@ const Worker = require('../models/Worker');
 
 const router = express.Router();
 
+const STAGES = [
+  'PENDING',
+  'CUTTING',
+  'BTC',
+  'LAMINATE',
+  'PRESS',
+  'FINISH',
+  'PACKING',
+  'DELIVERY',
+  'COMPLETED'
+];
+
 // ============================================
 // PRODUCTION SUPERVISOR ROUTES
 // ============================================
@@ -291,7 +303,7 @@ router.get('/order-full-details/:orderId', protect, authorize('ProductionSupervi
  * {
  *   orderId: String,
  *   doorNumber: Number,
- *   stage: String (CUTTING|PROCESSING|POLISHING|PACKING|LOADING|COMPLETED),
+ *   stage: String (CUTTING|BTC|LAMINATE|PRESS|FINISH|PACKING|DELIVERY|COMPLETED),
  *   workerId: String (Worker ID reference),
  *   quality: String (OK|REJECTED),
  *   reason: String (required if REJECTED)
@@ -301,7 +313,7 @@ router.get('/order-full-details/:orderId', protect, authorize('ProductionSupervi
  * - Stage cannot be skipped
  * - Worker must exist in workers collection
  * - If rejected, door stays in current stage
- * - Stage order: PENDING → CUTTING → PROCESSING → POLISHING → PACKING → LOADING → COMPLETED
+ * - Stage order: PENDING → CUTTING → BTC → LAMINATE → PRESS → fINISH → PACKING → DELIVERY → COMPLETED
  * - When all doors reach COMPLETED, order auto-completes
  */
 router.post('/update-stage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
@@ -318,7 +330,7 @@ router.post('/update-stage', protect, authorize('ProductionSupervisor', 'Factory
     }
 
     // Validate stage enum - Updated with PENDING and COMPLETED
-    const validStages = ['PENDING', 'CUTTING', 'PROCESSING', 'POLISHING', 'PACKING', 'LOADING', 'COMPLETED'];
+    const validStages = STAGES;
     if (!validStages.includes(stage)) {
       return res.status(400).json({
         success: false,
@@ -414,11 +426,11 @@ router.post('/update-stage', protect, authorize('ProductionSupervisor', 'Factory
 
     console.log(`✅ Stage updated for order ${orderId}, door ${doorNumber}: ${stage} by ${workerId}`);
 
-    // CHECK: If quality is OK and stage is LOADING, check if we can complete the order
-    if (quality === 'OK' && stage === 'LOADING') {
-      // Check if all doors of this order have reached LOADING stage
+    // CHECK: If quality is OK and stage is DELIVERY, check if we can complete the order
+    if (quality === 'OK' && stage === 'DELIVERY') {
+      // Check if all doors of this order have reached DELIVERY stage
       const allDoors = await DoorUnit.find({ orderId });
-      const allCompleted = allDoors.every(d => d.currentStage === 'LOADING');
+      const allCompleted = allDoors.every(d => d.currentStage === 'DELIVERY');
 
       if (allCompleted) {
         // Auto-complete the order
@@ -430,11 +442,11 @@ router.post('/update-stage', protect, authorize('ProductionSupervisor', 'Factory
           },
           { new: true }
         );
-        console.log(`✅ Order ${orderId} auto-completed! All doors reached LOADING.`);
+        console.log(`✅ Order ${orderId} auto-completed! All doors reached DELIVERY.`);
 
         return res.status(200).json({
           success: true,
-          message: 'Stage updated successfully. Order auto-completed (all doors in LOADING)!',
+          message: 'Stage updated successfully. Order auto-completed (all doors in DELIVERY)!',
           data: {
             orderId,
             doorNumber,
