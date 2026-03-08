@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const Order = require('../models/Order');
 const DoorUnit = require('../models/DoorUnit');
@@ -237,10 +238,11 @@ router.get('/order-full-details/:orderId', protect, authorize('ProductionSupervi
       
       return {
         doorNumber,
-        height: door.dimension?.height || door.height || null,
-        width: door.dimension?.width || door.width || null,
+        height: door.dimension?.height || door.height || door.length || null,
+        width: door.dimension?.width || door.width || door.breadth || null,
         type: door.doorType || door.type || 'Unknown',
         laminate: door.laminate || 'Unknown',
+        priority: door.priority || 'Normal',
         currentStage: production?.currentStage || 'PENDING',
         isRejected: production?.isRejected || false
       };
@@ -405,8 +407,11 @@ router.post('/update-stage', protect, authorize('ProductionSupervisor', 'Factory
     }
 
     // Create stage history entry
+    // Always record doorUnit.currentStage (the stage the worker COMPLETED),
+    // NOT the next stage the door moves to. This ensures worker-performance
+    // aggregations correctly attribute work to the stage the worker actually performed.
     const historyEntry = {
-      stage: quality === 'REJECTED' ? doorUnit.currentStage : stage,
+      stage: doorUnit.currentStage,
       worker: workerId,  // ✅ Store workerId (ObjectId reference)
       quality,
       reason: reason || null,
@@ -952,6 +957,293 @@ router.get('/worker-performance', protect, authorize('ProductionSupervisor', 'Fa
       message: 'Failed to generate worker performance report',
       error: error.message
     });
+  }
+});
+
+/**
+ * @route   GET /api/production/all-doors
+ * @desc    Fetch all production doors from ALL orders, merged with order specs
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.get('/all-doors', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const doorUnits = await DoorUnit.find({ isRejected: { $ne: true } }).lean();
+    const orderIds = [...new Set(doorUnits.map(d => d.orderId))];
+    const orders = await Order.find({ orderId: { $in: orderIds } })
+      .select('orderId doors priority')
+      .lean();
+
+    const orderMap = {};
+    orders.forEach(o => { orderMap[o.orderId] = o; });
+
+    const merged = doorUnits.map(du => {
+      const order = orderMap[du.orderId];
+      const doorSpec = order?.doors?.[du.doorNumber - 1];
+      return {
+        _id: du._id,
+        orderId: du.orderId,
+        doorNumber: du.doorNumber,
+        currentStage: du.currentStage,
+        isRejected: du.isRejected,
+        height: doorSpec?.dimension?.height || doorSpec?.height || doorSpec?.length || null,
+        width: doorSpec?.dimension?.width || doorSpec?.width || doorSpec?.breadth || null,
+        type: doorSpec?.doorType || 'Unknown',
+        priority: doorSpec?.priority || order?.priority || 'Normal',
+        laminate: doorSpec?.laminate || 'Unknown'
+      };
+    });
+
+    res.status(200).json({ success: true, data: merged, total: merged.length });
+  } catch (error) {
+    console.error('\u274c Error in all-doors:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   POST /api/production/advance-door
+ * @desc    Advance a single door to its next stage (checkbox-driven, no worker required)
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.post('/advance-door', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { doorId } = req.body;
+    if (!doorId) {
+      return res.status(400).json({ success: false, message: 'doorId is required' });
+    }
+
+    const doorUnit = await DoorUnit.findById(doorId);
+    if (!doorUnit) {
+      return res.status(404).json({ success: false, message: 'Door not found' });
+    }
+
+    const nextStageMap = {
+      PENDING:  'CUTTING',
+      CUTTING:  'BTC',
+      BTC:      'LAMINATE',
+      LAMINATE: 'PRESS',
+      PRESS:    'FINISH',
+      FINISH:   'PACKING',
+      PACKING:  'DELIVERY',
+      DELIVERY: 'COMPLETED'
+    };
+
+    const previousStage = doorUnit.currentStage;
+    const nextStage = nextStageMap[previousStage];
+
+    if (!nextStage) {
+      return res.status(400).json({ success: false, message: `Door is already at final stage: ${previousStage}` });
+    }
+
+    await DoorUnit.updateOne(
+      { _id: doorId },
+      { $set: { currentStage: nextStage, isRejected: false } }
+    );
+
+    console.log(`\u2705 Door ${doorId} advanced: ${previousStage} \u2192 ${nextStage}`);
+    res.status(200).json({
+      success: true,
+      message: `Door moved to ${nextStage}`,
+      data: { doorId, previousStage, currentStage: nextStage }
+    });
+  } catch (error) {
+    console.error('\u274c Error in advance-door:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   POST /api/production/complete-stage
+ * @desc    Batch advance multiple doors to their next stage (requires worker assignment)
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ *
+ * Body: { doors: [{ orderId, doorNumber, workerId }] }
+ */
+router.post('/complete-stage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { doors } = req.body;
+
+    if (!Array.isArray(doors) || doors.length === 0) {
+      return res.status(400).json({ success: false, message: 'doors array is required and must not be empty' });
+    }
+
+    const nextStageMap = {
+      PENDING:  'CUTTING',
+      CUTTING:  'BTC',
+      BTC:      'LAMINATE',
+      LAMINATE: 'PRESS',
+      PRESS:    'FINISH',
+      FINISH:   'PACKING',
+      PACKING:  'DELIVERY',
+      DELIVERY: 'COMPLETED'
+    };
+
+    const results = [];
+
+    for (const entry of doors) {
+      const { orderId, doorNumber, workerId } = entry;
+
+      if (!orderId || !doorNumber || !workerId) {
+        return res.status(400).json({ success: false, message: `Missing orderId, doorNumber, or workerId in one of the door entries` });
+      }
+
+      // Validate worker
+      const worker = await Worker.findById(workerId);
+      if (!worker) {
+        return res.status(404).json({ success: false, message: `Worker not found: ${workerId}` });
+      }
+
+      // Find door unit
+      const doorUnit = await DoorUnit.findOne({ orderId, doorNumber });
+      if (!doorUnit) {
+        return res.status(404).json({ success: false, message: `Door unit not found: order ${orderId}, door ${doorNumber}` });
+      }
+
+      const nextStage = nextStageMap[doorUnit.currentStage];
+      if (!nextStage) {
+        return res.status(400).json({ success: false, message: `Door #${doorNumber} is already at final stage: ${doorUnit.currentStage}` });
+      }
+
+      // Record the stage the worker COMPLETED (currentStage), not the stage the door moves to (nextStage)
+      const completedStage = doorUnit.currentStage;
+
+      // Record history entry and advance stage
+      doorUnit.stageHistory.push({
+        stage: completedStage,
+        worker: workerId,
+        quality: 'OK',
+        reason: null,
+        timestamp: new Date()
+      });
+      doorUnit.currentStage = nextStage;
+      doorUnit.isRejected = false;
+      await doorUnit.save();
+
+      console.log(`✅ Door #${doorNumber} (${orderId}): ${doorUnit.currentStage === nextStage ? 'already updated' : ''} → ${nextStage}`);
+      results.push({ doorNumber, orderId, newStage: nextStage });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `${results.length} door(s) advanced to next stage`,
+      data: results
+    });
+
+  } catch (error) {
+    console.error('❌ Error in complete-stage:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/production/door-summary
+ * @desc    Get total door count grouped by type across ALL orders
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.get('/door-summary', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const grouped = await Order.aggregate([
+      { $unwind: '$doors' },
+      { $group: { _id: '$doors.doorType', total: { $sum: 1 } } },
+      { $sort: { total: -1 } }
+    ]);
+
+    const summary = grouped.map(item => ({ doorType: item._id || 'Unknown', total: item.total }));
+    const totalDoors = summary.reduce((sum, item) => sum + item.total, 0);
+
+    res.status(200).json({ success: true, totalDoors, summary });
+  } catch (error) {
+    console.error('\u274c Error in door-summary:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/production/door-type-summary
+ * @desc    Get count of doors grouped by type, optionally filtered by orderId
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.get('/door-type-summary', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { orderId } = req.query;
+    const matchStage = orderId ? { orderId } : {};
+
+    const result = await Order.aggregate([
+      { $match: matchStage },
+      { $unwind: '$doors' },
+      { $group: { _id: '$doors.doorType', count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error('\u274c Error in door-type-summary:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   POST /api/production/inventory-usage
+ * @desc    Log material usage for a production stage and deduct from inventory
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.post('/inventory-usage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { stage, material, quantity, orderId } = req.body;
+
+    if (!stage || !material || !quantity) {
+      return res.status(400).json({ success: false, message: 'stage, material, and quantity are required' });
+    }
+
+    const qty = Number(quantity);
+    if (isNaN(qty) || qty <= 0) {
+      return res.status(400).json({ success: false, message: 'quantity must be a positive number' });
+    }
+
+    const db = mongoose.connection.db;
+
+    // Check current total stock for this material (ledger model: sum all quantity entries)
+    const stockResult = await db.collection('inventories').aggregate([
+      { $match: { category: material } },
+      { $group: { _id: '$category', totalStock: { $sum: '$quantity' } } }
+    ]).toArray();
+
+    const currentStock = stockResult.length > 0 ? stockResult[0].totalStock : 0;
+
+    if (currentStock < qty) {
+      return res.status(400).json({
+        success: false,
+        message: `Insufficient stock for "${material}". Available: ${currentStock}`
+      });
+    }
+
+    // Deduct via negative-quantity ledger entry
+    await db.collection('inventories').insertOne({
+      category: material,
+      quantity: -qty,
+      createdAt: new Date(),
+      type: 'USAGE',
+      stage,
+      orderId: orderId || null
+    });
+
+    // Audit log
+    await db.collection('production_inventory_logs').insertOne({
+      stage,
+      material,
+      quantity: qty,
+      orderId: orderId || null,
+      usedAt: new Date()
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${qty} units of "${material}" deducted from inventory`,
+      remainingStock: currentStock - qty
+    });
+  } catch (error) {
+    console.error('\u274c Error in inventory-usage:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

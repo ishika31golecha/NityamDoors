@@ -18,6 +18,8 @@ const productionRoutes = require('./routes/productionRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const workerRoutes = require('./routes/workerRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
+const vendorRoutes = require('./routes/vendorRoutes');
 
 // Initialize Express app
 const app = express();
@@ -30,7 +32,10 @@ app.use(express.json({ limit: '10mb' })); // Body parser with size limit
 app.use(express.urlencoded({ extended: true })); // URL encoded parser
 
 // Serve static frontend files from root directory
-app.use(express.static('.'));
+app.use(express.static('.', { etag: false, maxAge: 0 }));
+
+// Serve uploads directory for file downloads
+app.use('/uploads', express.static('uploads'));
 
 // CORS configuration
 app.use(cors({
@@ -76,7 +81,8 @@ app.use('/api/production', productionRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/workers', workerRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/vendors', vendorRoutes);
 
 // Serve index.html as fallback for SPA routing
 app.get('/', (req, res) => {

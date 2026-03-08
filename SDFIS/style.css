@@ -1090,6 +1090,22 @@ border-left:4px solid #FFD700;
 border-left:4px solid #FFD700;
 }
 
+/* Stage locked (prior stage incomplete) */
+.ps-stage.stage-locked{
+    opacity: 0.4;
+    position: relative;
+}
+.ps-stage.stage-locked::after{
+    content: "No doors in this stage";
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
 
 /* ===============================
 ORDER SELECTOR
@@ -1167,6 +1183,23 @@ font-size:13px;
 .ps-card select:focus{
 outline:none;
 border-color:#FFD700;
+}
+
+/* Flatpickr – keep the calendar input matching dark card style */
+.flatpickr-input{
+color-scheme: dark;
+}
+.flatpickr-calendar{
+font-family: inherit;
+}
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover{
+background:#FFD700 !important;
+border-color:#FFD700 !important;
+color:#000 !important;
+}
+.flatpickr-day:hover{
+background:#2a2a2a !important;
 }
 
 
@@ -2754,6 +2787,47 @@ transition:width 0.3s ease;
 
     .so-btn-add-door:hover {
         background: #0d47a1;
+    }
+
+    .so-calculation-display {
+        background: #e8f5e9;
+        border: 2px solid #4caf50;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 15px;
+    }
+
+    .so-calc-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 1rem;
+        border-bottom: 1px solid #c8e6c9;
+    }
+
+    .so-calc-row:last-child {
+        border-bottom: none;
+    }
+
+    .so-calc-label {
+        font-weight: 600;
+        color: #2e7d32;
+    }
+
+    .so-calc-value {
+        font-weight: 700;
+        color: #1b5e20;
+        font-size: 1.1rem;
+    }
+
+    .so-door-area-display {
+        background: #f3e5f5;
+        border-left: 4px solid #9c27b0;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        color: #4a148c;
     }
 
     .so-action-buttons {

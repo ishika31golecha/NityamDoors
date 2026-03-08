@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 /**
  * Order Schema for Smart Door ERP
- * Stores orders with customer details, doors, and status tracking
+ * Stores orders with customer details, doors, and pricing calculations
  */
 const orderSchema = new mongoose.Schema(
   {
@@ -22,6 +22,27 @@ const orderSchema = new mongoose.Schema(
       },
       email: String,
       phone: String,
+      mobileNumber: {
+        type: String,
+        required: true,
+        validate: {
+          validator: function(v) {
+            return /^[0-9]{10}$/.test(v) && v !== '0000000000';
+          },
+          message: 'Mobile number must be 10 digits and not all zeros'
+        }
+      },
+      gstNumber: {
+        type: String,
+        default: null,
+        validate: {
+          validator: function(v) {
+            if (!v) return true; // Optional
+            return /^[A-Z0-9]{15}$/.test(v);
+          },
+          message: 'GST number must be 15 alphanumeric characters'
+        }
+      },
       address: String
     },
 
@@ -33,18 +54,41 @@ const orderSchema = new mongoose.Schema(
 
     doors: [
       {
-        flatNo: String,
+        length: {
+          type: Number,
+          required: true
+        },
+        breadth: {
+          type: Number,
+          required: true
+        },
+        thickness: {
+          type: Number,
+          required: true
+        },
+        area: {
+          type: Number,
+          required: true
+        },
         doorType: String,
-        height: Number,
-        width: Number,
         laminate: String,
         priority: String,
-        quantity: {
-          type: Number,
-          default: 1
-        }
+        flatNo: String,
+        fileUrl: String
       }
     ],
+
+    ratePerUnit: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+
+    totalArea: {
+      type: Number,
+      required: true,
+      default: 0
+    },
 
     totalAmount: {
       type: Number,
@@ -62,8 +106,7 @@ const orderSchema = new mongoose.Schema(
     priority: {
       type: String,
       enum: ['High', 'Normal', 'Low'],
-      default: 'Normal',
-      index: true
+      default: 'Normal'
     },
 
     rejectionReason: String,

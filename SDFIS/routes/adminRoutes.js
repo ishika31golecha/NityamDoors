@@ -343,6 +343,61 @@ router.get('/priority-orders', protect, authorize('FactoryAdmin', 'SuperAdmin'),
 });
 
 /**
+ * @route   PUT /admin/orders/:orderId/priority
+ * @desc    Update the top-level priority of an order
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ *
+ * Params:  orderId  — the human-readable order ID (e.g. ORD-123)
+ * Body:    { priority: "High" | "Normal" | "Low" }
+ */
+router.put('/orders/:orderId/priority', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    console.log('\n=== 📥 PUT /admin/orders/:orderId/priority REQUEST ===');
+
+    const { orderId } = req.params;
+    const { priority } = req.body;
+
+    // Validate priority value
+    if (!priority || !['High', 'Normal', 'Low'].includes(priority)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Priority must be one of: High, Normal, Low.'
+      });
+    }
+
+    // Find the order
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: `Order ${orderId} not found.`
+      });
+    }
+
+    const oldPriority = order.priority || 'Normal';
+    order.priority = priority;
+    await order.save();
+
+    console.log(`✅ Order ${orderId} priority updated: ${oldPriority} → ${priority}`);
+
+    res.status(200).json({
+      success: true,
+      message: `Order priority updated from ${oldPriority} to ${priority}.`,
+      data: { orderId: order.orderId, priority: order.priority }
+    });
+
+  } catch (err) {
+    console.error('❌ Update Order Priority Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update priority.',
+      error: err.message
+    });
+  }
+});
+
+/**
  * @route   PUT /admin/update-door-priority
  * @desc    Update priority of a specific door in an order
  * @access  Private (FactoryAdmin, SuperAdmin)
@@ -357,80 +412,70 @@ router.get('/priority-orders', protect, authorize('FactoryAdmin', 'SuperAdmin'),
 router.put('/update-door-priority', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
   try {
     console.log('\n=== 📥 PUT /admin/update-door-priority REQUEST ===');
-    
+    console.log('Body:', JSON.stringify(req.body));
+
     const { orderId, doorIndex, newPriority } = req.body;
 
     // Validate required fields
     if (!orderId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Order ID is required.'
-      });
+      return res.status(400).json({ success: false, message: 'Order ID is required.' });
     }
 
     if (doorIndex === undefined || doorIndex === null) {
-      return res.status(400).json({
-        success: false,
-        message: 'Door index is required.'
-      });
+      return res.status(400).json({ success: false, message: 'Door index is required.' });
     }
 
     if (!newPriority || !['High', 'Normal', 'Low'].includes(newPriority)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Priority must be: High, Normal, or Low.'
-      });
+      return res.status(400).json({ success: false, message: 'Priority must be: High, Normal, or Low.' });
     }
 
-    console.log(`🔄 Updating door priority: Order=${orderId}, Door Index=${doorIndex}, New Priority=${newPriority}`);
+    // Parse to integer (parseInt handles both numbers and numeric strings)
+    const idx = parseInt(doorIndex, 10);
+    if (isNaN(idx) || idx < 0) {
+      return res.status(400).json({ success: false, message: 'Door index must be a non-negative integer.' });
+    }
 
-    // Find the order
-    const order = await Order.findOne({ orderId });
+    console.log(`🔄 Updating door priority: Order=${orderId}, Door Index=${idx}, New Priority=${newPriority}`);
+
+    // Find the order to validate door index bounds
+    const order = await Order.findOne({ orderId }).lean();
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found.'
-      });
+      return res.status(404).json({ success: false, message: `Order ${orderId} not found.` });
     }
 
-    // Check if door index is valid
-    if (doorIndex < 0 || doorIndex >= order.doors.length) {
+    const totalDoors = (order.doors || []).length;
+    if (idx >= totalDoors) {
       return res.status(400).json({
         success: false,
-        message: `Invalid door index. Order has ${order.doors.length} door(s).`
+        message: `Invalid door index ${idx}. Order has ${totalDoors} door(s).`
       });
     }
 
-    // Update the door priority
-    const oldPriority = order.doors[doorIndex].priority || 'Normal';
-    order.doors[doorIndex].priority = newPriority;
+    const oldPriority = (order.doors[idx] && order.doors[idx].priority) || 'Normal';
 
-    console.log(`✏️ Door priority updated: ${oldPriority} → ${newPriority}`);
+    // Use MongoDB $set with array dot-notation to update ONLY this one field.
+    // This bypasses Mongoose full-document validators entirely — no ValidationError
+    // on unrelated required fields (e.g. mobileNumber, area, etc.).
+    const updateResult = await Order.collection.updateOne(
+      { orderId: orderId },
+      { $set: { [`doors.${idx}.priority`]: newPriority } }
+    );
 
-    // Save the order
-    await order.save();
-
-    console.log(`✅ Order saved successfully`);
+    console.log(`✅ Door priority updated: ${oldPriority} → ${newPriority}`, updateResult);
 
     res.status(200).json({
       success: true,
       message: `Door priority updated from ${oldPriority} to ${newPriority}.`,
-      data: {
-        orderId: order.orderId,
-        doorIndex: doorIndex,
-        oldPriority: oldPriority,
-        newPriority: newPriority,
-        door: order.doors[doorIndex]
-      }
+      data: { orderId, doorIndex: idx, oldPriority, newPriority }
     });
 
   } catch (error) {
-    console.error('❌ Update Door Priority Error:', error);
+    console.error('❌ Update Door Priority Error:', error.message, error.stack);
     res.status(500).json({
       success: false,
-      message: 'Server error updating door priority.',
-      error: error.message
+      message: error.message,   // Return the real error so the frontend toast shows it
+      error: error.stack
     });
   }
 });

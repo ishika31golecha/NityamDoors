@@ -1,6 +1,7 @@
 const express = require('express');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const Worker = require('../models/Worker');
+const Attendance = require('../models/Attendance');
 
 const router = express.Router();
 
@@ -241,6 +242,147 @@ router.delete('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor',
       message: 'Failed to delete worker',
       error: error.message
     });
+  }
+});
+
+// ============================================
+// ATTENDANCE ROUTES
+// ============================================
+
+/**
+ * @route   POST /api/workers/attendance/mark
+ * @desc    Bulk upsert attendance for a date
+ * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
+ *
+ * Body: { date: "YYYY-MM-DD", attendance: [{ workerId, workerName, status }] }
+ */
+router.post('/attendance/mark', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { date, attendance } = req.body;
+
+    if (!date || !Array.isArray(attendance) || attendance.length === 0) {
+      return res.status(400).json({ success: false, message: 'date and attendance array are required' });
+    }
+
+    const ops = attendance.map(entry => ({
+      updateOne: {
+        filter: { workerId: entry.workerId.toUpperCase(), date },
+        update: { $set: { workerName: entry.workerName, status: entry.status || 'Present' } },
+        upsert: true
+      }
+    }));
+
+    const result = await Attendance.bulkWrite(ops);
+
+    console.log(`✅ Attendance saved for ${date}: upserted=${result.upsertedCount}, modified=${result.modifiedCount}`);
+
+    res.status(200).json({
+      success: true,
+      message: `Attendance saved for ${date}`,
+      upserted: result.upsertedCount,
+      modified: result.modifiedCount
+    });
+  } catch (error) {
+    console.error('❌ Error saving attendance:', error);
+    res.status(500).json({ success: false, message: 'Failed to save attendance', error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/workers/attendance/date?date=YYYY-MM-DD
+ * @desc    Get attendance records for a specific date
+ * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
+ */
+router.get('/attendance/date', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) {
+      return res.status(400).json({ success: false, message: 'date query param is required' });
+    }
+
+    const records = await Attendance.find({ date }).sort({ workerName: 1 }).lean();
+
+    res.status(200).json({ success: true, date, count: records.length, data: records });
+  } catch (error) {
+    console.error('❌ Error fetching attendance by date:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch attendance', error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/workers/attendance/month?month=MM&year=YYYY
+ * @desc    Get per-worker attendance summary for a given month
+ * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
+ */
+router.get('/attendance/month', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    if (!month || !year) {
+      return res.status(400).json({ success: false, message: 'month and year query params are required' });
+    }
+
+    const mm = String(month).padStart(2, '0');
+    const prefix = `${year}-${mm}`;
+
+    const records = await Attendance.find({ date: { $regex: `^${prefix}` } }).lean();
+
+    // Group by workerId
+    const summary = {};
+    records.forEach(r => {
+      if (!summary[r.workerId]) {
+        summary[r.workerId] = { workerId: r.workerId, workerName: r.workerName, present: 0, absent: 0, halfDay: 0, total: 0 };
+      }
+      summary[r.workerId].total++;
+      if (r.status === 'Present') summary[r.workerId].present++;
+      else if (r.status === 'Absent') summary[r.workerId].absent++;
+      else if (r.status === 'Half Day') summary[r.workerId].halfDay++;
+    });
+
+    const data = Object.values(summary).sort((a, b) => a.workerName.localeCompare(b.workerName));
+
+    res.status(200).json({ success: true, month: prefix, count: data.length, data });
+  } catch (error) {
+    console.error('❌ Error fetching monthly attendance:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch monthly attendance', error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/workers/attendance/year?year=YYYY
+ * @desc    Get per-worker attendance summary for each month of a year
+ * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
+ */
+router.get('/attendance/year', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { year } = req.query;
+    if (!year) {
+      return res.status(400).json({ success: false, message: 'year query param is required' });
+    }
+
+    const records = await Attendance.find({ date: { $regex: `^${year}-` } }).lean();
+
+    // Group by workerId -> month
+    const summary = {};
+    records.forEach(r => {
+      const monthKey = r.date.substring(0, 7); // YYYY-MM
+      if (!summary[r.workerId]) {
+        summary[r.workerId] = { workerId: r.workerId, workerName: r.workerName, months: {} };
+      }
+      if (!summary[r.workerId].months[monthKey]) {
+        summary[r.workerId].months[monthKey] = { present: 0, absent: 0, halfDay: 0, total: 0 };
+      }
+      summary[r.workerId].months[monthKey].total++;
+      if (r.status === 'Present') summary[r.workerId].months[monthKey].present++;
+      else if (r.status === 'Absent') summary[r.workerId].months[monthKey].absent++;
+      else if (r.status === 'Half Day') summary[r.workerId].months[monthKey].halfDay++;
+    });
+
+    const data = Object.values(summary).sort((a, b) => a.workerName.localeCompare(b.workerName));
+
+    res.status(200).json({ success: true, year, count: data.length, data });
+  } catch (error) {
+    console.error('❌ Error fetching yearly attendance:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch yearly attendance', error: error.message });
   }
 });
 
