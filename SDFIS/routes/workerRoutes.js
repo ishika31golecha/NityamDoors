@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect, authorize, authorizeModule } = require('../middleware/authMiddleware');
 const Worker = require('../models/Worker');
 const Attendance = require('../models/Attendance');
 
@@ -17,7 +17,7 @@ const router = express.Router();
  * Query params:
  * - status (optional): ACTIVE or INACTIVE
  */
-router.get('/', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.get('/', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { status } = req.query;
 
@@ -56,7 +56,7 @@ router.get('/', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'Supe
  * @desc    Get worker by ID
  * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
  */
-router.get('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.get('/:id', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -102,7 +102,7 @@ router.get('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'S
  *   status: String (ACTIVE/INACTIVE, default: ACTIVE)
  * }
  */
-router.post('/', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.post('/', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { workerId, name, phone, aadhaarNumber, status } = req.body;
 
@@ -161,7 +161,7 @@ router.post('/', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'Sup
  * 
  * Body: Any of the worker fields can be updated
  */
-router.put('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.put('/:id', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { id } = req.params;
     const { name, phone, aadhaarNumber, status } = req.body;
@@ -209,7 +209,7 @@ router.put('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'S
  * @desc    Delete worker (soft delete - set status to INACTIVE)
  * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
  */
-router.delete('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.delete('/:id', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -256,7 +256,7 @@ router.delete('/:id', protect, authorize('FactoryAdmin', 'ProductionSupervisor',
  *
  * Body: { date: "YYYY-MM-DD", attendance: [{ workerId, workerName, status }] }
  */
-router.post('/attendance/mark', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.post('/attendance/mark', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { date, attendance } = req.body;
 
@@ -293,7 +293,7 @@ router.post('/attendance/mark', protect, authorize('FactoryAdmin', 'ProductionSu
  * @desc    Get attendance records for a specific date
  * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
  */
-router.get('/attendance/date', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.get('/attendance/date', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { date } = req.query;
     if (!date) {
@@ -314,7 +314,7 @@ router.get('/attendance/date', protect, authorize('FactoryAdmin', 'ProductionSup
  * @desc    Get per-worker attendance summary for a given month
  * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
  */
-router.get('/attendance/month', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.get('/attendance/month', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { month, year } = req.query;
     if (!month || !year) {
@@ -352,7 +352,7 @@ router.get('/attendance/month', protect, authorize('FactoryAdmin', 'ProductionSu
  * @desc    Get per-worker attendance summary for each month of a year
  * @access  Private (FactoryAdmin, ProductionSupervisor, SuperAdmin)
  */
-router.get('/attendance/year', protect, authorize('FactoryAdmin', 'ProductionSupervisor', 'SuperAdmin'), async (req, res) => {
+router.get('/attendance/year', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { year } = req.query;
     if (!year) {

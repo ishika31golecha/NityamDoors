@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const RolePermission = require('../models/RolePermission');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -17,6 +18,39 @@ const VALID_ROLES = [
   'AccountsManager',
   'FranchiseeOwner'
 ];
+
+/**
+ * Resolve module permissions for a role from the database.
+ * SuperAdmin always gets full access.
+ * Falls back to all-false if the role has no DB entry.
+ */
+// Hard-coded default permissions — used as fallback when DB has no entry for a role
+const DEFAULT_PERMISSION_MATRIX = {
+  SuperAdmin:           { orders: true,  production: true,  inventory: true,  accounts: true,  reports: true  },
+  FactoryAdmin:         { orders: true,  production: true,  inventory: true,  accounts: false, reports: true  },
+  SalesExecutive:       { orders: true,  production: false, inventory: false, accounts: false, reports: false },
+  ProductionSupervisor: { orders: false, production: true,  inventory: false, accounts: false, reports: false },
+  InventoryManager:     { orders: false, production: false, inventory: true,  accounts: false, reports: false },
+  AccountsManager:      { orders: false, production: false, inventory: false, accounts: true,  reports: false },
+  FranchiseeOwner:      { orders: false, production: false, inventory: true,  accounts: false, reports: false }
+};
+
+const resolvePermissions = async (primaryRole) => {
+  const fallback = DEFAULT_PERMISSION_MATRIX[primaryRole]
+    || { orders: false, production: false, inventory: false, accounts: false, reports: false };
+  if (primaryRole === 'SuperAdmin') {
+    return { orders: true, production: true, inventory: true, accounts: true, reports: true };
+  }
+  try {
+    const rp = await RolePermission.findOne({ role: primaryRole }).lean();
+    if (!rp) return fallback;   // DB not seeded yet — use hard-coded defaults
+    const { orders, production, inventory, accounts, reports } = rp.permissions;
+    return { orders: !!orders, production: !!production, inventory: !!inventory, accounts: !!accounts, reports: !!reports };
+  } catch (err) {
+    console.error('resolvePermissions DB error:', err.message);
+    return fallback;            // DB error — use hard-coded defaults
+  }
+};
 
 /**
  * Generate JWT Token with roles array
@@ -286,6 +320,9 @@ router.post('/login', async (req, res) => {
     // Ensure roles array exists
     const userRoles = user.roles && user.roles.length > 0 ? user.roles : [user.role];
 
+    // Fetch module permissions from DB for the primary role
+    const permissions = await resolvePermissions(userRoles[0]);
+
     // Generate token with roles
     const token = generateToken(user._id, userRoles);
 
@@ -299,6 +336,7 @@ router.post('/login', async (req, res) => {
           email: user.email,
           role: user.role,
           roles: userRoles,
+          permissions,
           status: user.status,
           isActive: user.isActive !== false,
           createdAt: user.createdAt
@@ -324,12 +362,17 @@ router.post('/login', async (req, res) => {
 router.get('/me', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    
+    const userRoles = user.roles && user.roles.length > 0 ? user.roles : [user.role];
+    const permissions = await resolvePermissions(userRoles[0]);
+
     res.status(200).json({
       success: true,
       message: 'User profile retrieved successfully.',
       data: {
-        user
+        user: {
+          ...user.toJSON(),
+          permissions
+        }
       }
     });
   } catch (error) {

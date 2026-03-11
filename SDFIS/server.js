@@ -24,8 +24,16 @@ const vendorRoutes = require('./routes/vendorRoutes');
 // Initialize Express app
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database and seed default role permissions on first run
+connectDB().then(async () => {
+  try {
+    const RolePermission = require('./models/RolePermission');
+    await RolePermission.seedDefaults();
+    console.log('✅ Role permissions seeded (no-op if already exist)');
+  } catch (err) {
+    console.error('⚠️  Role permission seed failed:', err.message);
+  }
+});
 
 // Middleware setup
 app.use(express.json({ limit: '10mb' })); // Body parser with size limit

@@ -2,6 +2,7 @@ const express = require('express');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const DoorUnit = require('../models/DoorUnit');
+const RolePermission = require('../models/RolePermission');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -477,6 +478,186 @@ router.put('/update-door-priority', protect, authorize('FactoryAdmin', 'SuperAdm
       message: error.message,   // Return the real error so the frontend toast shows it
       error: error.stack
     });
+  }
+});
+
+// ============================================================
+// ROLE PERMISSION MANAGEMENT ROUTES
+// ============================================================
+
+/**
+ * @route   GET /api/admin/permissions
+ * @desc    Get module permissions for all roles
+ * @access  Private (SuperAdmin)
+ */
+router.get('/permissions', protect, authorize('SuperAdmin'), async (req, res) => {
+  try {
+    const rows = await RolePermission.find({}).lean();
+
+    // Build a role → permissions map
+    const matrix = {};
+    rows.forEach(r => {
+      matrix[r.role] = {
+        orders:     !!r.permissions.orders,
+        production: !!r.permissions.production,
+        inventory:  !!r.permissions.inventory,
+        accounts:   !!r.permissions.accounts,
+        reports:    !!r.permissions.reports
+      };
+    });
+
+    res.status(200).json({ success: true, data: matrix });
+  } catch (error) {
+    console.error('GET /permissions Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to load permissions.' });
+  }
+});
+
+/**
+ * @route   PUT /api/admin/permissions
+ * @desc    Save module permissions for all roles
+ * @body    { FactoryAdmin: { orders: true, ... }, SalesExecutive: { ... }, ... }
+ * @access  Private (SuperAdmin)
+ */
+router.put('/permissions', protect, authorize('SuperAdmin'), async (req, res) => {
+  try {
+    const matrix = req.body;
+
+    if (!matrix || typeof matrix !== 'object') {
+      return res.status(400).json({ success: false, message: 'Invalid permissions body.' });
+    }
+
+    const VALID_MODULES = ['orders', 'production', 'inventory', 'accounts', 'reports'];
+    const ops = [];
+
+    for (const [role, perms] of Object.entries(matrix)) {
+      // SuperAdmin permissions are immutable — always full access
+      if (role === 'SuperAdmin') continue;
+
+      if (typeof perms !== 'object') continue;
+
+      const sanitised = {};
+      VALID_MODULES.forEach(m => {
+        sanitised[m] = perms[m] === true;
+      });
+
+      ops.push({
+        updateOne: {
+          filter: { role },
+          update: { $set: { permissions: sanitised } },
+          upsert: true
+        }
+      });
+    }
+
+    if (ops.length > 0) {
+      await RolePermission.bulkWrite(ops);
+    }
+
+    res.status(200).json({ success: true, message: 'Permissions saved successfully.' });
+  } catch (error) {
+    console.error('PUT /permissions Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to save permissions.' });
+  }
+});
+
+/**
+ * @route   POST /api/admin/permissions/reset
+ * @desc    Reset all role permissions to system defaults
+ * @access  Private (SuperAdmin)
+ */
+router.post('/permissions/reset', protect, authorize('SuperAdmin'), async (req, res) => {
+  try {
+    const matrix = RolePermission.DEFAULT_MATRIX;
+    const ops = Object.entries(matrix)
+      .filter(([role]) => role !== 'SuperAdmin')
+      .map(([role, permissions]) => ({
+        updateOne: {
+          filter: { role },
+          update: { $set: { permissions } },
+          upsert: true
+        }
+      }));
+
+    await RolePermission.bulkWrite(ops);
+    res.status(200).json({ success: true, message: 'Permissions reset to defaults.' });
+  } catch (error) {
+    console.error('POST /permissions/reset Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to reset permissions.' });
+  }
+});
+
+/**
+ * @route   GET /api/admin/order-overview
+ * @desc    Fetch all approved/in-production/completed orders with door-level progress summary
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ */
+router.get('/order-overview', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const orders = await Order.find({
+      status: { $in: ['APPROVED', 'IN_PRODUCTION', 'COMPLETED'] }
+    })
+      .select('orderId customer doors status priority createdAt')
+      .lean();
+
+    const overviewPromises = orders.map(async (order) => {
+      const totalDoors = order.doors ? order.doors.length : 0;
+      const doorUnits = await DoorUnit.find({ orderId: order.orderId })
+        .select('currentStage')
+        .lean();
+      const DONE_STAGES = ['PACKING', 'DELIVERY', 'COMPLETED'];
+      const completedDoors = doorUnits.filter(d => DONE_STAGES.includes(d.currentStage)).length;
+      return {
+        orderId: order.orderId,
+        customerName: order.customer?.name || 'N/A',
+        totalDoors,
+        completedDoors,
+        remainingDoors: totalDoors - completedDoors,
+        progressPct: totalDoors > 0 ? Math.round((completedDoors / totalDoors) * 100) : 0,
+        status: order.status,
+        priority: order.priority || 'Normal',
+        createdAt: order.createdAt
+      };
+    });
+
+    const overview = await Promise.all(overviewPromises);
+    res.status(200).json({ success: true, count: overview.length, data: overview });
+  } catch (error) {
+    console.error('GET /order-overview Error:', error);
+    res.status(500).json({ success: false, message: 'Server error fetching order overview.', error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/admin/order-overview/:orderId/doors
+ * @desc    Fetch door-level progress detail for a single order
+ * @access  Private (FactoryAdmin, SuperAdmin)
+ */
+router.get('/order-overview/:orderId/doors', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const doorUnits = await DoorUnit.find({ orderId })
+      .select('doorNumber currentStage stageHistory isRejected')
+      .lean();
+
+    const doors = doorUnits.map(du => {
+      const lastEntry = du.stageHistory && du.stageHistory.length > 0
+        ? du.stageHistory[du.stageHistory.length - 1]
+        : null;
+      return {
+        doorNumber: du.doorNumber,
+        currentStage: du.currentStage,
+        isRejected: du.isRejected || false,
+        lastWorker: lastEntry?.worker || 'Unassigned',
+        lastStageCompleted: lastEntry?.stage || '—'
+      };
+    });
+
+    doors.sort((a, b) => a.doorNumber - b.doorNumber);
+    res.status(200).json({ success: true, count: doors.length, data: doors });
+  } catch (error) {
+    console.error('GET /order-overview/:orderId/doors Error:', error);
+    res.status(500).json({ success: false, message: 'Server error fetching door details.', error: error.message });
   }
 });
 

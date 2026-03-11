@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect, authorize, authorizeModule } = require('../middleware/authMiddleware');
 const mongoose = require('mongoose');
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
  * @desc    Add new inventory item
  * @access  Private - InventoryManager, SuperAdmin
  */
-router.post('/add', protect, authorize('InventoryManager', 'SuperAdmin'), async (req, res) => {
+router.post('/add', protect, authorizeModule('inventory'), async (req, res) => {
   try {
     const { category, quantity, ...otherFields } = req.body;
 
@@ -66,7 +66,7 @@ router.post('/add', protect, authorize('InventoryManager', 'SuperAdmin'), async 
  * @desc    Get all inventory items
  * @access  Private - InventoryManager, SuperAdmin
  */
-router.get('/', protect, authorize('InventoryManager', 'SuperAdmin'), async (req, res) => {
+router.get('/', protect, authorizeModule('inventory'), async (req, res) => {
   try {
     const db = mongoose.connection.db;
     const collection = db.collection('inventories');
@@ -98,7 +98,7 @@ router.get('/', protect, authorize('InventoryManager', 'SuperAdmin'), async (req
  * @desc    Get inventory snapshot grouped by category with total stock
  * @access  Private - FactoryAdmin, SuperAdmin
  */
-router.get('/snapshot', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/snapshot', protect, authorizeModule('inventory'), async (req, res) => {
   try {
     const db = mongoose.connection.db;
     const collection = db.collection('inventories');

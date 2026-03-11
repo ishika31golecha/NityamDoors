@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect, authorize, authorizeModule } = require('../middleware/authMiddleware');
 const Order = require('../models/Order');
 const DoorUnit = require('../models/DoorUnit');
 const Worker = require('../models/Worker');
@@ -30,7 +30,7 @@ const STAGES = [
  * 
  * Returns only orders ready for production
  */
-router.get('/approved-orders', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/approved-orders', protect, authorizeModule('production'), async (req, res) => {
   try {
     const orders = await Order.find({ status: 'APPROVED' })
       .select('orderId customer.name doors totalAmount priority')
@@ -71,7 +71,7 @@ router.get('/approved-orders', protect, authorize('ProductionSupervisor', 'Facto
  * 
  * If no production documents exist, auto-create them from order's door count
  */
-router.get('/doors/:orderId', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/doors/:orderId', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId } = req.params;
 
@@ -150,7 +150,7 @@ router.get('/doors/:orderId', protect, authorize('ProductionSupervisor', 'Factor
  * 
  * Returns order details with doors array including height and width
  */
-router.get('/order-details/:orderId', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/order-details/:orderId', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId } = req.params;
 
@@ -209,7 +209,7 @@ router.get('/order-details/:orderId', protect, authorize('ProductionSupervisor',
  * Order collection has door specs, Production collection has stage tracking.
  * This endpoint merges them for display.
  */
-router.get('/order-full-details/:orderId', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/order-full-details/:orderId', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId } = req.params;
 
@@ -318,7 +318,7 @@ router.get('/order-full-details/:orderId', protect, authorize('ProductionSupervi
  * - Stage order: PENDING → CUTTING → BTC → LAMINATE → PRESS → fINISH → PACKING → DELIVERY → COMPLETED
  * - When all doors reach COMPLETED, order auto-completes
  */
-router.post('/update-stage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.post('/update-stage', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId, doorNumber, stage, workerId, quality, reason } = req.body;
 
@@ -492,7 +492,7 @@ router.post('/update-stage', protect, authorize('ProductionSupervisor', 'Factory
  * @desc    Get complete production history for an order
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.get('/history/:orderId', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/history/:orderId', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId } = req.params;
 
@@ -554,7 +554,7 @@ router.get('/history/:orderId', protect, authorize('ProductionSupervisor', 'Fact
  * 3. Group by worker and stage, count doors
  * 4. Sort by worker name and stage
  */
-router.get('/worker-history', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/worker-history', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { date } = req.query;
 
@@ -708,7 +708,7 @@ router.get('/worker-history', protect, authorize('ProductionSupervisor', 'Factor
  * 
  * Use this endpoint to verify API is working without date filtering issues
  */
-router.get('/worker-history-test', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/worker-history-test', protect, authorizeModule('production'), async (req, res) => {
   try {
     console.log('🧪 Test endpoint called - /worker-history-test');
     
@@ -773,6 +773,78 @@ router.get('/worker-history-test', protect, authorize('ProductionSupervisor', 'F
 });
 
 /**
+ * @route   GET /api/production/worker-performance/drill-down
+ * @desc    Get all doors worked by a specific worker in a specific month
+ * @query   workerId=<ObjectId>&month=YYYY-MM
+ * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
+ */
+router.get('/worker-performance/drill-down', protect, authorizeModule('production'), async (req, res) => {
+  try {
+    const { workerId, month } = req.query;
+
+    if (!workerId || !month) {
+      return res.status(400).json({
+        success: false,
+        message: 'workerId and month (YYYY-MM) are required'
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(workerId)) {
+      return res.status(400).json({ success: false, message: 'Invalid workerId' });
+    }
+
+    const parts = month.split('-');
+    if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1]))) {
+      return res.status(400).json({ success: false, message: 'Invalid month format. Use YYYY-MM' });
+    }
+
+    const year = parseInt(parts[0]);
+    const mon = parseInt(parts[1]);
+    const startDate = new Date(Date.UTC(year, mon - 1, 1, 0, 0, 0, 0));
+    const endDate = new Date(Date.UTC(year, mon, 0, 23, 59, 59, 999));
+
+    const workerObjectId = new mongoose.Types.ObjectId(workerId);
+
+    const results = await DoorUnit.aggregate([
+      { $unwind: '$stageHistory' },
+      {
+        $match: {
+          'stageHistory.worker': workerObjectId,
+          'stageHistory.timestamp': { $gte: startDate, $lte: endDate }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          orderId: 1,
+          doorNumber: 1,
+          stage: '$stageHistory.stage',
+          date: '$stageHistory.timestamp'
+        }
+      },
+      { $sort: { date: 1 } }
+    ]);
+
+    console.log(`📋 Drill-down: ${results.length} records for worker ${workerId} in ${month}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Drill-down data fetched successfully',
+      count: results.length,
+      data: results
+    });
+
+  } catch (error) {
+    console.error('❌ Error in worker drill-down:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch drill-down data',
+      error: error.message
+    });
+  }
+});
+
+/**
  * @route   GET /api/production/worker-performance
  * @desc    Get worker performance report (daily, monthly, yearly)
  * @query   type=daily|monthly|yearly, date=YYYY-MM-DD
@@ -781,7 +853,7 @@ router.get('/worker-history-test', protect, authorize('ProductionSupervisor', 'F
  * Returns worker performance grouped by worker and stage with door counts
  * Supports daily, monthly, and yearly filtering
  */
-router.get('/worker-performance', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/worker-performance', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { type = 'daily', date } = req.query;
 
@@ -965,7 +1037,7 @@ router.get('/worker-performance', protect, authorize('ProductionSupervisor', 'Fa
  * @desc    Fetch all production doors from ALL orders, merged with order specs
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.get('/all-doors', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/all-doors', protect, authorizeModule('production'), async (req, res) => {
   try {
     const doorUnits = await DoorUnit.find({ isRejected: { $ne: true } }).lean();
     const orderIds = [...new Set(doorUnits.map(d => d.orderId))];
@@ -1005,7 +1077,7 @@ router.get('/all-doors', protect, authorize('ProductionSupervisor', 'FactoryAdmi
  * @desc    Advance a single door to its next stage (checkbox-driven, no worker required)
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.post('/advance-door', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.post('/advance-door', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { doorId } = req.body;
     if (!doorId) {
@@ -1059,7 +1131,7 @@ router.post('/advance-door', protect, authorize('ProductionSupervisor', 'Factory
  *
  * Body: { doors: [{ orderId, doorNumber, workerId }] }
  */
-router.post('/complete-stage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.post('/complete-stage', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { doors } = req.body;
 
@@ -1140,7 +1212,7 @@ router.post('/complete-stage', protect, authorize('ProductionSupervisor', 'Facto
  * @desc    Get total door count grouped by type across ALL orders
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.get('/door-summary', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/door-summary', protect, authorizeModule('production'), async (req, res) => {
   try {
     const grouped = await Order.aggregate([
       { $unwind: '$doors' },
@@ -1163,7 +1235,7 @@ router.get('/door-summary', protect, authorize('ProductionSupervisor', 'FactoryA
  * @desc    Get count of doors grouped by type, optionally filtered by orderId
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.get('/door-type-summary', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.get('/door-type-summary', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { orderId } = req.query;
     const matchStage = orderId ? { orderId } : {};
@@ -1187,7 +1259,7 @@ router.get('/door-type-summary', protect, authorize('ProductionSupervisor', 'Fac
  * @desc    Log material usage for a production stage and deduct from inventory
  * @access  Private (ProductionSupervisor, FactoryAdmin, SuperAdmin)
  */
-router.post('/inventory-usage', protect, authorize('ProductionSupervisor', 'FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+router.post('/inventory-usage', protect, authorizeModule('production'), async (req, res) => {
   try {
     const { stage, material, quantity, orderId } = req.body;
 

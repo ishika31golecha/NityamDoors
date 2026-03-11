@@ -114,22 +114,20 @@
         <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="module-nav" id="moduleNav">
-                <button class="nav-btn active" onclick="showModule('dashboard')">Dashboard</button>
-                <!-- <button class="nav-btn" onclick="showModule('orders')">Orders</button>
-                <button class="nav-btn" onclick="showModule('production')">Production</button> -->
-                <button class="nav-btn" onclick="showModule('inventory')">Inventory</button>
-                <button class="nav-btn" onclick="showModule('accounts')">Accounts</button>
-                <button class="nav-btn" onclick="showModule('reports')">Reports</button>
-                <button class="nav-btn" onclick="showModule('factoryadmin')">Factory Admin</button>
-                <button class="nav-btn" onclick="showModule('salesexec')">Sales Executive</button>
-                <button class="nav-btn" onclick="showModule('productionsupervisor')">Production</button>
-                <button class="nav-btn" onclick="showModule('worker-history')">Worker History</button>
+                <button class="nav-btn active" data-module="dashboard" onclick="showModule('dashboard')">Dashboard</button>
+                <button class="nav-btn" data-module="salesexec" data-permission="orders" onclick="showModule('salesexec')">Sales Executive</button>
+                <button class="nav-btn" data-module="factoryadmin" data-roles="FactoryAdmin" onclick="showModule('factoryadmin')">Factory Admin</button>
+                <button class="nav-btn" data-module="productionsupervisor" data-permission="production" onclick="showModule('productionsupervisor')">Production</button>
+                <button class="nav-btn" data-module="worker-history" data-permission="production" onclick="showModule('worker-history')">Worker History</button>
+                <button class="nav-btn" data-module="inventory" data-permission="inventory" onclick="showModule('inventory')">Inventory</button>
+                <button class="nav-btn" data-module="accounts" data-permission="accounts" onclick="showModule('accounts')">Accounts</button>
+                <button class="nav-btn" data-module="reports" data-permission="reports" onclick="showModule('reports')">Reports</button>
                 <!-- ACCESS MANAGEMENT DROPDOWN -->
                 <div class="nav-dropdown">
-                    <button class="nav-btn dropdown-btn" onclick="toggleAccessMenu()">Access Management<span class="dropdown-arrow" id="accessArrow">▾</span></button>
+                    <button class="nav-btn dropdown-btn" data-module="accessmgmt" data-roles="SuperAdmin" onclick="toggleAccessMenu()">Access Management<span class="dropdown-arrow" id="accessArrow">▾</span></button>
                     <div class="dropdown-menu" id="accessMenu">
-                        <button class="nav-btn sub-nav" onclick="showModule('accesscontrol')">Access Control</button>
-                        <button class="nav-btn sub-nav" onclick="showModule('usermanagement')">User Management</button>
+                        <button class="nav-btn sub-nav" data-module="accesscontrol" data-roles="SuperAdmin" onclick="showModule('accesscontrol')">Access Control</button>
+                        <button class="nav-btn sub-nav" data-module="usermanagement" data-roles="SuperAdmin,FactoryAdmin" onclick="showModule('usermanagement')">User Management</button>
                     </div>
                 </div>
             </div>
@@ -769,6 +767,9 @@
                             <button class="tab-btn" data-tab="fa-vendor-overview" onclick="showFactoryAdminTab('fa-vendor-overview')">
                                 🏪 Vendor Overview
                             </button>
+                            <button class="tab-btn" data-tab="fa-order-overview" onclick="showFactoryAdminTab('fa-order-overview')">
+                                📈 Order Overview
+                            </button>
                         </div>
 
                         <!-- ========== SUB-SECTION 1: PENDING ORDERS ========== -->
@@ -1103,6 +1104,53 @@
                                     </form>
                                 </div>
                             </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== SUB-SECTION 7: ORDER OVERVIEW ========== -->
+                        <!-- // FACTORY ADMIN DASHBOARD - Order Overview Section -->
+                        <!-- Shows all approved/in-production orders with door-level progress % and drill-down -->
+                        <div id="fa-order-overview" class="fa-subsection">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 style="margin: 0; color: #333;">📈 Order Overview</h3>
+                                <button class="btn btn-primary" onclick="loadOrderOverview()" style="padding: 8px 16px; font-size: 14px;">🔄 Refresh</button>
+                            </div>
+
+                            <!-- Search bar -->
+                            <div style="margin-bottom: 15px;">
+                                <input type="text" id="orderOverviewSearch" class="input-field" placeholder="🔍 Search by Order ID or Customer Name..." oninput="filterOrderOverview()" style="width: 100%; max-width: 420px; padding: 8px 12px; font-size: 14px; box-sizing: border-box;">
+                            </div>
+
+                            <div id="orderOverviewInfo" class="info-box" style="display:none;"></div>
+
+                            <table class="data-table" id="orderOverviewTable">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Total Doors</th>
+                                        <th>Completed</th>
+                                        <th>Remaining</th>
+                                        <th>Progress</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderOverviewTableBody">
+                                    <tr><td colspan="9" style="text-align:center; padding:30px; color:#888;">📈 Click "Refresh" or switch to this tab to load data.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Order Overview - Door Detail Modal -->
+                        <div id="orderDoorDetailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:2000; align-items:center; justify-content:center;">
+                            <div style="background:#fff; border-radius:8px; width:92%; max-width:700px; max-height:85vh; overflow-y:auto; padding:28px; box-shadow:0 6px 24px rgba(0,0,0,0.25); position:relative;">
+                                <button onclick="closeOrderDoorModal()" style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#888;">✕</button>
+                                <h3 id="doorDetailModalTitle" style="margin-top:0; color:#2c3e50;">Door Details</h3>
+                                <div id="doorDetailModalBody">
+                                    <!-- Door rows rendered by JS -->
+                                </div>
                             </div>
                         </div>
 
@@ -2007,6 +2055,25 @@
                                 </div>
                             </div>
 
+                            <!-- ========== MONTHLY WORKER PERFORMANCE (DRILL-DOWN) ========== -->
+                            <div class="ps-card ps-workers">
+                                <h3 style="margin-top: 0; color: #FFD700;">📊 Monthly Worker Performance</h3>
+
+                                <div style="display: grid; grid-template-columns: 1fr 160px; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
+                                    <div>
+                                        <label for="monthlyPerfMonth" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Select Month</label>
+                                        <input type="month" id="monthlyPerfMonth" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px; box-sizing: border-box;">
+                                    </div>
+                                    <button onclick="loadMonthlyWorkerPerformance()" style="padding: 10px 20px; background: #FFD700; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Load</button>
+                                </div>
+
+                                <div style="overflow-x: auto;">
+                                    <div id="monthlyWorkerPerfContainer">
+                                        <p style="text-align: center; color: #999; padding: 20px;">Select a month and click Load to view worker performance table...</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- ========== WORKER ATTENDANCE SECTION ========== -->
                             <div class="ps-card ps-workers">
                                 <h3 style="margin-top: 0; color: #FFD700;">🗓️ Worker Attendance</h3>
@@ -2358,20 +2425,6 @@
             }, 3000);
         }
 
-        /**
-         * Get permissions from localStorage (or use defaults)
-         */
-        function getPermissions() {
-            const stored = localStorage.getItem('sdfis_permissions');
-            if (stored) {
-                console.log('Loaded permissions from localStorage');
-                return JSON.parse(stored);
-            }
-            console.log('Using default permissions');
-            return JSON.parse(JSON.stringify(DEFAULT_PERMISSIONS));
-        }
-
-
         // ==================== LOGIN FUNCTIONS ====================
 
         /**
@@ -2422,14 +2475,15 @@
                 if (data.success && data.data) {
                     const { user, token } = data.data;
                     
-                    // Create user object from backend response
+                    // Create user object from backend response (includes server-returned permissions)
                     currentUser = {
                         id: user._id,
                         name: user.name,
                         email: user.email,
                         role: user.role,
                         roles: user.roles || [user.role],
-                        franchiseId: user.franchiseId || null  // ADDED: Include franchiseId
+                        franchiseId: user.franchiseId || null,
+                        permissions: user.permissions || DEFAULT_PERMISSIONS[user.role] || {}
                     };
 
                     // Store in localStorage ONLY after backend success
@@ -2437,20 +2491,7 @@
                     localStorage.setItem('sdfis_token', token);
 
                     console.log('User logged in:', currentUser);
-                    console.log('Token stored from backend');
-                    console.log('User Role:', currentUser.role);
-
-                    // FIXED: Ensure permissions are initialized from DEFAULT_PERMISSIONS
-                    console.log('Checking localStorage permissions...');
-                    const storedPerms = localStorage.getItem('sdfis_permissions');
-                    if (!storedPerms) {
-                        console.log('Initializing permissions from DEFAULT_PERMISSIONS');
-                        localStorage.setItem('sdfis_permissions', JSON.stringify(DEFAULT_PERMISSIONS));
-                    } else {
-                        console.log('Found existing permissions in localStorage:', JSON.parse(storedPerms));
-                    }
-                    console.log('👤 Current user role:', currentUser.role);
-                    console.log('🔑 Expected permissions for', currentUser.role + ':', DEFAULT_PERMISSIONS[currentUser.role]);
+                    console.log('Permissions from server:', currentUser.permissions);
 
                     // Show dashboard (which will call applyPermissions)
                     showDashboard();
@@ -2658,14 +2699,16 @@
                     if (response.ok) {
                         const data = await response.json();
                         if (data.success && data.data.user) {
-                            // UPDATED: Use fresh user data from backend
+                            const freshUser = data.data.user;
+                            // UPDATED: Use fresh user data from backend (includes up-to-date permissions)
                             currentUser = {
-                                id: data.data.user._id,
-                                name: data.data.user.name,
-                                email: data.data.user.email,
-                                role: data.data.user.role,
-                                roles: data.data.user.roles || [data.data.user.role],
-                                franchiseId: data.data.user.franchiseId || null
+                                id: freshUser._id,
+                                name: freshUser.name,
+                                email: freshUser.email,
+                                role: freshUser.role,
+                                roles: freshUser.roles || [freshUser.role],
+                                franchiseId: freshUser.franchiseId || null,
+                                permissions: freshUser.permissions || DEFAULT_PERMISSIONS[freshUser.role] || {}
                             };
                             // Update stored user with fresh data
                             localStorage.setItem('sdfis_user', JSON.stringify(currentUser));
@@ -2713,8 +2756,8 @@
             // Apply role-based permissions
             applyPermissions();
 
-            // Load permissions into table (for SuperAdmin)
-            loadPermissionsToTable();
+            // Load permissions into table (SuperAdmin only)
+            if (currentUser.role === 'SuperAdmin') loadPermissionsToTable();
 
             // Show default module (dashboard)
             showModule('dashboard');
@@ -2770,7 +2813,16 @@
 
             // ADDED: Auto-load inventory when switching to Inventory module
             if (moduleName === 'inventory') {
-                loadAllInventory();
+                const perms = getUserPermissions();
+                if (perms.inventory) loadAllInventory();
+            }
+
+            // Load production pipeline on dashboard only for users with production permission
+            if (moduleName === 'dashboard') {
+                const perms = getUserPermissions();
+                if (currentUser && perms.production) {
+                    loadDashboardPipelines();
+                }
             }
         }
 
@@ -2884,10 +2936,7 @@
 
 
 
-        //========== INITIAL LOAD ==========
-        document.addEventListener("DOMContentLoaded", function(){
-            loadDashboardPipelines();
-        });
+        //========== INITIAL LOAD (pipeline loaded after login via showModule) ==========
 
 
 
@@ -2905,298 +2954,180 @@
         // ==================== PERMISSION FUNCTIONS ====================
 
         /**
-         * Apply permissions based on current user's role
+         * Get the current user's module permissions.
+         * Source: permissions returned by login / session restore, stored in
+         * currentUser.permissions and persisted to localStorage.
+         * Falls back to DEFAULT_PERMISSIONS if nothing is stored.
+         */
+        function getUserPermissions() {
+            if (currentUser && currentUser.permissions) {
+                return currentUser.permissions;
+            }
+            const stored = localStorage.getItem('sdfis_user');
+            if (stored) {
+                const u = JSON.parse(stored);
+                if (u && u.permissions) return u.permissions;
+            }
+            // Final fallback: use hard-coded defaults for the current role
+            const role = currentUser && currentUser.role;
+            return DEFAULT_PERMISSIONS[role] || {};
+        }
+
+        /**
+         * Apply role-based sidebar permissions using server-returned permission object.
+         * Deny by default: hide all non-dashboard buttons, then reveal what is allowed.
          */
         function applyPermissions() {
-            console.log('--- 🔒 APPLYING PERMISSIONS for:', currentUser.role, '---');
-            
-            // STEP 0: DENY BY DEFAULT - Hide ALL buttons first (except dashboard)
-            console.log('🚫 STEP 0: Hiding ALL buttons by default...');
-            document.querySelectorAll('.module-nav .nav-btn').forEach(function(btn) {
-                const module = btn.getAttribute('data-module');
-                if (module !== 'dashboard') {
+            const role = currentUser.role;
+            const perms = getUserPermissions();
+            console.log('--- \uD83D\uDD12 applyPermissions | role:', role, '| perms:', perms, '---');
+
+            // --- Step 1: Hide ALL buttons and sections (deny by default) ---
+            document.querySelectorAll('.module-nav .nav-btn[data-module]').forEach(function(btn) {
+                if (btn.getAttribute('data-module') !== 'dashboard') {
                     btn.classList.add('hidden');
-                    console.log('  🔒 Hidden:', module);
                 }
             });
-            
-            // Also hide all module sections by default
-            document.querySelectorAll('.module-section').forEach(function(section) {
-                const sectionId = section.id;
-                if (sectionId !== 'module-dashboard') {
-                    section.classList.add('hidden');
-                    console.log('  🔒 Section hidden:', sectionId);
-                }
+            document.querySelectorAll('.module-section').forEach(function(s) {
+                if (s.id !== 'module-dashboard') s.classList.add('hidden');
             });
-            
-            // DEBUG: Check all nav buttons before applying permissions
-            console.log('🔍 All nav buttons found:');
-            document.querySelectorAll('.module-nav .nav-btn').forEach(function(btn) {
-                const module = btn.getAttribute('data-module');
-                const isHidden = btn.classList.contains('hidden');
-                console.log('  📌 Button:', module, '| Hidden:', isHidden);
-            });
-            
-            // Step 1: Get permissions from storage
-            const permissions = getPermissions();
-            console.log('📂 Loaded Permissions Object:', permissions);
-            
-            const userPermissions = permissions[currentUser.role] || {};
-            console.log('👤 User Permissions for', currentUser.role + ':', userPermissions);
+            // Also hide the Access Management dropdown wrapper itself
+            var accessDropdown = document.querySelector('.nav-dropdown');
+            if (accessDropdown) accessDropdown.classList.add('hidden');
 
-            // Step 2: SuperAdmin sees EVERYTHING
-            if (currentUser.role === 'SuperAdmin') {
-                console.log('SuperAdmin detected - Granting FULL access to all modules');
-                
-                // Show all nav buttons
-                document.querySelectorAll('.module-nav .nav-btn').forEach(function(btn) {
+            // Helper: reveal a nav button + its module section
+            function show(moduleKey) {
+                var btn = document.querySelector('.nav-btn[data-module="' + moduleKey + '"]');
+                var section = document.getElementById('module-' + moduleKey);
+                if (btn) btn.classList.remove('hidden');
+                if (section) section.classList.remove('hidden');
+            }
+
+            // --- Step 2: SuperAdmin sees everything ---
+            if (role === 'SuperAdmin') {
+                document.querySelectorAll('.module-nav .nav-btn[data-module]').forEach(function(btn) {
                     btn.classList.remove('hidden');
-                    console.log('  ✅ Showing:', btn.getAttribute('data-module'));
                 });
-                
-                // Show all module sections
-                document.querySelectorAll('.module-section').forEach(function(section) {
-                    section.classList.remove('hidden');
+                document.querySelectorAll('.module-section').forEach(function(s) {
+                    s.classList.remove('hidden');
                 });
-                
+                if (accessDropdown) accessDropdown.classList.remove('hidden');
+                loadPermissionsToTable();
                 return;
             }
 
-            // Step 3: Hide admin-only modules for non-SuperAdmin
-            const accessControlBtn = document.querySelector('.nav-btn[data-module="accesscontrol"]');
-            if (accessControlBtn) {
-                accessControlBtn.classList.add('hidden');
-                console.log('  🔒 Hiding: accesscontrol (SuperAdmin only)');
-            }
-            
-            // Step 4: User Management - only SuperAdmin/FactoryAdmin
-            const userMgmtBtn = document.querySelector('.nav-btn[data-module="usermanagement"]');
-            if (userMgmtBtn) {
-                if (currentUser.role === 'FactoryAdmin') {
-                    userMgmtBtn.classList.remove('hidden');
-                    console.log('  ✅ Showing: usermanagement (FactoryAdmin role)');
-                } else {
-                    userMgmtBtn.classList.add('hidden');
-                    console.log('  🔒 Hiding: usermanagement (non-admin role)');
-                }
-            }
-            
-            // Step 5: Factory Admin Dashboard - only FactoryAdmin
-            const factoryAdminBtn = document.querySelector('.nav-btn[data-module="factoryadmin"]');
-            const factoryAdminModule = document.getElementById('module-factoryadmin');
-            
-            if (currentUser.role === 'FactoryAdmin') {
-                if (factoryAdminBtn) factoryAdminBtn.classList.remove('hidden');
-                if (factoryAdminModule) factoryAdminModule.classList.remove('hidden');
-                console.log('  ✅ Showing: factoryadmin dashboard (FactoryAdmin role)');
-                
-                // Hide Accounts for Factory Admin
-                const accountsBtn = document.querySelector('.nav-btn[data-module="accounts"]');
-                const accountsModule = document.getElementById('module-accounts');
-                if (accountsBtn) accountsBtn.classList.add('hidden');
-                if (accountsModule) accountsModule.classList.add('hidden');
-                console.log('  🔒 Hiding: accounts (not allowed for FactoryAdmin)');
-            } else {
-                if (factoryAdminBtn) factoryAdminBtn.classList.add('hidden');
-                if (factoryAdminModule) factoryAdminModule.classList.add('hidden');
-                console.log('  🔒 Hiding: factoryadmin dashboard (non-FactoryAdmin role)');
+            // --- Step 3: FactoryAdmin role-specific view ---
+            if (role === 'FactoryAdmin') {
+                show('factoryadmin');
+                show('usermanagement');
             }
 
-            // ADDED: Step 5.5: Sales Executive Dashboard - only SalesExecutive
-            const salesExecBtn = document.querySelector('.nav-btn[data-module="salesexec"]');
-            const salesExecModule = document.getElementById('module-salesexec');
-            
-            if (currentUser.role === 'SalesExecutive') {
-                if (salesExecBtn) salesExecBtn.classList.remove('hidden');
-                if (salesExecModule) salesExecModule.classList.remove('hidden');
-                console.log('  ✅ Showing: Sales Executive dashboard (SalesExecutive role)');
-                
-                // ADDED: Show Sales Order Creation section for Sales Executive
-                toggleSalesOrderSection(true);
-                
-                // Hide modules not for Sales Executive
-                ['production', 'inventory', 'accounts', 'reports', 'accesscontrol', 'usermanagement'].forEach(function(module) {
-                    const btn = document.querySelector('.nav-btn[data-module="' + module + '"]');
-                    const section = document.getElementById('module-' + module);
-                    if (btn) btn.classList.add('hidden');
-                    if (section) section.classList.add('hidden');
-                    console.log('  🔒 Hiding:', module);
-                });
-            } else {
-                if (salesExecBtn) salesExecBtn.classList.add('hidden');
-                if (salesExecModule) salesExecModule.classList.add('hidden');
-                // ADDED: Hide Sales Order Creation section for other roles
-                toggleSalesOrderSection(false);
-                console.log('  🔒 Hiding: Sales Executive dashboard (non-SalesExecutive role)');
-            }
+            // --- Step 4: Module-permission driven buttons ---
+            if (perms.orders)     { show('salesexec'); }
+            if (perms.production) { show('productionsupervisor'); show('worker-history'); }
+            if (perms.inventory)  { show('inventory'); }
+            if (perms.accounts)   { show('accounts'); }
+            if (perms.reports)    { show('reports'); }
 
-            // ADDED: Step 5.6: Production Supervisor Dashboard - only ProductionSupervisor
-            const prodSuperBtn = document.querySelector('.nav-btn[data-module="productionsupervisor"]');
-            const prodSuperModule = document.getElementById('module-productionsupervisor');
-            const workerHistoryBtn = document.querySelector('.nav-btn[data-module="workerhistory"]');
-            const workerHistoryModule = document.getElementById('module-worker-history');
-            
-            console.log('🔍 DEBUG - Production Supervisor Module Check:');
-            console.log('  Current role:', currentUser.role);
-            console.log('  User permissions.production:', userPermissions.production);
-            console.log('  prodSuperBtn found:', !!prodSuperBtn);
-            console.log('  prodSuperModule found:', !!prodSuperModule);
-            console.log('  workerHistoryBtn found:', !!workerHistoryBtn);
-            console.log('  workerHistoryModule found:', !!workerHistoryModule);
-            
-            if (currentUser.role === 'ProductionSupervisor' && userPermissions.production === true) {
-                console.log('  ✅ ProductionSupervisor with production permission - SHOWING modules');
-                if (prodSuperBtn) prodSuperBtn.classList.remove('hidden');
-                if (prodSuperModule) prodSuperModule.classList.remove('hidden');
-                if (workerHistoryBtn) workerHistoryBtn.classList.remove('hidden');
-                if (workerHistoryModule) workerHistoryModule.classList.remove('hidden');
-                console.log('  ✅ Showing: Production Supervisor dashboard');
-                console.log('  ✅ Showing: Worker History module');
-                
-                // Initialize Worker History date picker
-                console.log('  🔧 Initializing Worker History date picker...');
+            // --- Step 5: Per-role initialisation callbacks ---
+            if (typeof toggleSalesOrderSection === 'function') {
+                toggleSalesOrderSection(role === 'SalesExecutive' && !!perms.orders);
+            }
+            if (perms.production && typeof initWorkerHistoryDate === 'function') {
                 initWorkerHistoryDate();
-                
-                // Hide modules not for Production Supervisor
-                ['orders', 'inventory', 'accounts', 'reports', 'accesscontrol', 'usermanagement', 'factoryadmin', 'salesexec'].forEach(function(module) {
-                    const btn = document.querySelector('.nav-btn[data-module="' + module + '"]');
-                    const section = document.getElementById('module-' + module);
-                    if (btn) btn.classList.add('hidden');
-                    if (section) section.classList.add('hidden');
+            }
+
+            console.log('\u2705 applyPermissions complete.');
+        }
+
+        /**
+         * Load permissions into the Access Control table from the backend.
+         * Only called when the Access Control module is visible (SuperAdmin).
+         */
+        async function loadPermissionsToTable() {
+            console.log('Loading permissions from backend...');
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) return;
+
+            try {
+                const res = await fetch(API_BASE_URL + '/admin/permissions', {
+                    headers: { 'Authorization': 'Bearer ' + token }
                 });
-            } else {
-                console.log('  ❌ NOT ProductionSupervisor or production permission denied - HIDING modules');
-                if (prodSuperBtn) prodSuperBtn.classList.add('hidden');
-                if (prodSuperModule) prodSuperModule.classList.add('hidden');
-                if (workerHistoryBtn) workerHistoryBtn.classList.add('hidden');
-                if (workerHistoryModule) workerHistoryModule.classList.add('hidden');
-                console.log('  🔒 Hiding: Production Supervisor dashboard');
-                console.log('  🔒 Hiding: Worker History module');
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message);
+
+                const matrix = data.data;
+                document.querySelectorAll('#permissionTable input[type="checkbox"]').forEach(function(cb) {
+                    var role   = cb.getAttribute('data-role');
+                    var module = cb.getAttribute('data-module');
+                    if (role && module && matrix[role]) {
+                        cb.checked = matrix[role][module] === true;
+                    }
+                });
+                console.log('\u2705 Permission table loaded from backend.');
+            } catch (err) {
+                console.error('Failed to load permissions from backend:', err.message);
             }
-
-            // Step 6: CRITICAL - Apply BASE PERMISSIONS from permission matrix
-            console.log('🔄 Applying module-specific permissions from matrix:');
-            MODULES.forEach(function(module) {
-                const hasAccess = userPermissions[module] === true;
-                console.log('  📦 Module [' + module + ']: Permission=' + userPermissions[module] + ' → ' + (hasAccess ? '✅ SHOW' : '❌ HIDE'));
-
-                // Hide or show nav button
-                const navBtn = document.querySelector('.nav-btn[data-module="' + module + '"]');
-                if (navBtn) {
-                    if (hasAccess) {
-                        navBtn.classList.remove('hidden');  // GRANT access
-                        console.log('    ✅ Button shown:', module);
-                    } else {
-                        navBtn.classList.add('hidden');     // DENY access
-                        console.log('    ❌ Button hidden:', module);
-                    }
-                } else {
-                    console.log('    ⚠️ Button not found for module:', module);
-                }
-
-                // Hide or show module section
-                const moduleSection = document.getElementById('module-' + module);
-                if (moduleSection) {
-                    if (hasAccess) {
-                        moduleSection.classList.remove('hidden');
-                        console.log('    ✅ Section shown:', 'module-' + module);
-                    } else {
-                        moduleSection.classList.add('hidden');
-                        console.log('    ❌ Section hidden:', 'module-' + module);
-                    }
-                } else {
-                    console.log('    ⚠️ Section not found for module:', 'module-' + module);
-                }
-            });
-
-            console.log('✅ Permissions applied successfully');
-            
-            // DEBUG: Check final state of all nav buttons
-            console.log('🔍 FINAL STATE - All nav buttons:');
-            document.querySelectorAll('.module-nav .nav-btn').forEach(function(btn) {
-                const module = btn.getAttribute('data-module');
-                const isHidden = btn.classList.contains('hidden');
-                console.log('  📌 Button:', module, '| Hidden:', isHidden, '| Classes:', btn.className);
-            });
         }
 
         /**
-         * Load permissions into the Access Control table
+         * Save permissions from the Access Control table to the backend (SuperAdmin only).
          */
-        function loadPermissionsToTable() {
-            console.log('Loading permissions to table...');
-            
-            const permissions = getPermissions();
+        async function savePermissions() {
+            console.log('--- \uD83D\uDCBE Saving Permissions to backend ---');
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) { showToast('Please login', 'error'); return; }
 
-            // Update each checkbox based on stored permissions
-            document.querySelectorAll('#permissionTable input[type="checkbox"]').forEach(function(checkbox) {
-                const role = checkbox.getAttribute('data-role');
-                const module = checkbox.getAttribute('data-module');
-
-                if (role && module && permissions[role]) {
-                    checkbox.checked = permissions[role][module] === true;
-                }
-            });
-
-            console.log('✅ Permission table updated');
-        }
-
-        /**
-         * Save permissions from table to localStorage
-         */
-        function savePermissions() {
-            console.log('--- 💾 Saving Permissions ---');
-            
-            const permissions = {};
-
-            // Collect values from all checkboxes
-            document.querySelectorAll('#permissionTable input[type="checkbox"]').forEach(function(checkbox) {
-                const role = checkbox.getAttribute('data-role');
-                const module = checkbox.getAttribute('data-module');
-
+            const matrix = {};
+            document.querySelectorAll('#permissionTable input[type="checkbox"]').forEach(function(cb) {
+                var role   = cb.getAttribute('data-role');
+                var module = cb.getAttribute('data-module');
                 if (role && module) {
-                    if (!permissions[role]) {
-                        permissions[role] = {};
-                    }
-                    permissions[role][module] = checkbox.checked;
+                    if (!matrix[role]) matrix[role] = {};
+                    matrix[role][module] = cb.checked;
                 }
             });
 
-            // Save to localStorage
-            localStorage.setItem('sdfis_permissions', JSON.stringify(permissions));
-            
-            console.log('✅ Permissions saved:', permissions);
-            
-            // Re-apply permissions immediately
-            if (currentUser) {
-                applyPermissions();
+            try {
+                const res = await fetch(API_BASE_URL + '/admin/permissions', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(matrix)
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message);
+                showToast('\u2705 Permissions saved successfully!', 'success');
+            } catch (err) {
+                console.error('Failed to save permissions:', err.message);
+                showToast('\u274C Failed to save: ' + err.message, 'error');
             }
-
-            showToast('✅ Permissions saved successfully!', 'success');
         }
 
         /**
-         * Reset permissions to default values
+         * Reset all permissions to system defaults via the backend (SuperAdmin only).
          */
-        function resetPermissions() {
-            if (!confirm('Reset all permissions to default?')) {
-                return;
-            }
-            
-            console.log('--- 🔄 Resetting Permissions ---');
-            
-            // Remove from localStorage
-            localStorage.removeItem('sdfis_permissions');
-            
-            // Reload table with defaults
-            loadPermissionsToTable();
-            
-            // Re-apply permissions
-            if (currentUser) {
-                applyPermissions();
-            }
+        async function resetPermissions() {
+            if (!confirm('Reset all permissions to system defaults?')) return;
 
-            showToast('🔄 Permissions reset to default!', 'success');
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) { showToast('Please login', 'error'); return; }
+
+            try {
+                const res = await fetch(API_BASE_URL + '/admin/permissions/reset', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message);
+                await loadPermissionsToTable();
+                showToast('\uD83D\uDD04 Permissions reset to defaults!', 'success');
+            } catch (err) {
+                console.error('Failed to reset permissions:', err.message);
+                showToast('\u274C Failed to reset: ' + err.message, 'error');
+            }
         }
 
 
@@ -3407,9 +3338,6 @@
             console.log('============================================');
             console.log('🚀 DOM Loaded - Initializing SDFIS');
             console.log('============================================');
-
-            // Load permissions to table (with defaults)
-            loadPermissionsToTable();
 
             // UPDATED: Check for existing login session (now async)
             const hasValidSession = await checkExistingSession();
@@ -3628,6 +3556,170 @@
                 alert('Error: ' + error.message);
             }
         }
+
+        // ========== ORDER OVERVIEW ==========
+        /** Raw data cache for client-side search filtering */
+        let _orderOverviewData = [];
+
+        /**
+         * // FACTORY ADMIN - Load Order Overview
+         * Fetches GET /api/admin/order-overview and renders the summary table
+         */
+        async function loadOrderOverview() {
+            const tbody = document.getElementById('orderOverviewTableBody');
+            const infoBox = document.getElementById('orderOverviewInfo');
+            if (!tbody) return;
+
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">⏳ Loading order overview...</td></tr>';
+            if (infoBox) infoBox.style.display = 'none';
+
+            try {
+                const token = localStorage.getItem('sdfis_token');
+                const response = await fetch(`${API_BASE_URL}/admin/order-overview`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to fetch order overview');
+
+                _orderOverviewData = data.data || [];
+                renderOrderOverviewTable(_orderOverviewData);
+            } catch (error) {
+                console.error('loadOrderOverview error:', error);
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#e74c3c;">❌ ' + error.message + '</td></tr>';
+            }
+        }
+
+        /**
+         * Renders the order overview table with provided rows
+         */
+        function renderOrderOverviewTable(rows) {
+            const tbody = document.getElementById('orderOverviewTableBody');
+            if (!tbody) return;
+
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">No orders found.</td></tr>';
+                return;
+            }
+
+            const priorityBadge = { High: '#e74c3c', Normal: '#f39c12', Low: '#27ae60' };
+            const statusBadge   = { APPROVED: '#3498db', IN_PRODUCTION: '#e67e22', COMPLETED: '#27ae60' };
+
+            tbody.innerHTML = rows.map(order => {
+                const pct = order.progressPct || 0;
+                const barColor = pct === 100 ? '#27ae60' : pct >= 50 ? '#f39c12' : '#e74c3c';
+                const priColor = priorityBadge[order.priority] || '#7f8c8d';
+                const stColor  = statusBadge[order.status] || '#7f8c8d';
+                return `<tr>
+                    <td><strong>${order.orderId}</strong></td>
+                    <td>${order.customerName}</td>
+                    <td><span style="background:${priColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${order.priority}</span></td>
+                    <td><span style="background:${stColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${order.status}</span></td>
+                    <td style="text-align:center;">${order.totalDoors}</td>
+                    <td style="text-align:center;">${order.completedDoors}</td>
+                    <td style="text-align:center;">${order.remainingDoors}</td>
+                    <td style="min-width:130px;">
+                        <div style="background:#ecf0f1;border-radius:8px;height:14px;overflow:hidden;margin-bottom:2px;">
+                            <div style="background:${barColor};width:${pct}%;height:100%;border-radius:8px;transition:width .3s;"></div>
+                        </div>
+                        <span style="font-size:12px;color:#555;">${pct}%</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewOrderDoors('${order.orderId}')" style="padding:4px 10px;font-size:12px;">🔍 View Doors</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        /**
+         * Client-side search/filter on the order overview table
+         */
+        function filterOrderOverview() {
+            const query = (document.getElementById('orderOverviewSearch')?.value || '').toLowerCase().trim();
+            if (!_orderOverviewData.length) return;
+            if (!query) {
+                renderOrderOverviewTable(_orderOverviewData);
+                return;
+            }
+            const filtered = _orderOverviewData.filter(o =>
+                o.orderId.toLowerCase().includes(query) ||
+                o.customerName.toLowerCase().includes(query)
+            );
+            renderOrderOverviewTable(filtered);
+        }
+
+        /**
+         * // FACTORY ADMIN - View door-level detail for an order
+         * Fetches GET /api/admin/order-overview/:orderId/doors
+         */
+        async function viewOrderDoors(orderId) {
+            const modal = document.getElementById('orderDoorDetailModal');
+            const title = document.getElementById('doorDetailModalTitle');
+            const body  = document.getElementById('doorDetailModalBody');
+            if (!modal || !body) return;
+
+            title.textContent = `Door Details — ${orderId}`;
+            body.innerHTML = '<p style="text-align:center;color:#888;">⏳ Loading doors...</p>';
+            modal.style.display = 'flex';
+
+            try {
+                const token = localStorage.getItem('sdfis_token');
+                const response = await fetch(`${API_BASE_URL}/admin/order-overview/${encodeURIComponent(orderId)}/doors`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to fetch doors');
+
+                const doors = data.data || [];
+                if (doors.length === 0) {
+                    body.innerHTML = '<p style="text-align:center;color:#888;">No door units found for this order.</p>';
+                    return;
+                }
+
+                const stageColors = {
+                    CUTTING: '#3498db', BTC: '#9b59b6', LAMINATE: '#e67e22',
+                    PRESS: '#e74c3c', FINISH: '#f39c12', PACKING: '#27ae60'
+                };
+
+                body.innerHTML = `<table class="data-table" style="margin-top:10px;">
+                    <thead><tr>
+                        <th>Door #</th>
+                        <th>Current Stage</th>
+                        <th>Last Completed Stage</th>
+                        <th>Last Worker</th>
+                        <th>Status</th>
+                    </tr></thead>
+                    <tbody>
+                        ${doors.map(d => {
+                            const stColor = stageColors[d.currentStage] || '#7f8c8d';
+                            const statusLabel = d.isRejected
+                                ? '<span style="background:#e74c3c;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Rejected</span>'
+                                : ['PACKING','DELIVERY','COMPLETED'].includes(d.currentStage)
+                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">✅ Done</span>'
+                                    : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
+                            return `<tr>
+                                <td style="text-align:center;"><strong>Door ${d.doorNumber}</strong></td>
+                                <td><span style="background:${stColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${d.currentStage}</span></td>
+                                <td>${d.lastStageCompleted}</td>
+                                <td>${d.lastWorker}</td>
+                                <td>${statusLabel}</td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>`;
+            } catch (error) {
+                body.innerHTML = '<p style="text-align:center;color:#e74c3c;">❌ ' + error.message + '</p>';
+            }
+        }
+
+        /**
+         * Close the order door detail modal
+         */
+        function closeOrderDoorModal() {
+            const modal = document.getElementById('orderDoorDetailModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // ========== END ORDER OVERVIEW ==========
         
         /**
          * // FACTORY ADMIN DASHBOARD - Switch between sub-tabs
@@ -3676,6 +3768,11 @@
             // ADDED: Fetch priority orders when the priority orders tab is clicked
             if (tabId === 'fa-priority-orders') {
                 loadPriorityOrders();
+            }
+
+            // Load order overview when that tab is clicked
+            if (tabId === 'fa-order-overview') {
+                loadOrderOverview();
             }
         }
 
@@ -4813,6 +4910,12 @@
          * Initialize Production Supervisor Dashboard
          */
         function initProductionSupervisorDashboard() {
+            // Guard: check DB-permission (production), not just hard-coded role name
+            const perms = getUserPermissions();
+            if (!currentUser || !perms.production) {
+                console.warn('⛔ initProductionSupervisorDashboard blocked — no production permission for role:', currentUser && currentUser.role);
+                return;
+            }
             console.log('🔄 Initializing Production Supervisor Dashboard...');
             loadAllDoors();  // Load all doors from all orders
             loadWorkers();  // Load workers for dropdown and management
@@ -4825,6 +4928,10 @@
             // Initialize Worker Performance Report date picker
             console.log('🔧 Initializing Worker Performance Report date picker...');
             initWorkerPerformanceReportDate();
+
+            // Initialize Monthly Worker Performance month picker
+            console.log('🔧 Initializing Monthly Worker Performance month picker...');
+            initMonthlyWorkerPerfMonth();
 
             // Initialize Flatpickr attendance date pickers
             const today = new Date();
@@ -4849,6 +4956,10 @@
          * Load all production doors across ALL orders and populate stage sections
          */
         async function loadAllDoors() {
+            // Guard: check DB-permission (production)
+            const perms = getUserPermissions();
+            if (!currentUser || !perms.production) return;
+
             const token = localStorage.getItem('sdfis_token');
             if (!token) { showToast('Please login', 'error'); return; }
             psCurrentOrder = null;
@@ -4859,7 +4970,10 @@
                 const response = await fetch(`${API_BASE_URL}/production/all-doors`, {
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                 });
-                if (!response.ok) throw new Error('Failed to fetch doors');
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(`${response.status}: ${errData.message || 'Failed to fetch doors'}`);
+                }
                 const data = await response.json();
                 if (!data.success) throw new Error(data.error || 'Failed to fetch doors');
 
@@ -6352,6 +6466,224 @@
             }
         }
 
+        // ==================== MONTHLY WORKER PERFORMANCE DRILL-DOWN ====================
+
+        /**
+         * Initialize month picker to current month
+         */
+        function initMonthlyWorkerPerfMonth() {
+            try {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const monthInput = document.getElementById('monthlyPerfMonth');
+                if (monthInput) {
+                    monthInput.value = `${yyyy}-${mm}`;
+                }
+            } catch (e) {
+                console.error('Error initializing monthly perf month picker:', e);
+            }
+        }
+
+        /**
+         * Load Monthly Worker Performance Table
+         * Reuses existing /worker-performance?type=monthly endpoint
+         */
+        async function loadMonthlyWorkerPerformance() {
+            const monthInput = document.getElementById('monthlyPerfMonth');
+            const container = document.getElementById('monthlyWorkerPerfContainer');
+
+            if (!monthInput || !monthInput.value) {
+                showToast('Please select a month', 'error');
+                return;
+            }
+
+            const month = monthInput.value; // YYYY-MM
+            container.innerHTML = '<p style="text-align:center; color:#2196f3; padding:20px;">⏳ Loading performance data...</p>';
+
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) {
+                showToast('Please login first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/production/worker-performance?type=monthly&date=${month}`,
+                    { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
+                );
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Failed to load data');
+                }
+
+                renderMonthlyWorkerPerformanceTable(data.summary || [], month);
+
+            } catch (err) {
+                console.error('❌ Monthly performance error:', err);
+                container.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;">❌ ${err.message}</p>`;
+            }
+        }
+
+        /**
+         * Render Monthly Worker Performance Table with clickable worker names
+         */
+        function renderMonthlyWorkerPerformanceTable(summary, month) {
+            const container = document.getElementById('monthlyWorkerPerfContainer');
+
+            if (!summary || summary.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#ff9800; padding:20px;">No worker data found for selected month.</p>';
+                return;
+            }
+
+            const stages = ['CUTTING', 'BTC', 'LAMINATE', 'PRESS', 'FINISH', 'PACKING'];
+
+            let html = `
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr style="background:#0b0b0b;">
+                            <th style="padding:11px 14px; text-align:left; color:#FFD700; border-bottom:2px solid #444;">Worker Name</th>
+                            ${stages.map(s => `<th style="padding:11px 14px; text-align:center; color:#aaa; border-bottom:2px solid #444;">${s}</th>`).join('')}
+                            <th style="padding:11px 14px; text-align:center; color:#4caf50; border-bottom:2px solid #444;">Total Doors</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            summary.forEach((w, i) => {
+                const rowBg = i % 2 === 0 ? '#1e1e2e' : '#252535';
+                const workerId = w.workerId || '';
+                const workerName = w.workerName || w.worker?.name || 'Unknown';
+                const safeWorkerName = workerName.replace(/'/g, "\\'");
+
+                html += `<tr style="background:${rowBg};">
+                    <td style="padding:10px 14px;">
+                        <button
+                            onclick="openWorkerDrillDown('${workerId}', '${safeWorkerName}', '${month}')"
+                            style="background:none; border:none; color:#2196f3; cursor:pointer; font-size:13px; font-weight:bold; text-decoration:underline; padding:0;">
+                            ${workerName}
+                        </button>
+                    </td>
+                    ${stages.map(s => `<td style="padding:10px 14px; text-align:center; color:#ccc;">${w.stages?.[s] != null ? w.stages[s] : '—'}</td>`).join('')}
+                    <td style="padding:10px 14px; text-align:center; color:#4caf50; font-weight:bold;">${w.totalDoorsForWorker || 0}</td>
+                </tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        /**
+         * Open worker drill-down modal
+         */
+        async function openWorkerDrillDown(workerId, workerName, month) {
+            const overlay = document.getElementById('workerDrillDownOverlay');
+            const title = document.getElementById('drillDownTitle');
+            const subtitle = document.getElementById('drillDownSubtitle');
+            const content = document.getElementById('drillDownContent');
+
+            if (!workerId) {
+                showToast('Worker ID not available for drill-down', 'error');
+                return;
+            }
+
+            title.textContent = workerName;
+            subtitle.textContent = `Month: ${month}`;
+            content.innerHTML = '<p style="text-align:center; color:#2196f3; padding:30px;">⏳ Loading door details...</p>';
+            overlay.style.display = 'flex';
+
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) { showToast('Please login first', 'error'); return; }
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/production/worker-performance/drill-down?workerId=${encodeURIComponent(workerId)}&month=${encodeURIComponent(month)}`,
+                    { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
+                );
+                const data = await response.json();
+
+                if (!response.ok || !data.success) throw new Error(data.message || 'Failed to load drill-down data');
+
+                renderDrillDownContent(data.data, workerName, month, content);
+
+            } catch (err) {
+                console.error('❌ Drill-down error:', err);
+                content.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;">❌ ${err.message}</p>`;
+            }
+        }
+
+        /**
+         * Render drill-down table inside modal
+         */
+        function renderDrillDownContent(doors, workerName, month, container) {
+            if (!doors || doors.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#ff9800; padding:20px;">No doors found for this worker in the selected month.</p>';
+                return;
+            }
+
+            const stageColors = {
+                CUTTING: '#ff9800', BTC: '#2196f3', LAMINATE: '#9c27b0',
+                PRESS: '#00bcd4', FINISH: '#4caf50', PACKING: '#FFD700',
+                DELIVERY: '#f44336', COMPLETED: '#8bc34a'
+            };
+
+            let html = `
+                <p style="margin:0 0 14px 0; color:#aaa; font-size:13px;">
+                    <strong style="color:#fff;">${doors.length}</strong> door operation(s) recorded for
+                    <strong style="color:#fff;">${workerName}</strong> in <strong style="color:#fff;">${month}</strong>
+                </p>
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr style="background:#0b0b0b;">
+                            <th style="padding:10px 14px; text-align:left; color:#aaa; border-bottom:2px solid #444;">#</th>
+                            <th style="padding:10px 14px; text-align:left; color:#aaa; border-bottom:2px solid #444;">Order ID</th>
+                            <th style="padding:10px 14px; text-align:center; color:#aaa; border-bottom:2px solid #444;">Door No.</th>
+                            <th style="padding:10px 14px; text-align:center; color:#aaa; border-bottom:2px solid #444;">Stage</th>
+                            <th style="padding:10px 14px; text-align:left; color:#aaa; border-bottom:2px solid #444;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            doors.forEach((door, i) => {
+                const rowBg = i % 2 === 0 ? '#1e1e2e' : '#252535';
+                const dateStr = door.date
+                    ? new Date(door.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '—';
+                const color = stageColors[door.stage] || '#aaa';
+
+                html += `<tr style="background:${rowBg};">
+                    <td style="padding:9px 14px; color:#888; font-size:12px;">${i + 1}</td>
+                    <td style="padding:9px 14px; color:#fff; font-family:monospace; font-size:12px;">${door.orderId}</td>
+                    <td style="padding:9px 14px; text-align:center; color:#ccc;">Door ${door.doorNumber}</td>
+                    <td style="padding:9px 14px; text-align:center;">
+                        <span style="background:${color}22; color:${color}; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:bold; border:1px solid ${color}55;">${door.stage}</span>
+                    </td>
+                    <td style="padding:9px 14px; color:#aaa; font-size:12px;">${dateStr}</td>
+                </tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        /**
+         * Close the worker drill-down modal
+         */
+        function closeWorkerDrillDown() {
+            document.getElementById('workerDrillDownOverlay').style.display = 'none';
+        }
+
+        /**
+         * Close modal when clicking outside the panel
+         */
+        function handleDrillDownOverlayClick(event) {
+            if (event.target === document.getElementById('workerDrillDownOverlay')) {
+                closeWorkerDrillDown();
+            }
+        }
+
         // ==================== WORKER HISTORY MODULE - JAVASCRIPT FUNCTIONS ====================
         
         /**
@@ -7719,6 +8051,9 @@
         }
 
         async function loadAllInventory() {
+            // Guard: check DB-permission (inventory)
+            const perms = getUserPermissions();
+            if (!currentUser || !perms.inventory) return;
             try {
                 const token = localStorage.getItem('sdfis_token');
                 if (!token) return;
@@ -7859,6 +8194,11 @@
         window.changePriority = changePriority;
         window.filterPriorityOrders = filterPriorityOrders;
         window.applyFactoryAdminPermissions = applyFactoryAdminPermissions;
+        // Order Overview exports
+        window.loadOrderOverview = loadOrderOverview;
+        window.filterOrderOverview = filterOrderOverview;
+        window.viewOrderDoors = viewOrderDoors;
+        window.closeOrderDoorModal = closeOrderDoorModal;
         // SALES EXECUTIVE DASHBOARD - Export functions
         window.saveSalesExecCustomer = saveSalesExecCustomer;
         window.saveSalesExecOrder = saveSalesExecOrder;
@@ -7905,12 +8245,35 @@
         window.loadWorkerHistory = loadWorkerHistory;
         window.initWorkerHistoryDate = initWorkerHistoryDate;
         // INVENTORY MANAGER - Export functions
-        window.saveInventoryStock = saveInventoryStock;
         window.loadAllInventory = loadAllInventory;
         // PRODUCTION SUPERVISOR INVENTORY USAGE
         window.submitInventoryUsage = submitInventoryUsage;
         window.loadDoorTypeSummary = loadDoorTypeSummary;
+        // MONTHLY WORKER PERFORMANCE DRILL-DOWN
+        window.loadMonthlyWorkerPerformance = loadMonthlyWorkerPerformance;
+        window.renderMonthlyWorkerPerformanceTable = renderMonthlyWorkerPerformanceTable;
+        window.openWorkerDrillDown = openWorkerDrillDown;
+        window.closeWorkerDrillDown = closeWorkerDrillDown;
+        window.handleDrillDownOverlayClick = handleDrillDownOverlayClick;
+        window.initMonthlyWorkerPerfMonth = initMonthlyWorkerPerfMonth;
 
     </script>
+
+    <!-- ========== WORKER DRILL-DOWN MODAL ========== -->
+    <div id="workerDrillDownOverlay" onclick="handleDrillDownOverlayClick(event)" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#1e1e2e; border-radius:10px; width:92%; max-width:860px; max-height:88vh; display:flex; flex-direction:column; border:1px solid #444; box-shadow:0 8px 32px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid #444; flex-shrink:0;">
+                <div>
+                    <h3 id="drillDownTitle" style="margin:0 0 2px 0; color:#FFD700; font-size:16px;">Worker Drill-Down</h3>
+                    <p id="drillDownSubtitle" style="margin:0; color:#888; font-size:12px;"></p>
+                </div>
+                <button onclick="closeWorkerDrillDown()" style="background:none; border:none; color:#aaa; font-size:24px; cursor:pointer; padding:0 4px; line-height:1;" title="Close">&#x2715;</button>
+            </div>
+            <div style="overflow-y:auto; padding:20px; flex:1;" id="drillDownContent">
+                <p style="text-align:center; color:#999;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

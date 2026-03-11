@@ -1279,6 +1279,10 @@ display:block;
 display:none !important;
 }
 
+.hidden {
+    display: none !important;
+}
+
 
 /* ===============================
 RESPONSIVE

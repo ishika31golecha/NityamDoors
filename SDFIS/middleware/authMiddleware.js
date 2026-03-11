@@ -412,6 +412,56 @@ const permissionGuard = (module, options = {}) => {
  */
 const getPermissionMatrix = () => PERMISSION_MATRIX;
 
+/**
+ * authorizeModule — DB-backed module access guard
+ *
+ * Checks the RolePermission collection (managed via Access Control page).
+ * SuperAdmin always passes. All other roles must have the module set to true
+ * in the database for the request to proceed.
+ *
+ * @param {string} module - One of: orders | production | inventory | accounts | reports
+ *
+ * Usage:
+ *   router.get('/route', protect, authorizeModule('orders'), handler);
+ */
+const authorizeModule = (module) => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required.'
+        });
+      }
+
+      const userRoles = req.user.roles && req.user.roles.length > 0
+        ? req.user.roles
+        : [req.user.role];
+
+      // SuperAdmin has unrestricted access
+      if (userRoles.includes('SuperAdmin')) return next();
+
+      const RolePermission = require('../models/RolePermission');
+
+      // Grant access if ANY of the user's roles have permission for this module
+      for (const role of userRoles) {
+        const rp = await RolePermission.findOne({ role }).lean();
+        if (rp && rp.permissions && rp.permissions[module] === true) return next();
+      }
+
+      return res.status(403).json({
+        success: false,
+        code: 'MODULE_ACCESS_DENIED',
+        message: `Access denied. Your role does not have permission to access the '${module}' module.`,
+        module
+      });
+    } catch (error) {
+      console.error('[authorizeModule] Error:', error.message);
+      return res.status(500).json({ success: false, message: 'Permission check failed.' });
+    }
+  };
+};
+
 module.exports = {
   protect,
   authorize,
@@ -421,8 +471,9 @@ module.exports = {
   optionalAuth,
   filterByFranchise,
   hasLimitedAccess,
-  roleGuard,           // ADDED: Strict role checking middleware
-  permissionGuard,     // ADDED: Module permission checking middleware
-  getPermissionMatrix, // ADDED: Get permission matrix for frontend sync
-  PERMISSION_MATRIX    // ADDED: Export matrix for reference
+  roleGuard,
+  permissionGuard,
+  authorizeModule,     // DB-backed module permission guard
+  getPermissionMatrix,
+  PERMISSION_MATRIX
 };
