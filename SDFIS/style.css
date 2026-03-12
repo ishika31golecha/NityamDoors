@@ -42,6 +42,25 @@ margin-bottom:10px;
 color:#FFD700;
 }
 
+.company-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px; /* space between logo and text */
+    margin-bottom: 25px;
+}
+
+.company-logo-login{
+    width: 50px;   /* increase size */
+    height: 50px;
+    object-fit: contain;
+}
+
+.company-header h1{
+    color: #ffd700;
+    margin: 0;
+}
+
 .form-group{
 text-align:left;
 margin-bottom:22px;
@@ -1388,6 +1407,738 @@ background:#FFD700;
 transition:width 0.3s ease;
 }
 
+/* ================= 
+SALES EXECUTIVE ORDERS DASHBOARD 
+================= */
+
+#se-orders-dashboard{
+    background:#0b0b0b;
+    padding:25px;
+    border-radius:12px;
+}
+
+/* HEADER */
+.orders-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.orders-header h2{
+    margin:0;
+    font-size:26px;
+    font-weight:600;
+    color:white;
+}
+
+.orders-subtitle{
+    margin-top:5px;
+    color:#9ca3af;
+    font-size:14px;
+}
+
+
+/* ACTION BUTTONS */
+.orders-actions{
+    display:flex;
+    gap:10px;
+}
+
+.btn-primary{
+    background:#facc15;
+    color:#000;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.btn-primary:hover{
+    background:#eab308;
+}
+
+.btn-secondary{
+    background:#161616;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+
+/* TABS */
+.orders-tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.orders-tab{
+    padding:8px 16px;
+    background:#111;
+    border:1px solid #333;
+    color:#fff;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.orders-tab.active{
+    background:#facc15;
+    color:#000;
+}
+
+
+/* TABLE */
+.orders-table{
+    width:100%;
+    border-collapse:collapse;
+    background:#111;
+    color:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.orders-table thead{
+    background:#1a1a1a;
+}
+
+.orders-table th{
+    padding:14px;
+    text-align:left;
+    font-weight:500;
+    font-size:14px;
+    color:#9ca3af;
+    border-bottom:1px solid #333;
+}
+
+.orders-table td{
+    padding:16px 14px;
+    border-bottom:1px solid #222;
+    font-size:14px;
+}
+
+.orders-table tr:hover{
+    background:#161616;
+}
+
+
+/* STATUS BADGES */
+
+.status-approved{
+    background:#2563eb;
+    color:white;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.status-pending{
+    background:#f59e0b;
+    color:black;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+
+/* PRIORITY TAGS */
+
+.priority-high{
+    color:#ef4444;
+    font-weight:600;
+}
+
+.priority-normal{
+    color:#f59e0b;
+}
+
+.priority-low{
+    color:#10b981;
+}
+
+#salesOrderSection{
+    display:none;
+}
+
+
+/* ============================
+SEE PRIORITY QUEUE 
+============================ */
+.dashboard-success {
+    background: #0f1f16;
+    border-left: 4px solid #27ae60;
+    color: #2ecc71;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-success strong {
+    color: #2ecc71;
+}
+
+/* Queue Summary Bar */
+#productionQueueInfo{
+    background:#161616;
+    border:1px solid #333;
+    border-left:4px solid #3b82f6;
+    color:#e5e7eb;
+    padding:12px 16px;
+    border-radius:8px;
+    margin-bottom:18px;
+    font-size:14px;
+}
+
+.queue-summary{
+    display:flex;
+    gap:30px;
+    background:#121826;
+    border:1px solid #2c3e50;
+    border-radius:8px;
+    padding:14px 18px;
+    margin-bottom:20px;
+}
+
+.queue-stat{
+    display:flex;
+    flex-direction:column;
+}
+
+.queue-number{
+    font-size:20px;
+    font-weight:700;
+    color:#FFD700;
+}
+
+.queue-label{
+    font-size:12px;
+    color:#888;
+}
+
+.queue-value{
+    font-size:14px;
+    color:#fff;
+}
+
+/* Order Cards */
+.pq-order-card{
+    background:#161616;
+    border:1px solid #333;
+    border-radius:8px;
+    padding:14px 16px;
+    margin-bottom:14px;
+    transition:all 0.2s ease;
+}
+
+.pq-order-card:hover{
+    border-color:#6b7280;
+}
+
+/* Order Header */
+.pq-order-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    padding-bottom:10px;
+    border-bottom:1px solid #2c3e50;
+    margin-bottom:10px;
+}
+
+/* Order Title */
+.pq-order-title{
+    font-size:15px;
+    font-weight:600;
+    color:#fff;
+}
+
+/* Order Meta */
+.pq-order-meta{
+    display:flex;
+    gap:18px;
+    font-size:13px;
+    color:#aaa;
+}
+
+/* Collapse Button */
+.pq-collapse-btn{
+    background:none;
+    border:none;
+    color:#facc15;
+    font-size:16px;
+    margin-right:10px;
+    cursor:pointer;
+    transition:transform 0.25s ease;
+}
+
+/* Arrow when expanded */
+.pq-collapse-btn.expanded{
+    transform:rotate(180deg);
+}
+
+.pq-doors-container{
+    display:none;
+    margin-top:10px;
+}
+
+/* Show when expanded */
+.pq-doors-container.expanded{
+    display:block;
+}
+
+.pq-door-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #161616;
+}
+
+.pq-door-info{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.pq-door-details{
+    display:flex;
+    gap:15px;
+    font-size:12px;
+    color:#aaa;
+}
+
+.pq-door-priority-control{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.pq-btn-save{
+    background:#333;
+    color:#9ca3af;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    font-size:13px;
+    cursor:not-allowed;
+    transition:all 0.2s ease;
+}
+
+/* Enabled state */
+.pq-btn-save.enabled{
+    background:#22c55e;
+    color:white;
+    cursor:pointer;
+}
+
+/* Hover */
+.pq-btn-save.enabled:hover{
+    background:#16a34a;
+}
+
+/* Priority Badge Styles */
+.priority-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* High Priority - Red */
+.priority-high {
+    background: #ffcdd2;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+/* Normal Priority - Orange */
+.priority-normal {
+    background: #ffe0b2;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+}
+
+/* Low Priority - Green */
+.priority-low {
+    background: #c8e6c9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.priority-urgent {
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+    animation: urgentPulse 2s infinite;
+}
+
+@keyframes urgentPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Action Button Styles for Factory Admin */
+.btn-approve {
+    background: #27ae60;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    transition: background 0.3s;
+}
+
+.btn-approve:hover {
+    background: #219a52;
+}
+
+.btn-reject {
+    background: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.3s;
+}
+
+.btn-reject:hover {
+    background: #c0392b;
+}
+
+.btn-priority {
+    background: #f39c12;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.3s;
+}
+
+.btn-priority:hover {
+    background: #d68910;
+}
+
+
+
+
+/* ==================== 
+SALES ORDER CREATION SECTION 
+==================== */
+
+.so-form-wrapper {
+    background: rgb(10, 10, 10);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    color: #d6d6d6;
+    grid-column: 1 / -1;
+}
+
+.so-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+}
+
+.so-section h3 {
+    color: #FFD700;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FFD700;
+}
+
+.so-form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.so-form-group {
+    margin-bottom: 15px;
+}
+
+.so-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.so-form-group label .required {
+    color: #ff4d4d;
+    margin-left: 3px;
+}
+
+.so-form-group input,
+.so-form-group select,
+.so-form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: #2b2b2b;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border 0.3s;
+}
+
+.so-form-group input:focus,
+.so-form-group select:focus,
+.so-form-group textarea:focus {
+    outline: none;
+    border-color: #FFD700;
+    box-shadow: 0 0 6px rgba(212,175,55,0.25);
+}
+
+.so-form-group input:disabled,
+.so-form-group select:disabled {
+    background: #333;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.so-form-group input.error,
+.so-form-group select.error {
+    border-color: #ff4d4d;
+}
+
+.so-error-msg {
+    color: #ff4d4d;
+    font-size: 0.75rem;
+    margin-top: 3px;
+    display: none;
+}
+
+.so-error-msg.show {
+    display: block;
+}
+
+.so-door-block {
+    background: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.so-door-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.so-door-title {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.so-btn-remove {
+    background: #b33939;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.3s;
+}
+
+.so-btn-remove:hover {
+    background: #8c2d2d;
+}
+
+.so-btn-remove:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+.so-btn-add-door {
+    background: #FFD700;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+    font-weight: 500;
+}
+
+.so-btn-add-door:hover {
+    background: #b8962e;
+}
+
+.so-calculation-display {
+    background: #1a1a1a;
+    border: 2px solid #FFD700;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.so-calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 1rem;
+    border-bottom: 1px solid #333;
+}
+
+.so-calc-row:last-child {
+    border-bottom: none;
+}
+
+.so-calc-label {
+    font-weight: 600;
+    color: #FFD700;
+}
+
+.so-calc-value {
+    font-weight: 700;
+    color: #f1c40f;
+    font-size: 1.1rem;
+}
+
+.so-door-area-display {
+    background: #1a1a1a;
+    border-left: 4px solid #FFD700;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #e0c15a;
+}
+
+.so-action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.so-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 140px;
+}
+
+.so-btn-cancel {
+    background: #444;
+    color: white;
+}
+
+.so-btn-cancel:hover {
+    background: #2f2f2f;
+}
+
+.so-btn-submit {
+    background: #FFD700;
+    color: black;
+}
+
+.so-btn-submit:hover {
+    background: #b8962e;
+}
+
+.so-validation-summary {
+    background: #1a1a1a;
+    border: 1px solid #ff4d4d;
+    color: #ff6b6b;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.so-validation-summary.show {
+    display: block;
+}
+
+.so-validation-summary strong {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.so-validation-summary ul {
+    margin-left: 20px;
+    margin-top: 8px;
+}
+
+.so-validation-summary li {
+    margin-bottom: 4px;
+}
+
+.so-info-box {
+    background: #1a1a1a;
+    border-left: 4px solid #FFD700;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.so-form-group textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.so-hidden {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1600,271 +2351,6 @@ transition:width 0.3s ease;
         display: block;
     }
 
-    /* Priority Badge Styles */
-    .priority-badge {
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    /* High Priority - Red */
-    .priority-high {
-        background: #ffcdd2;
-        color: #c62828;
-        border: 1px solid #ef9a9a;
-    }
-
-    /* Normal Priority - Orange */
-    .priority-normal {
-        background: #ffe0b2;
-        color: #e65100;
-        border: 1px solid #ffcc80;
-    }
-
-    /* Low Priority - Green */
-    .priority-low {
-        background: #c8e6c9;
-        color: #2e7d32;
-        border: 1px solid #a5d6a7;
-    }
-
-    .priority-urgent {
-        background: #fff3e0;
-        color: #e65100;
-        border: 1px solid #ffcc80;
-        animation: urgentPulse 2s infinite;
-    }
-
-    @keyframes urgentPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-
-    /* Action Button Styles for Factory Admin */
-    .btn-approve {
-        background: #27ae60;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        margin-right: 5px;
-        transition: background 0.3s;
-    }
-
-    .btn-approve:hover {
-        background: #219a52;
-    }
-
-    .btn-reject {
-        background: #e74c3c;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s;
-    }
-
-    .btn-reject:hover {
-        background: #c0392b;
-    }
-
-    .btn-priority {
-        background: #f39c12;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s;
-    }
-
-    .btn-priority:hover {
-        background: #d68910;
-    }
-
-    /* Production Queue Card Styles */
-    .pq-order-card {
-        background: #f8f9fa;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .pq-order-card:hover {
-        border-color: #3498db;
-        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
-        background: #f5f7fa;
-    }
-
-    .pq-order-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 10px;
-    }
-
-    .pq-order-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2c3e50;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .pq-order-meta {
-        display: flex;
-        gap: 15px;
-        font-size: 0.9rem;
-        color: #7f8c8d;
-        flex-wrap: wrap;
-    }
-
-    .pq-collapse-btn {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 5px 10px;
-        color: #3498db;
-        transition: transform 0.3s;
-    }
-
-    .pq-collapse-btn.expanded {
-        transform: rotate(180deg);
-    }
-
-    .pq-doors-container {
-        margin-top: 15px;
-        display: none;
-    }
-
-    .pq-doors-container.expanded {
-        display: block;
-    }
-
-    .pq-door-row {
-        background: white;
-        border: 1px solid #ecf0f1;
-        border-radius: 6px;
-        padding: 12px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .pq-door-info {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .pq-door-type {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 5px;
-    }
-
-    .pq-door-details {
-        font-size: 0.85rem;
-        color: #7f8c8d;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .pq-door-detail-item {
-        display: flex;
-        gap: 5px;
-    }
-
-    .pq-door-priority-control {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .pq-priority-select {
-        padding: 6px 10px;
-        border: 1px solid #bdc3c7;
-        border-radius: 4px;
-        background: white;
-        color: #2c3e50;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: border-color 0.3s;
-    }
-
-    .pq-priority-select:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-    }
-
-    .pq-door-priority-badge {
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        min-width: 70px;
-        text-align: center;
-    }
-
-    .pq-priority-high {
-        background: #ffcdd2;
-        color: #c62828;
-        border: 1px solid #ef9a9a;
-    }
-
-    .pq-priority-normal {
-        background: #ffe0b2;
-        color: #e65100;
-        border: 1px solid #ffcc80;
-    }
-
-    .pq-priority-low {
-        background: #c8e6c9;
-        color: #2e7d32;
-        border: 1px solid #a5d6a7;
-    }
-
-    .pq-btn-save {
-        background: #27ae60;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s;
-        white-space: nowrap;
-    }
-
-    .pq-btn-save:hover {
-        background: #219a52;
-    }
-
-    .pq-btn-save:disabled {
-        background: #bdc3c7;
-        cursor: not-allowed;
-    }
-
     /* Inventory Snapshot Grid */
     .inventory-snapshot-grid {
         display: grid;
@@ -2036,231 +2522,6 @@ transition:width 0.3s ease;
         border-radius: 50%;
         font-weight: bold;
         font-size: 0.85rem;
-    }
-
-    /* ==================== SALES EXECUTIVE DASHBOARD STYLES ==================== */
-    /* Sales Executive Dashboard - Card-based layout for customer & order management */
-
-    /* Sales Executive Dashboard Grid Layout */
-    .se-dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-
-    /* Sales Executive - Form Cards */
-    .se-form-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        overflow: hidden;
-    }
-
-    .se-form-header {
-        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
-        color: white;
-        padding: 20px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .se-form-body {
-        padding: 25px;
-    }
-
-    .se-form-body .form-group {
-        margin-bottom: 18px;
-    }
-
-    .se-form-body label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #333;
-        font-size: 0.95rem;
-    }
-
-    .se-form-body input,
-    .se-form-body select,
-    .se-form-body textarea {
-        width: 100%;
-        padding: 12px 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-family: inherit;
-        transition: border-color 0.3s;
-    }
-
-    .se-form-body textarea {
-        resize: vertical;
-        min-height: 80px;
-    }
-
-    .se-form-body input:focus,
-    .se-form-body select:focus,
-    .se-form-body textarea:focus {
-        outline: none;
-        border-color: #1565c0;
-        box-shadow: 0 0 8px rgba(21, 101, 192, 0.2);
-    }
-
-    .se-form-body .btn {
-        width: 100%;
-        padding: 12px 25px;
-        margin-top: 12px;
-        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .se-form-body .btn:hover {
-        background: linear-gradient(135deg, #0d47a1 0%, #0d3d7d 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(21, 101, 192, 0.3);
-    }
-
-    .se-form-body .btn:active {
-        transform: translateY(0);
-    }
-
-    .form-success {
-        background: #e8f5e9;
-        border: 1px solid #4caf50;
-        color: #2e7d32;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-size: 0.9rem;
-        display: none;
-    }
-
-    /* Sales Executive - Orders Table Styles */
-    .se-orders-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        overflow: hidden;
-        grid-column: 1 / -1;
-    }
-
-    .se-orders-header {
-        background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
-        color: white;
-        padding: 20px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        justify-content: space-between;
-    }
-
-    .se-orders-body {
-        padding: 25px;
-    }
-
-    .se-orders-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.95rem;
-    }
-
-    .se-orders-table thead {
-        background: #f8f9fa;
-        border-bottom: 2px solid #ddd;
-    }
-
-    .se-orders-table th {
-        padding: 15px;
-        text-align: left;
-        font-weight: 600;
-        color: #555;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-    }
-
-    .se-orders-table td {
-        padding: 15px;
-        border-bottom: 1px solid #eee;
-        color: #666;
-    }
-
-    .se-orders-table tbody tr:hover {
-        background: #f8f9fa;
-        transition: background 0.2s;
-    }
-
-    .se-orders-table .status-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .se-orders-table .status-pending {
-        background: #fff3e0;
-        color: #e65100;
-    }
-
-    .se-orders-table .status-approved {
-        background: #e3f2fd;
-        color: #1565c0;
-    }
-
-    .se-orders-table .status-inprogress {
-        background: #f3e5f5;
-        color: #7b1fa2;
-    }
-
-    .se-orders-table .status-completed {
-        background: #e8f5e9;
-        color: #2e7d32;
-    }
-
-    .se-empty-state {
-        text-align: center;
-        padding: 40px 20px;
-        color: #999;
-    }
-
-    .se-empty-state-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        opacity: 0.5;
-    }
-
-    .se-empty-state p {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-    }
-
-    /* Sales Executive - Info Box */
-    .se-info-box {
-        background: #e3f2fd;
-        border-left: 4px solid #1565c0;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-size: 0.95rem;
-        color: #0d47a1;
-    }
-
-    .se-info-box strong {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 1rem;
     }
 
     /* ==================== PRODUCTION SUPERVISOR DASHBOARD STYLES ==================== */
@@ -2625,296 +2886,6 @@ transition:width 0.3s ease;
     .ps-stage-badge.completed {
         background: #e8f5e9;
         color: #2e7d32;
-    }
-
-    /* ==================== SALES ORDER CREATION SECTION ==================== */
-    /* Sales Exec: Order creation with customer, POC, and door specifications */
-
-    #salesOrderSection {
-        display: none !important;
-        width: 100%;
-    }
-
-    #salesOrderSection.visible {
-        display: block !important;
-    }
-
-    .so-form-wrapper {
-        background: white;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        color: #333;
-        grid-column: 1 / -1;
-    }
-
-    .so-section {
-        margin-bottom: 30px;
-        padding: 20px;
-        background: #f8f9fa;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-    }
-
-    .so-section h3 {
-        color: #1565c0;
-        font-size: 1.2em;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #1565c0;
-    }
-
-    .so-form-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .so-form-group {
-        margin-bottom: 15px;
-    }
-
-    .so-form-group label {
-        display: block;
-        margin-bottom: 6px;
-        color: #333;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    .so-form-group label .required {
-        color: #e74c3c;
-        margin-left: 3px;
-    }
-
-    .so-form-group input,
-    .so-form-group select,
-    .so-form-group textarea {
-        width: 100%;
-        padding: 10px 12px;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        color: #333;
-        font-size: 0.9rem;
-        font-family: inherit;
-        transition: border 0.3s;
-    }
-
-    .so-form-group input:focus,
-    .so-form-group select:focus,
-    .so-form-group textarea:focus {
-        outline: none;
-        border-color: #1565c0;
-        box-shadow: 0 0 6px rgba(21, 101, 192, 0.15);
-    }
-
-    .so-form-group input:disabled,
-    .so-form-group select:disabled {
-        background: #ecf0f1;
-        color: #7f8c8d;
-        cursor: not-allowed;
-    }
-
-    .so-form-group input.error,
-    .so-form-group select.error {
-        border-color: #e74c3c;
-    }
-
-    .so-error-msg {
-        color: #e74c3c;
-        font-size: 0.75rem;
-        margin-top: 3px;
-        display: none;
-    }
-
-    .so-error-msg.show {
-        display: block;
-    }
-
-    .so-door-block {
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        position: relative;
-    }
-
-    .so-door-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .so-door-title {
-        color: #1565c0;
-        font-weight: bold;
-        font-size: 1rem;
-    }
-
-    .so-btn-remove {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        transition: background 0.3s;
-    }
-
-    .so-btn-remove:hover {
-        background: #c0392b;
-    }
-
-    .so-btn-remove:disabled {
-        background: #bdc3c7;
-        cursor: not-allowed;
-    }
-
-    .so-btn-add-door {
-        background: #1565c0;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background 0.3s;
-        font-weight: 500;
-    }
-
-    .so-btn-add-door:hover {
-        background: #0d47a1;
-    }
-
-    .so-calculation-display {
-        background: #e8f5e9;
-        border: 2px solid #4caf50;
-        border-radius: 8px;
-        padding: 20px;
-        margin-top: 15px;
-    }
-
-    .so-calc-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 1rem;
-        border-bottom: 1px solid #c8e6c9;
-    }
-
-    .so-calc-row:last-child {
-        border-bottom: none;
-    }
-
-    .so-calc-label {
-        font-weight: 600;
-        color: #2e7d32;
-    }
-
-    .so-calc-value {
-        font-weight: 700;
-        color: #1b5e20;
-        font-size: 1.1rem;
-    }
-
-    .so-door-area-display {
-        background: #f3e5f5;
-        border-left: 4px solid #9c27b0;
-        padding: 12px;
-        border-radius: 4px;
-        font-size: 0.95rem;
-        color: #4a148c;
-    }
-
-    .so-action-buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-top: 25px;
-    }
-
-    .so-btn {
-        padding: 12px 30px;
-        border: none;
-        border-radius: 6px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        min-width: 140px;
-    }
-
-    .so-btn-cancel {
-        background: #95a5a6;
-        color: white;
-    }
-
-    .so-btn-cancel:hover {
-        background: #7f8c8d;
-    }
-
-    .so-btn-submit {
-        background: #27ae60;
-        color: white;
-    }
-
-    .so-btn-submit:hover {
-        background: #229954;
-    }
-
-    .so-validation-summary {
-        background: #ffebee;
-        border: 1px solid #e74c3c;
-        color: #c0392b;
-        padding: 15px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        display: none;
-    }
-
-    .so-validation-summary.show {
-        display: block;
-    }
-
-    .so-validation-summary strong {
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .so-validation-summary ul {
-        margin-left: 20px;
-        margin-top: 8px;
-    }
-
-    .so-validation-summary li {
-        margin-bottom: 4px;
-    }
-
-    .so-info-box {
-        background: #e3f2fd;
-        border-left: 4px solid #1565c0;
-        padding: 12px;
-        margin-bottom: 15px;
-        border-radius: 4px;
-        font-size: 0.9rem;
-        color: #0d47a1;
-    }
-
-    .so-form-group textarea {
-        resize: vertical;
-        min-height: 70px;
-    }
-
-    .so-hidden {
-        display: none !important;
     }
 
     /* ==================== RESPONSIVE ==================== */

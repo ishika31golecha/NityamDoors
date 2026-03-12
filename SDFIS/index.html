@@ -19,7 +19,10 @@
          ============================================ -->
     <div id="loginSection" class="login-container">
         <div class="login-box">
-            <h1>Nityam Doors</h1>
+            <div class="company-header">
+                <img src="logo.jpg" class="company-logo-login">
+                <h1>Nityam Doors</h1>
+            </div>
             
             <!-- ADDED: Login Form -->
             <div id="loginForm">
@@ -94,7 +97,7 @@
     <div class="top-navbar">
 
         <div class="nav-left">
-            <div class="company-logo" style="font-size: 24px; font-weight: bold; color: #2c3e50; background: linear-gradient(135deg, #e94560 0%, #e67e22 100%); padding: 8px 15px; border-radius: 5px; min-width: 40px; text-align: center; color: white;">ND</div>
+            <img src="logo.jpg" class="company-logo">
             <div class="brand-text">
                 <div class="brand">Nityam Doors</div>
             </div>
@@ -115,10 +118,9 @@
         <div class="sidebar">
             <div class="module-nav" id="moduleNav">
                 <button class="nav-btn active" data-module="dashboard" onclick="showModule('dashboard')">Dashboard</button>
-                <button class="nav-btn" data-module="salesexec" data-permission="orders" onclick="showModule('salesexec')">Sales Executive</button>
+                <button class="nav-btn" data-module="salesexec" data-permission="orders" onclick="showModule('salesexec')">Orders</button>
                 <button class="nav-btn" data-module="factoryadmin" data-roles="FactoryAdmin" onclick="showModule('factoryadmin')">Factory Admin</button>
                 <button class="nav-btn" data-module="productionsupervisor" data-permission="production" onclick="showModule('productionsupervisor')">Production</button>
-                <button class="nav-btn" data-module="worker-history" data-permission="production" onclick="showModule('worker-history')">Worker History</button>
                 <button class="nav-btn" data-module="inventory" data-permission="inventory" onclick="showModule('inventory')">Inventory</button>
                 <button class="nav-btn" data-module="accounts" data-permission="accounts" onclick="showModule('accounts')">Accounts</button>
                 <button class="nav-btn" data-module="reports" data-permission="reports" onclick="showModule('reports')">Reports</button>
@@ -160,22 +162,18 @@
             <div id="module-dashboard" class="module-section active">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">🛒</div>
                         <div class="stat-value">156</div>
                         <div class="stat-label">Total Orders</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">🏭</div>
                         <div class="stat-value">42</div>
                         <div class="stat-label">In Production</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">📦</div>
                         <div class="stat-value">1,250</div>
                         <div class="stat-label">Items in Stock</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">💰</div>
                         <div class="stat-value">₹8.5L</div>
                         <div class="stat-label">Revenue (MTD)</div>
                     </div>
@@ -306,7 +304,7 @@
             <div id="module-inventory" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>📦 Inventory Management</h2>
+                        <h2>Inventory Management</h2>
                     </div>
                     
                     <div class="card-body">
@@ -464,7 +462,7 @@
 
                         <!-- HARDWARE SECTION -->
                         <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #16a085;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">🔧 Hardware</h3>
+                            <h3 style="color: #2c3e50; margin-top: 0;"> Hardware</h3>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                                 <div>
                                     <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Type</label>
@@ -568,7 +566,7 @@
                                 <div class="stat-label">Avg Production</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">✅</div>
+                                <div class="stat-icon"></div>
                                 <div class="stat-value">98.5%</div>
                                 <div class="stat-label">Fulfillment Rate</div>
                             </div>
@@ -749,115 +747,20 @@
 
                         <!-- // FACTORY ADMIN DASHBOARD - Sub-Navigation Tabs -->
                         <div class="factory-admin-tabs">
-                            <button class="tab-btn active" data-tab="fa-pending-orders" onclick="showFactoryAdminTab('fa-pending-orders')">
-                                📋 Pending Orders
-                            </button>
-                            <button class="tab-btn" data-tab="fa-production-queue" onclick="showFactoryAdminTab('fa-production-queue')">
-                                🔄 Production Queue
-                            </button>
-                            <button class="tab-btn" data-tab="fa-priority-orders" onclick="showFactoryAdminTab('fa-priority-orders')">
-                                ⚡ Priority Orders
-                            </button>
                             <button class="tab-btn" data-tab="fa-inventory-snapshot" onclick="showFactoryAdminTab('fa-inventory-snapshot')">
-                                📦 Inventory Snapshot
-                            </button>
-                            <button class="tab-btn" data-tab="fa-factory-reports" onclick="showFactoryAdminTab('fa-factory-reports')">
-                                📊 Factory Reports
+                                Inventory Snapshot
                             </button>
                             <button class="tab-btn" data-tab="fa-vendor-overview" onclick="showFactoryAdminTab('fa-vendor-overview')">
-                                🏪 Vendor Overview
+                                Vendor Overview
                             </button>
-                            <button class="tab-btn" data-tab="fa-order-overview" onclick="showFactoryAdminTab('fa-order-overview')">
-                                📈 Order Overview
-                            </button>
-                        </div>
+                        </div> 
 
-                        <!-- ========== SUB-SECTION 1: PENDING ORDERS ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Pending Orders Section -->
-                        <!-- Factory Admin can Approve or Reject orders here -->
-                        <div id="fa-pending-orders" class="fa-subsection active">
-                            <h3 style="margin-bottom: 15px; color: #333;">📋 Pending Orders for Approval</h3>
-                            
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer Name</th>
-                                        <th>Customer Type</th>
-                                        <th>Total Doors</th>
-                                        <th>Status</th>
-                                        <th>Created At</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="pendingOrdersTableBody">
-                                    <!-- Data will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- ========== SUB-SECTION 2: PRODUCTION QUEUE ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Production Queue Section -->
-                        <!-- Shows order list sorted by priority and creation date with expandable door details -->
-                        <div id="fa-production-queue" class="fa-subsection">
-                            <h3 style="margin-bottom: 15px; color: #333;">Production Queue</h3>
-                            <div class="info-box" id="productionQueueInfo">
-                                <strong>ℹ️ Queue Status:</strong> Loading orders from database...
-                            </div>
-                            
-                            <!-- Production Queue Cards Container -->
-                            <div id="productionQueueContainer" style="margin-top: 20px;">
-                                <!-- Order cards will be rendered here by JavaScript -->
-                                <div style="text-align: center; padding: 30px; color: #888;">
-                                    🔄 Loading queue data...
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ========== SUB-SECTION 3: PRIORITY ORDERS ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Priority Orders Section -->
-                        <!-- Filtered view showing only High and Urgent priority orders -->
-                        <div id="fa-priority-orders" class="fa-subsection">
-                            <h3 style="margin-bottom: 15px; color: #333;">⚡ Priority Orders</h3>
-                            <div id="priorityOrdersInfo" class="info-box warning">
-                                <strong>ℹ️ Status:</strong> Loading priority orders from database...
-                            </div>
-
-                            <!-- Priority Filter Dropdown -->
-                            <div style="margin-bottom: 15px;">
-                                <label for="priorityFilterSelect" style="margin-right: 10px; font-weight: bold;">Filter by Priority:</label>
-                                <select id="priorityFilterSelect" class="input-field" onchange="loadPriorityOrders(this.value)" style="padding: 8px 12px; font-size: 14px; max-width: 200px;">
-                                    <option value="">All Priorities</option>
-                                    <option value="High">🔴 High</option>
-                                    <option value="Normal">🟠 Normal</option>
-                                    <option value="Low">🟢 Low</option>
-                                </select>
-                            </div>
-                            
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer Name</th>
-                                        <th>Door Type</th>
-                                        <th>Priority</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="priorityOrdersTableBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; padding: 30px; color: #888;">🔄 Loading priority orders...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- ========== SUB-SECTION 4: INVENTORY SNAPSHOT ========== -->
+                        <!-- ========== SUB-SECTION 3: INVENTORY SNAPSHOT ========== -->
                         <!-- // FACTORY ADMIN DASHBOARD - Inventory Snapshot Section -->
                         <!-- Shows raw material and finished goods inventory levels -->
                         <div id="fa-inventory-snapshot" class="fa-subsection">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; color: #333;">📦 Inventory Snapshot</h3>
+                                <h3 style="margin: 0; color: #333;">Inventory Snapshot</h3>
                                 <button class="btn btn-primary" onclick="loadInventorySnapshot()" style="padding: 8px 16px; font-size: 14px;">🔄 Refresh</button>
                             </div>
                             <div class="info-box warning">
@@ -896,7 +799,7 @@
 
                                 <!-- Hardware & Fittings Card -->
                                 <div class="inventory-category-card">
-                                    <h4>🔧 Hardware & Fittings</h4>
+                                    <h4> Hardware & Fittings</h4>
                                     <div class="inventory-item">
                                         <span class="item-name">Door Handles</span>
                                         <span class="item-qty">500 Pcs</span>
@@ -925,7 +828,7 @@
 
                                 <!-- Finished Goods Card -->
                                 <div class="inventory-category-card finished-goods">
-                                    <h4>✅ Finished Goods (Ready to Ship)</h4>
+                                    <h4> Finished Goods (Ready to Ship)</h4>
                                     <div class="inventory-item">
                                         <span class="item-name">Wooden Door - Premium</span>
                                         <span class="item-qty">18 Units</span>
@@ -975,83 +878,8 @@
                             </div>
                         </div>
 
-                        <!-- ========== SUB-SECTION 5: FACTORY REPORTS ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Factory Reports Section -->
-                        <!-- View-only report cards (no accounts data) -->
-                        <div id="fa-factory-reports" class="fa-subsection">
-                            <h3 style="margin-bottom: 15px; color: #333;">📊 Factory Reports (View Only)</h3>
-                            <div class="info-box success">
-                                <strong>📈 Report Period:</strong> January 2026 | Last Updated: 03 Feb 2026, 10:30 AM
-                            </div>
-
-                            <div class="factory-reports-grid">
-                                <!-- Production Efficiency -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">⚙️</div>
-                                    <div class="report-title">Production Efficiency</div>
-                                    <div class="report-value">94.5%</div>
-                                    <div class="report-trend positive">↑ +2.3% from last month</div>
-                                </div>
-
-                                <!-- Orders Completed -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">✅</div>
-                                    <div class="report-title">Orders Completed</div>
-                                    <div class="report-value">142</div>
-                                    <div class="report-trend positive">↑ +18 from last month</div>
-                                </div>
-
-                                <!-- On-Time Delivery -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">🚚</div>
-                                    <div class="report-title">On-Time Delivery</div>
-                                    <div class="report-value">97.2%</div>
-                                    <div class="report-trend positive">↑ +1.5% from last month</div>
-                                </div>
-
-                                <!-- Average Production Time -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">⏱️</div>
-                                    <div class="report-title">Avg Production Time</div>
-                                    <div class="report-value">4.2 Days</div>
-                                    <div class="report-trend positive">↓ -0.3 days (improved)</div>
-                                </div>
-
-                                <!-- Defect Rate -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">🔍</div>
-                                    <div class="report-title">Defect Rate</div>
-                                    <div class="report-value">1.8%</div>
-                                    <div class="report-trend positive">↓ -0.5% from last month</div>
-                                </div>
-
-                                <!-- Machine Utilization -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">🏭</div>
-                                    <div class="report-title">Machine Utilization</div>
-                                    <div class="report-value">87.3%</div>
-                                    <div class="report-trend negative">↓ -1.2% from last month</div>
-                                </div>
-
-                                <!-- Units Produced -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">📦</div>
-                                    <div class="report-title">Units Produced</div>
-                                    <div class="report-value">1,856</div>
-                                    <div class="report-trend positive">↑ +156 from last month</div>
-                                </div>
-
-                                <!-- Worker Productivity -->
-                                <div class="factory-report-card">
-                                    <div class="report-icon">👷</div>
-                                    <div class="report-title">Worker Productivity</div>
-                                    <div class="report-value">92.1%</div>
-                                    <div class="report-trend positive">↑ +3.2% from last month</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ========== SUB-SECTION 6: VENDOR OVERVIEW ========== -->
+                        
+                        <!-- ========== SUB-SECTION 4: VENDOR OVERVIEW ========== -->
                         <!-- // FACTORY ADMIN DASHBOARD - Vendor Overview Section -->
                         <!-- Basic vendor list (view only) -->
                         <div id="fa-vendor-overview" class="fa-subsection">
@@ -1107,53 +935,6 @@
                             </div>
                         </div>
 
-                        <!-- ========== SUB-SECTION 7: ORDER OVERVIEW ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Order Overview Section -->
-                        <!-- Shows all approved/in-production orders with door-level progress % and drill-down -->
-                        <div id="fa-order-overview" class="fa-subsection">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; color: #333;">📈 Order Overview</h3>
-                                <button class="btn btn-primary" onclick="loadOrderOverview()" style="padding: 8px 16px; font-size: 14px;">🔄 Refresh</button>
-                            </div>
-
-                            <!-- Search bar -->
-                            <div style="margin-bottom: 15px;">
-                                <input type="text" id="orderOverviewSearch" class="input-field" placeholder="🔍 Search by Order ID or Customer Name..." oninput="filterOrderOverview()" style="width: 100%; max-width: 420px; padding: 8px 12px; font-size: 14px; box-sizing: border-box;">
-                            </div>
-
-                            <div id="orderOverviewInfo" class="info-box" style="display:none;"></div>
-
-                            <table class="data-table" id="orderOverviewTable">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer Name</th>
-                                        <th>Priority</th>
-                                        <th>Status</th>
-                                        <th>Total Doors</th>
-                                        <th>Completed</th>
-                                        <th>Remaining</th>
-                                        <th>Progress</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="orderOverviewTableBody">
-                                    <tr><td colspan="9" style="text-align:center; padding:30px; color:#888;">📈 Click "Refresh" or switch to this tab to load data.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Order Overview - Door Detail Modal -->
-                        <div id="orderDoorDetailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:2000; align-items:center; justify-content:center;">
-                            <div style="background:#fff; border-radius:8px; width:92%; max-width:700px; max-height:85vh; overflow-y:auto; padding:28px; box-shadow:0 6px 24px rgba(0,0,0,0.25); position:relative;">
-                                <button onclick="closeOrderDoorModal()" style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#888;">✕</button>
-                                <h3 id="doorDetailModalTitle" style="margin-top:0; color:#2c3e50;">Door Details</h3>
-                                <div id="doorDetailModalBody">
-                                    <!-- Door rows rendered by JS -->
-                                </div>
-                            </div>
-                        </div>
-
                     </div><!-- End card-body -->
                 </div><!-- End card -->
             </div><!-- End module-factoryadmin -->
@@ -1162,284 +943,492 @@
             <!-- This dashboard is for Sales Executive role -->
             <!-- Shows: Customer Creation, Order Creation, My Orders -->
             <!-- Features: Create customers, create orders (auto PENDING_APPROVAL), track own orders -->
-            <div id="module-salesexec" class="module-section">
-                <div class="se-dashboard-grid">
-                    
-                    <!-- ========== SECTION 1: CREATE NEW CUSTOMER ========== -->
-                  
-                    <!-- ========== SECTION 3: MY ORDERS TABLE ========== -->
-                    <div class="se-orders-card">
-                        <div class="se-orders-header">
-                            📋 My Orders <span id="orderCountBadge" style="background:rgba(255,255,255,0.3); padding:5px 12px; border-radius:12px; font-size:0.9rem;">0 Orders</span>
-                        </div>
-                        <div class="se-orders-body">
-                            <table class="se-orders-table" id="myOrdersTable">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer</th>
-                                        <th>Product</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Created Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="myOrdersTableBody">
-                                    <!-- Orders will be loaded here -->
-                                </tbody>
-                            </table>
-                            <div id="noOrdersMessage" class="se-empty-state">
-                                <div class="se-empty-state-icon">📭</div>
-                                <p><strong>No orders yet</strong></p>
-                                <p>Orders you create will appear here. All new orders start with PENDING_APPROVAL status.</p>
-                            </div>
-                        </div>
-                    </div>
+        
+                <div id="module-salesexec" class="module-section">
 
-                    <!-- ==================== SALES ORDER CREATION ==================== -->
-                    <section id="salesOrderSection" class="so-form-wrapper">
-                        
-                        <!-- Validation Summary -->
-                        <div id="soValidationSummary" class="so-validation-summary">
-                            <strong>Please fix the following errors:</strong>
-                            <ul id="soErrorList"></ul>
-                        </div>
+                    <div class="se-dashboard-grid">
 
-                        <!-- AI DOCUMENT PARSER SECTION -->
-                        <div class="so-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
-                            <h3 style="margin-top: 0; color: white;">🤖 Auto-Fill from Order Sheet</h3>
-                            <div style="margin-bottom: 15px;">
-                                <p style="margin: 0 0 10px 0;">Upload an order sheet (.jpg, .png, .pdf, .xlsx) to automatically extract door details.</p>
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <input type="file" id="soOrderDocumentInput" accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx" style="padding: 10px; border-radius: 4px; flex: 1; background: white; color: #333;">
-                                    <button type="button" id="soParseDocumentBtn" class="so-btn" style="background: white; color: #667eea; font-weight: bold; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px;">📄 Parse</button>
+                        <!-- ==================== ORDERS DASHBOARD ==================== -->
+                        <div id="se-orders-dashboard">
+
+                            <div class="orders-header">
+                                <div>
+                                    <h1 class="access-title">
+                                    Order <span class="gold-text">Management</span>
+                                    </h1>
+                                    <p class="orders-subtitle">
+                                        Monitor manufacturing pipelines and fulfillment status.
+                                    </p>
                                 </div>
-                                <div id="soParseStatus" style="margin-top: 10px; font-size: 14px; display: none;"></div>
-                            </div>
-                        </div>
 
-                        <!-- PARSED DATA PREVIEW MODAL -->
-                        <div id="soParsedDataPreviewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
-                            <div style="background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 900px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                                <h2 style="margin-top: 0; margin-bottom: 20px; color: #333;">📋 Extracted Door Data Preview</h2>
-                                <p style="color: #666; margin-bottom: 20px;">Please review the extracted door details below. Click "Confirm Data" to fill the form or "Edit Data" to make changes.</p>
-                                
-                                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                                    <thead style="background: #667eea; color: white;">
+                                <div class="orders-actions">
+                                    <button class="btn-primary" onclick="openCreateOrderForm()">
+                                        + Create New Order
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ==================== ORDER TABS ==================== -->
+                            <div class="orders-tabs">
+
+                                <button class="orders-tab" onclick="showOrdersTab('pending')">
+                                    Pending Approval
+                                </button>
+
+                                <button class="orders-tab" onclick="showOrdersTab('setpriority')">
+                                    Set Priority
+                                </button>
+
+                                <button class="orders-tab" onclick="showOrdersTab('seepriority')">
+                                    See Priority
+                                </button>
+
+                            </div>
+
+
+                            <!-- ==================== PENDING ORDERS ==================== -->
+                            <div id="pendingOrdersSection" class="orders-section" style="display:none;">
+
+                                <h3 style="margin-bottom:15px;color:#333;">
+                                    Pending Orders for Approval
+                                </h3>
+
+                                <table class="data-table">
+
+                                    <thead>
                                         <tr>
-                                            <th style="padding: 12px; text-align: left; font-weight: 600;">Door Type</th>
-                                            <th style="padding: 12px; text-align: center; font-weight: 600;">Length (cm)</th>
-                                            <th style="padding: 12px; text-align: center; font-weight: 600;">Breadth (cm)</th>
-                                            <th style="padding: 12px; text-align: center; font-weight: 600;">Thickness (mm)</th>
+                                            <th>Order ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Customer Type</th>
+                                            <th>Total Doors</th>
+                                            <th>Status</th>
+                                            <th>Created At</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="soParsedDoorsTable">
-                                        <!-- Table rows will be populated here -->
+
+                                    <tbody id="pendingOrdersTableBody">
+                                        <!-- Pending orders loaded by JS -->
                                     </tbody>
+
                                 </table>
 
-                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                    <button type="button" onclick="closeParsedDataPreview()" style="padding: 10px 20px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
-                                    <button type="button" onclick="editParsedData()" style="padding: 10px 20px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">✏️ Edit Data</button>
-                                    <button type="button" onclick="confirmAndFillParsedData()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">✅ Confirm Data</button>
+                            </div>
+
+                            <!-- ========================= Set Orders ======================= -->
+                             <div id="setPrioritySection" class="orders-section" style="display:none;">
+
+                                <h3 style="margin-bottom:15px;">Set Priority</h3>
+
+                                <div id="productionQueueInfo" class="info-box">
+                                    Loading production queue...
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- CUSTOMER PROFILE SECTION -->
-                        <div class="so-section">
-                            <h3>👥 Customer Profile</h3>
-                            <div class="so-info-box">
-                                ℹ️ GST Number is optional for Direct Customers and required for Dealers/Builders/Franchises.
-                            </div>
+                                <div id="productionQueueContainer">
+                                    <div style="text-align:center;padding:30px;color:#888;">
+                                        Loading orders...
+                                    </div>
+                                </div>
 
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soCustomerType">
-                                        Customer Type <span class="required">*</span>
+                                </div>
+
+                            <!-- ========================= See Priority ===================== -->
+                            <div id="seePrioritySection" class="orders-section" style="display:none;">
+
+                                <h3 style="margin-bottom:15px;">Priority Orders</h3>
+
+                                <!-- Info Box -->
+                                <div id="priorityOrdersInfo" class="info-box">
+                                    Loading priority orders...
+                                </div>
+
+                                <!-- Priority Filter Bar -->
+                                <div style="margin-bottom:15px;">
+                                    <label for="priorityFilterSelect" style="margin-right:10px;font-weight:bold;">
+                                        Filter by Priority:
                                     </label>
-                                    <select id="soCustomerType" required>
-                                        <option value="">-- Select Customer Type --</option>
-                                        <option value="Direct Customer">Direct Customer</option>
-                                        <option value="Dealer">Dealer</option>
-                                        <option value="Builder">Builder</option>
-                                        <option value="Franchise">Franchise</option>
+
+                                    <select id="priorityFilterSelect"
+                                            class="input-field"
+                                            onchange="loadPriorityOrders(this.value)"
+                                            style="padding:8px 12px;font-size:14px;max-width:200px;">
+
+                                        <option value="">All</option>
+                                        <option value="High">🔴 High</option>
+                                        <option value="Normal">🟠 Normal</option>
+                                        <option value="Low">🟢 Low</option>
+
                                     </select>
-                                    <div class="so-error-msg" data-field="soCustomerType"></div>
                                 </div>
 
-                                <div class="so-form-group">
-                                    <label for="soCustomerName">
-                                        Customer / Company Name <span class="required">*</span>
-                                    </label>
-                                    <input type="text" id="soCustomerName" placeholder="Enter full company name" required>
-                                    <div class="so-error-msg" data-field="soCustomerName"></div>
-                                </div>
+                                <!-- Priority Table -->
+                                <table class="data-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Door Type</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="priorityOrdersTableBody">
+                                        <tr>
+                                            <td colspan="5" style="text-align:center;padding:30px;color:#888;">
+                                                Loading priority orders...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
                             </div>
 
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soGstNumber">
-                                        GST Number (Optional)
-                                    </label>
-                                    <input type="text" id="soGstNumber" placeholder="15 alphanumeric characters (optional)">
-                                    <div class="so-error-msg" data-field="soGstNumber"></div>
-                                </div>
-
-                                <div class="so-form-group">
-                                    <label for="soPrimaryEmail">
-                                        Primary Email <span class="required">*</span>
-                                    </label>
-                                    <input type="email" id="soPrimaryEmail" placeholder="customer@example.com" required>
-                                    <div class="so-error-msg" data-field="soPrimaryEmail"></div>
-                                </div>
-                            </div>
-
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soPrimaryPhone">
-                                        Primary Phone <span class="required">*</span>
-                                    </label>
-                                    <input type="tel" id="soPrimaryPhone" placeholder="10-digit phone" required>
-                                    <div class="so-error-msg" data-field="soPrimaryPhone"></div>
-                                </div>
-                            </div>
-
-                            <div class="so-form-group">
-                                <label for="soBillingAddress">
-                                    Billing Address <span class="required">*</span>
-                                </label>
-                                <textarea id="soBillingAddress" placeholder="Enter complete billing address" required></textarea>
-                                <div class="so-error-msg" data-field="soBillingAddress"></div>
-                            </div>
-
-                            <div class="so-form-group">
-                                <label for="soDeliveryAddress">
-                                    Delivery Address <span class="required">*</span>
-                                </label>
-                                <textarea id="soDeliveryAddress" placeholder="Enter complete delivery address" required></textarea>
-                                <div class="so-error-msg" data-field="soDeliveryAddress"></div>
-                            </div>
-
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soCity">
-                                        City <span class="required">*</span>
-                                    </label>
-                                    <input type="text" id="soCity" placeholder="City name" required>
-                                    <div class="so-error-msg" data-field="soCity"></div>
-                                </div>
-
-                                <div class="so-form-group">
-                                    <label for="soState">
-                                        State <span class="required">*</span>
-                                    </label>
-                                    <input type="text" id="soState" placeholder="State name" required>
-                                    <div class="so-error-msg" data-field="soState"></div>
-                                </div>
-
-                                <div class="so-form-group">
-                                    <label for="soPincode">
-                                        Pincode <span class="required">*</span>
-                                    </label>
-                                    <input type="text" id="soPincode" placeholder="6-digit pincode" required>
-                                    <div class="so-error-msg" data-field="soPincode"></div>
-                                </div>
-                            </div>
                         </div>
 
-                        <!-- CONTACT PERSON (POC) SECTION -->
-                        <div class="so-section">
-                            <h3>👤 Contact Person (POC)</h3>
 
-                            <div class="so-form-row">
+                        <!-- ==================== SALES ORDER CREATION ==================== -->
+                        <section id="salesOrderSection" class="so-form-wrapper">
+
+                            <h1 class="access-title">
+                            Order <span class="gold-text">Details</span>
+                            </h1>
+
+                            <!-- Validation Summary -->
+                            <div id="soValidationSummary" class="so-validation-summary">
+                                <strong>Please fix the following errors:</strong>
+                                <ul id="soErrorList"></ul>
+                            </div>
+
+                            <!-- ==================== CUSTOMER PROFILE ==================== -->
+                            <div class="so-section">
+
+                                <h3>Customer Profile</h3>
+
+                                <div class="so-info-box">
+                                    GST Number is optional for Direct Customers and required for Dealers/Builders/Franchises.
+                                </div>
+
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soCustomerType">
+                                            Customer Type <span class="required">*</span>
+                                        </label>
+
+                                        <select id="soCustomerType" required>
+                                            <option value="">-- Select Customer Type --</option>
+                                            <option value="Direct Customer">Direct Customer</option>
+                                            <option value="Dealer">Dealer</option>
+                                            <option value="Builder">Builder</option>
+                                            <option value="Franchise">Franchise</option>
+                                        </select>
+
+                                        <div class="so-error-msg" data-field="soCustomerType"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soCustomerName">
+                                            Customer / Company Name <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="soCustomerName"
+                                            placeholder="Enter full company name"
+                                            required
+                                        >
+
+                                        <div class="so-error-msg" data-field="soCustomerName"></div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soGstNumber">
+                                            GST Number (Optional)
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            id="soGstNumber"
+                                            placeholder="15 alphanumeric characters (optional)"
+                                        >
+
+                                        <div class="so-error-msg" data-field="soGstNumber"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soPrimaryEmail">
+                                            Primary Email <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            id="soPrimaryEmail"
+                                            placeholder="customer@example.com"
+                                            required
+                                        >
+
+                                        <div class="so-error-msg" data-field="soPrimaryEmail"></div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soPrimaryPhone">
+                                            Primary Phone <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="tel"
+                                            id="soPrimaryPhone"
+                                            placeholder="10-digit phone"
+                                            required
+                                        >
+
+                                        <div class="so-error-msg" data-field="soPrimaryPhone"></div>
+                                    </div>
+
+                                </div>
+
+
                                 <div class="so-form-group">
-                                    <label for="soPocName">
-                                        POC Name <span class="required">*</span>
+                                    <label for="soBillingAddress">
+                                        Billing Address <span class="required">*</span>
                                     </label>
-                                    <input type="text" id="soPocName" placeholder="Full name" required>
-                                    <div class="so-error-msg" data-field="soPocName"></div>
+
+                                    <textarea
+                                        id="soBillingAddress"
+                                        placeholder="Enter complete billing address"
+                                        required
+                                    ></textarea>
+
+                                    <div class="so-error-msg" data-field="soBillingAddress"></div>
                                 </div>
+
 
                                 <div class="so-form-group">
-                                    <label for="soPocDesignation">
-                                        Designation <span class="required">*</span>
+                                    <label for="soDeliveryAddress">
+                                        Delivery Address <span class="required">*</span>
                                     </label>
-                                    <input type="text" id="soPocDesignation" placeholder="e.g., Manager, Director" required>
-                                    <div class="so-error-msg" data-field="soPocDesignation"></div>
-                                </div>
-                            </div>
 
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soPocPhone">
-                                        POC Phone <span class="required">*</span>
-                                    </label>
-                                    <input type="tel" id="soPocPhone" placeholder="10-digit phone" required>
-                                    <div class="so-error-msg" data-field="soPocPhone"></div>
+                                    <textarea
+                                        id="soDeliveryAddress"
+                                        placeholder="Enter complete delivery address"
+                                        required
+                                    ></textarea>
+
+                                    <div class="so-error-msg" data-field="soDeliveryAddress"></div>
                                 </div>
 
-                                <div class="so-form-group">
-                                    <label for="soPocEmail">
-                                        POC Email <span class="required">*</span>
-                                    </label>
-                                    <input type="email" id="soPocEmail" placeholder="poc@company.com" required>
-                                    <div class="so-error-msg" data-field="soPocEmail"></div>
+
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soCity">
+                                            City <span class="required">*</span>
+                                        </label>
+
+                                        <input type="text" id="soCity" placeholder="City name" required>
+
+                                        <div class="so-error-msg" data-field="soCity"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soState">
+                                            State <span class="required">*</span>
+                                        </label>
+
+                                        <input type="text" id="soState" placeholder="State name" required>
+
+                                        <div class="so-error-msg" data-field="soState"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soPincode">
+                                            Pincode <span class="required">*</span>
+                                        </label>
+
+                                        <input type="text" id="soPincode" placeholder="6-digit pincode" required>
+
+                                        <div class="so-error-msg" data-field="soPincode"></div>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- DOOR SPECIFICATIONS SECTION -->
-                        <div class="so-section">
-                            <h3>🚪 Door Specifications</h3>
-                            <div class="so-info-box">
-                                ℹ️ Each door entry represents one door specification. Measurements should be in centimeters.
                             </div>
 
-                            <div id="soDoorsContainer"></div>
 
-                            <button type="button" class="so-btn-add-door" id="soAddDoorBtn">+ Add Another Door</button>
-                        </div>
+                            <!-- ==================== CONTACT PERSON ==================== -->
+                            <div class="so-section">
 
-                        <!-- PRICING SECTION -->
-                        <div class="so-section">
-                            <h3>💰 Pricing & Calculation</h3>
-                            <div class="so-info-box">
-                                ℹ️ Total area is calculated from all doors. Estimated price = Total Area × Rate Per Unit
-                            </div>
+                                <h3>Contact Person (POC)</h3>
 
-                            <div class="so-form-row">
-                                <div class="so-form-group">
-                                    <label for="soRatePerUnit">
-                                        Rate Per Unit (₹/cm²) <span class="required">*</span>
-                                    </label>
-                                    <input type="number" id="soRatePerUnit" placeholder="Enter rate per cm²" min="0" step="0.01" required>
-                                    <div class="so-error-msg" data-field="soRatePerUnit"></div>
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soPocName">
+                                            POC Name <span class="required">*</span>
+                                        </label>
+
+                                        <input type="text" id="soPocName" placeholder="Full name" required>
+
+                                        <div class="so-error-msg" data-field="soPocName"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soPocDesignation">
+                                            Designation <span class="required">*</span>
+                                        </label>
+
+                                        <input type="text" id="soPocDesignation" placeholder="Manager / Director" required>
+
+                                        <div class="so-error-msg" data-field="soPocDesignation"></div>
+                                    </div>
+
                                 </div>
+
+
+                                <div class="so-form-row">
+
+                                    <div class="so-form-group">
+                                        <label for="soPocPhone">
+                                            POC Phone <span class="required">*</span>
+                                        </label>
+
+                                        <input type="tel" id="soPocPhone" placeholder="10-digit phone" required>
+
+                                        <div class="so-error-msg" data-field="soPocPhone"></div>
+                                    </div>
+
+
+                                    <div class="so-form-group">
+                                        <label for="soPocEmail">
+                                            POC Email <span class="required">*</span>
+                                        </label>
+
+                                        <input type="email" id="soPocEmail" placeholder="poc@company.com" required>
+
+                                        <div class="so-error-msg" data-field="soPocEmail"></div>
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="so-calculation-display">
-                                <div class="so-calc-row">
-                                    <span class="so-calc-label">Total Door Area:</span>
-                                    <span class="so-calc-value" id="soTotalAreaDisplay">0</span> cm²
+
+                            <!-- ==================== DOOR SPECIFICATIONS ==================== -->
+                            <div class="so-section">
+
+                                <h3>Door Specifications</h3>
+
+                                <div class="so-info-box">
+                                    Each door entry represents one door specification. Measurements should be in centimeters.
                                 </div>
-                                <div class="so-calc-row">
-                                    <span class="so-calc-label">Estimated Price:</span>
-                                    <span class="so-calc-value" id="soEstimatedPriceDisplay">₹0</span>
-                                </div>
+
+                                <div id="soDoorsContainer"></div>
+
+                                <button
+                                    type="button"
+                                    class="so-btn-add-door"
+                                    id="soAddDoorBtn"
+                                >
+                                    + Add Another Door
+                                </button>
+
                             </div>
-                        </div>
 
-                        <!-- ACTION BUTTONS -->
-                        <div class="so-action-buttons">
-                            <button type="button" class="so-btn so-btn-cancel" id="soCancelBtn">Cancel</button>
-                            <button type="button" class="so-btn so-btn-submit" id="soSubmitBtn">Generate Order ID</button>
-                        </div>
-                    </section>
 
-                </div><!-- End se-dashboard-grid -->
-            </div><!-- End module-salesexec -->
+                            <!-- ==================== PRICING ==================== -->
+                            <div class="so-section">
+
+                                <h3>Pricing & Calculation</h3>
+
+                                <div class="so-info-box">
+                                    Total area is calculated from all doors. Estimated price = Total Area × Rate Per Unit
+                                </div>
+
+
+                                <div class="so-form-row">
+                                    <div class="so-form-group">
+
+                                        <label for="soRatePerUnit">
+                                            Rate Per Unit (₹/cm²) <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            id="soRatePerUnit"
+                                            placeholder="Enter rate per cm²"
+                                            min="0"
+                                            step="0.01"
+                                            required
+                                        >
+
+                                        <div class="so-error-msg" data-field="soRatePerUnit"></div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="so-calculation-display">
+
+                                    <div class="so-calc-row">
+                                        <span class="so-calc-label">Total Door Area:</span>
+                                        <span class="so-calc-value" id="soTotalAreaDisplay">0</span> cm²
+                                    </div>
+
+                                    <div class="so-calc-row">
+                                        <span class="so-calc-label">Estimated Price:</span>
+                                        <span class="so-calc-value" id="soEstimatedPriceDisplay">₹0</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ==================== ACTION BUTTONS ==================== -->
+                            <div class="so-action-buttons">
+
+                                <button
+                                    type="button"
+                                    class="so-btn so-btn-cancel"
+                                    id="soCancelBtn"
+                                    onclick="closeCreateOrderForm()"
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="so-btn so-btn-submit"
+                                    id="soSubmitBtn"
+                                >
+                                    Generate Order ID
+                                </button>
+
+                            </div>
+
+                        </section>
+
+                    </div>
+
+                </div>
 
             <!-- ==================== PRODUCTION SUPERVISOR DASHBOARD MODULE ==================== -->
             <!-- This dashboard is for Production Supervisor role -->
@@ -1453,6 +1442,9 @@
                     <div class="card-body">
 
                     <div class="ps-tabs">
+                        <button class="ps-tab" onclick="switchPsTab('approved')">
+                            Approved Orders
+                        </button>
                         <button class="ps-tab active" onclick="switchPsTab('production')">
                             Door Production
                         </button>
@@ -1460,11 +1452,74 @@
                         <button class="ps-tab" onclick="switchPsTab('workers')">
                             Worker Management
                         </button>
-                    </div>                   
+                    </div>       
+                    
+                        <!-- ==================== PRODUCTION APPROVED ORDERS ==================== -->
+                        <div id="ps-approved-orders" style="display:block">
+
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                                <h3 style="margin:0;color:#FFD700;">Approved / Production Orders</h3>
+
+                                <button onclick="loadOrderOverview()" 
+                                style="padding:8px 16px;background:#FFD700;color:#000;border:none;border-radius:4px;font-weight:bold;cursor:pointer;">
+                                    Refresh
+                                </button>
+                            </div>
+
+                            <!-- Search -->
+                            <div style="margin-bottom:15px;">
+                                <input
+                                    type="text"
+                                    id="orderOverviewSearch"
+                                    class="input-field"
+                                    placeholder="Search by Order ID or Customer Name..."
+                                    oninput="filterOrderOverview()"
+                                    style="width:100%;max-width:420px;padding:8px 12px;font-size:14px;"
+                                >
+                            </div>
+
+                            <table class="data-table" id="orderOverviewTable">
+
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer Name</th>
+                                        <!-- <th>Priority</th> -->
+                                        <th>Status</th>
+                                        <th>Total Doors</th>
+                                        <th>Completed</th>
+                                        <th>Remaining</th>
+                                        <th>Progress</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="orderOverviewTableBody">
+                                    <tr>
+                                        <td colspan="9" style="text-align:center;padding:30px;color:#888;">
+                                            Loading approved orders...
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                                <!-- Order Overview - Door Detail Modal -->
+                            <div id="orderDoorDetailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:2000; align-items:center; justify-content:center;">
+                                <div style="background:#fff; border-radius:8px; width:92%; max-width:700px; max-height:85vh; overflow-y:auto; padding:28px; box-shadow:0 6px 24px rgba(0,0,0,0.25); position:relative;">
+                                    <button onclick="closeOrderDoorModal()" style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#888;">✕</button>
+                                    <h3 id="doorDetailModalTitle" style="margin-top:0; color:#2c3e50;">Door Details</h3>
+                                    <div id="doorDetailModalBody">
+                                        <!-- Door rows rendered by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     
                         <div id ="ps-production">
                             <!-- ========== PRODUCTION HEADER ========== -->
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:25px; padding:14px 18px; background:#1a1a2e; border-radius:8px; border:1px solid #2a2a4a;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:25px; padding:14px 18px; background:#111; border-radius:8px; border:1px solid #333;">
                                 <div>
                                     <h3 style="margin:0 0 4px 0; color:#fff;">All Production Doors</h3>
                                     <span id="allDoorsTotal" style="color:#888; font-size:13px;">Loading...</span>
@@ -1472,31 +1527,8 @@
                                 <button onclick="loadAllDoors()" style="padding:8px 18px; background:#FFD700; color:#000; border:none; border-radius:4px; font-weight:bold; cursor:pointer; font-size:13px;">&#8635; Refresh</button>
                             </div>
 
-                                <div class="production-pipeline">
-
-                                    <div class="pipeline-stages">
-                                        <span>CUTTING</span>
-                                        <span>BTC</span>
-                                        <span>LAMINATE</span>
-                                        <span>PRESS</span>
-                                        <span>FINISH</span>
-                                        <span>PACKING</span>
-                                        <span>DELIVERY</span>
-                                    </div>
-
-                                    <div class="pipeline-bar">
-                                        <div id="pipelineProgress"></div>
-                                    </div>
-
-                                    <div class="pipeline-percent">
-                                        <span id="pipelinePercent">0%</span> Completed
-                                    </div>
-
-                                </div>
-                            
-
                             <!-- ========== DOOR TYPE SUMMARY ========== -->
-                            <div id="doorTypeSummaryBox" style="margin-bottom:20px; padding:16px; background:#1e1e2e; border-radius:8px; border:1px solid #2a2a4a;">
+                            <div id="doorTypeSummaryBox" style="margin-bottom:20px; padding:16px; background:#111; border-radius:8px; border:1px solid #333;">
                                 <h4 style="margin:0 0 12px 0; color:#FFD700; font-size:14px;">Door Type Summary <span style="font-weight:normal; color:#888; font-size:12px;">(All Orders)</span></h4>
                                 <div id="doorTypeSummaryContent" style="color:#999; font-size:13px;">
                                     Loading...
@@ -1518,7 +1550,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-cutting" onchange="applyStageFilters('cutting')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1575,7 +1607,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-BTC" onchange="applyStageFilters('BTC')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1632,7 +1664,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-laminate" onchange="applyStageFilters('laminate')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1689,7 +1721,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-press" onchange="applyStageFilters('press')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1746,7 +1778,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-finish" onchange="applyStageFilters('finish')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1804,7 +1836,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-packing" onchange="applyStageFilters('packing')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1867,7 +1899,7 @@
                                         </button>
 
                                     </div>
-                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #2a2a4a; flex-wrap:wrap; align-items:center;">
+                                    <div style="display:flex; gap:16px; padding:10px 16px; background:#141424; border-bottom:1px solid #333; flex-wrap:wrap; align-items:center;">
                                         <div style="display:flex; align-items:center; gap:6px;">
                                             <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Priority:</label>
                                             <select id="filterPriority-delivery" onchange="applyStageFilters('delivery')" style="padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
@@ -1918,7 +1950,7 @@
                             </div>
 
                             <!-- ========== INVENTORY USAGE SECTION ========== -->
-                            <div style="margin-top:30px; padding:20px; background:#1e1e2e; border-radius:8px; border:1px solid #2a2a4a;">
+                            <div style="margin-top:30px; padding:20px; background:#1e1e2e; border-radius:8px; border:1px solid #333;">
                                 <h3 style="margin:0 0 16px 0; color:#FFD700;">Log Inventory Usage</h3>
                                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; align-items:flex-end;">
                                     <div>
@@ -2109,9 +2141,9 @@
                                             </tbody>
                                         </table>
                                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                            <button onclick="attMarkAll('Present')" style="padding: 7px 14px; background: #4caf50; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">✅ Mark All Present</button>
-                                            <button onclick="attMarkAll('Absent')" style="padding: 7px 14px; background: #f44336; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">❌ Mark All Absent</button>
-                                            <button onclick="saveAttendance()" style="padding: 7px 20px; background: #FFD700; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; margin-left: auto;">💾 Save Attendance</button>
+                                            <button onclick="attMarkAll('Present')" style="padding: 7px 14px; background: #4caf50; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;"> Mark All Present</button>
+                                            <button onclick="attMarkAll('Absent')" style="padding: 7px 14px; background: #f44336; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;"> Mark All Absent</button>
+                                            <button onclick="saveAttendance()" style="padding: 7px 20px; background: #FFD700; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; margin-left: auto;">Save Attendance</button>
                                         </div>
                                     </div>
                                     <p id="attMarkMsg" style="margin: 8px 0 0 0; font-size: 12px; color: #999;"></p>
@@ -2174,80 +2206,7 @@
                 </div><!-- End card -->
             </div><!-- End module-productionsupervisor -->
 
-            <!-- ==================== WORKER HISTORY MODULE ==================== -->
-            <!-- Shows daily worker performance summary with aggregated statistics -->
-            <div id="module-worker-history" class="module-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>📊 Worker Performance History</h2>
-                        <p>Daily worker productivity summary by stage</p>
-                    </div>
-                    <div class="card-body">
-                        
-                        <!-- ========== DATE PICKER ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
-                            <h3 style="margin-top: 0; color: #2196f3;">📅 Select Date</h3>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 200px; gap: 15px; align-items: flex-end;">
-                                <div>
-                                    <label for="workerHistoryDate" style="display: block; margin-bottom: 8px; color: #aaa; font-weight: bold;">Date</label>
-                                    <input type="date" id="workerHistoryDate" style="width: 100%; padding: 10px; background: #0b0b0b; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 14px;">
-                                </div>
-                                <button onclick="loadWorkerHistory()" style="padding: 10px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">🔍 Search</button>
-                            </div>
-                        </div>
-
-                        <!-- ========== WORKER SUMMARY TABLE ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                            <h3 style="margin-top: 0; color: #2196f3;">📈 Worker Summary</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #0b0b0b;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">👤 Worker</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">✂️ Cutting</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">⚙️ BTC</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">✨ Laminate</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">📦 Press</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">🚚 Finish</th>
-                                            <th style="padding: 12px; text-align: center; color: #4caf50; border-bottom: 2px solid #444; font-weight: bold;">📊 Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="workerSummaryTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="7" style="padding: 20px; text-align: center; color: #666;">📅 Select a date and click Search to view worker performance...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- ========== DETAILED WORKER ACTIVITY ========== -->
-                        <div style="background: #1e1e2e; padding: 20px; border-radius: 8px;">
-                            <h3 style="margin-top: 0; color: #2196f3;">📋 Detailed Activity</h3>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: #0b0b0b;">
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Stage</th>
-                                            <th style="padding: 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Doors</th>
-                                            <th style="padding: 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Quality</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="workerDetailTableBody" style="color: #ccc;">
-                                        <tr style="background: #1e1e2e;">
-                                            <td colspan="4" style="padding: 20px; text-align: center; color: #666;">📅 Select a date and click Search to view details...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div><!-- End card-body -->
-                </div><!-- End card -->
-            </div><!-- End module-worker-history -->
-
+        
             <!-- ==================== ADDED: USER MANAGEMENT MODULE (ADMIN ONLY) ==================== -->
             <div id="module-usermanagement" class="module-section">
                 <div class="users-header">
@@ -2377,23 +2336,88 @@
         // ==================== HELPER FUNCTIONS ====================
 
         //=====SWITCH TABS FOR PRODUCTION (DOOR PRODUCTION UPDATE VS WORKER UPDATE)=====
+        //===== SWITCH TABS FOR PRODUCTION (APPROVED ORDERS / DOOR PRODUCTION / WORKERS) =====
         function switchPsTab(tab){
 
+            document.getElementById("ps-approved-orders").style.display="none";
             document.getElementById("ps-production").style.display="none";
             document.getElementById("ps-workers-section").style.display="none";
 
             document.querySelectorAll(".ps-tab").forEach(t=>t.classList.remove("active"));
 
-            if(tab==="production"){
-            document.getElementById("ps-production").style.display="block";
-            document.querySelectorAll(".ps-tab")[0].classList.add("active");
-            }
-            else{
-            document.getElementById("ps-workers-section").style.display="block";
-            document.querySelectorAll(".ps-tab")[1].classList.add("active");
+            if(tab==="approved"){
+                document.getElementById("ps-approved-orders").style.display="block";
+                document.querySelectorAll(".ps-tab")[0].classList.add("active");
+
+                loadOrderOverview(); // load approved orders
             }
 
+            else if(tab==="production"){
+                document.getElementById("ps-production").style.display="block";
+                document.querySelectorAll(".ps-tab")[1].classList.add("active");
             }
+
+            else if(tab==="workers"){
+                document.getElementById("ps-workers-section").style.display="block";
+                document.querySelectorAll(".ps-tab")[2].classList.add("active");
+            }
+        }
+
+        function openCreateOrderForm() {
+
+            const dashboard = document.getElementById("se-orders-dashboard");
+            const form = document.getElementById("salesOrderSection");
+
+            if (dashboard) dashboard.style.display = "none";
+            if (form) form.style.display = "block";
+
+            window.scrollTo(0,0);
+        }
+
+        function closeCreateOrderForm() {
+
+            const dashboard = document.getElementById("se-orders-dashboard");
+            const form = document.getElementById("salesOrderSection");
+
+            if (form) form.style.display = "none";
+            if (dashboard) dashboard.style.display = "block";
+        }
+
+        // ======= create order button function ==========
+        // ======= order priority pending tab switching ======
+        // ======= pending orders tab switching ======
+        function showOrdersTab(type){
+
+            document.getElementById("pendingOrdersSection").style.display="none";
+            document.getElementById("setPrioritySection").style.display="none";
+            document.getElementById("seePrioritySection").style.display="none";
+
+            document.querySelectorAll(".orders-tab").forEach(t=>t.classList.remove("active"));
+
+            if(type==="pending"){
+                document.getElementById("pendingOrdersSection").style.display="block";
+                document.querySelectorAll(".orders-tab")[0].classList.add("active");
+
+                fetchPendingOrders();
+            }
+
+            if(type==="setpriority"){
+                document.getElementById("setPrioritySection").style.display="block";
+                document.querySelectorAll(".orders-tab")[1].classList.add("active");
+
+                loadProductionQueue();
+            }
+
+            if(type==="seepriority"){
+                document.getElementById("seePrioritySection").style.display="block";
+                document.querySelectorAll(".orders-tab")[2].classList.add("active");
+
+                loadPriorityOrders();
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            loadOrderOverview();
+        });
 
         //======= toggle function ===========
         function toggleAccessMenu() {
@@ -2495,19 +2519,19 @@
 
                     // Show dashboard (which will call applyPermissions)
                     showDashboard();
-                    showToast('✅ Login successful!', 'success');
+                    showToast(' Login successful!', 'success');
                 } else {
                     throw new Error('Invalid response from server');
                 }
 
             } catch (error) {
-                console.error('❌ Login Error:', error);
+                console.error(' Login Error:', error);
                 
                 // UPDATED: Handle backend offline scenario
                 if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    errorEl.textContent = '❌ Server is offline. Please start the backend.';
+                    errorEl.textContent = ' Server is offline. Please start the backend.';
                 } else {
-                    errorEl.textContent = '❌ ' + error.message;
+                    errorEl.textContent = ' ' + error.message;
                 }
             } finally {
                 // ADDED: Re-enable button
@@ -2598,7 +2622,7 @@
 
             // ADDED: Disable button during API call
             signupBtn.disabled = true;
-            signupBtn.textContent = '⏳ Creating account...';
+            signupBtn.textContent = ' Creating account...';
 
             try {
                 // ADDED: Call backend signup API
@@ -2618,7 +2642,7 @@
 
                 // ADDED: Show success message (NO auto-login)
                 if (data.success) {
-                    console.log('✅ Signup successful:', data.data.user.email);
+                    console.log(' Signup successful:', data.data.user.email);
                     
                     // Clear form fields
                     document.getElementById('signupName').value = '';
@@ -2628,7 +2652,7 @@
                     document.getElementById('signupConfirmPassword').value = '';
                     
                     // Show success message
-                    successEl.textContent = '✅ ' + data.message;
+                    successEl.textContent = ' ' + data.message;
                     successEl.style.display = 'block';
                     
                     showToast('Signup successful! Awaiting admin approval.', 'success');
@@ -2643,13 +2667,13 @@
                 }
 
             } catch (error) {
-                console.error('❌ Signup Error:', error);
+                console.error(' Signup Error:', error);
                 
                 // ADDED: Handle backend offline scenario
                 if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    errorEl.textContent = '❌ Server is offline. Please start the backend.';
+                    errorEl.textContent = ' Server is offline. Please start the backend.';
                 } else {
-                    errorEl.textContent = '❌ ' + error.message;
+                    errorEl.textContent = ' ' + error.message;
                 }
             } finally {
                 // ADDED: Re-enable button
@@ -2712,19 +2736,19 @@
                             };
                             // Update stored user with fresh data
                             localStorage.setItem('sdfis_user', JSON.stringify(currentUser));
-                            console.log('✅ Session validated:', currentUser.name, '-', currentUser.role);
+                            console.log(' Session validated:', currentUser.name, '-', currentUser.role);
                             return true;
                         }
                     }
                     
                     // Token invalid or expired - clear session
-                    console.log('❌ Token validation failed, clearing session');
+                    console.log(' Token validation failed, clearing session');
                     localStorage.removeItem('sdfis_user');
                     localStorage.removeItem('sdfis_token');
                     return false;
                     
                 } catch (e) {
-                    console.error('❌ Session validation error:', e.message);
+                    console.error(' Session validation error:', e.message);
                     // UPDATED: If backend is offline, don't auto-login
                     localStorage.removeItem('sdfis_user');
                     localStorage.removeItem('sdfis_token');
@@ -2732,7 +2756,7 @@
                 }
             }
             
-            console.log('❌ No existing session found');
+            console.log(' No existing session found');
             return false;
         }
 
@@ -2762,7 +2786,7 @@
             // Show default module (dashboard)
             showModule('dashboard');
 
-            console.log('✅ Dashboard displayed for:', currentUser.role);
+            console.log(' Dashboard displayed for:', currentUser.role);
         }
 
 
@@ -2804,11 +2828,23 @@
             // ADDED: Auto-load orders when switching to Sales Executive dashboard
             if (moduleName === 'salesexec') {
                 initSalesExecDashboard();
+                initSalesExecDashboard();
+
+                // Default tab = Pending Orders
+                setTimeout(() => {
+                    showOrdersTab('pending');
+                }, 50);
             }
 
             // ADDED: Auto-load orders when switching to Production Supervisor dashboard
             if (moduleName === 'productionsupervisor') {
                 initProductionSupervisorDashboard();
+
+
+            // Force default tab to Door Production
+                if (typeof switchPsTab === "function") {
+                    switchPsTab("production");
+                }
             }
 
             // ADDED: Auto-load inventory when switching to Inventory module
@@ -3181,8 +3217,8 @@
                 }
 
             } catch (error) {
-                console.error('❌ Load Users Error:', error);
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: #e74c3c;">❌ ${error.message}</td></tr>`;
+                console.error(' Load Users Error:', error);
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: #e74c3c;"> ${error.message}</td></tr>`;
             }
         }
 
@@ -3278,7 +3314,7 @@
          * ADDED: Approve user and assign roles
          */
         async function approveUser(userId, userName) {
-            console.log('--- ✅ Approving User:', userName, '---');
+            console.log('---  Approving User:', userName, '---');
             
             const token = localStorage.getItem('sdfis_token');
             if (!token) {
@@ -3318,15 +3354,15 @@
                     throw new Error(data.message || 'Failed to approve user');
                 }
 
-                console.log('✅ User approved:', data);
-                showToast(`✅ ${data.message}`, 'success');
+                console.log(' User approved:', data);
+                showToast(` ${data.message}`, 'success');
                 
                 // Reload users table
                 loadUsers(usersCurrentPage);
 
             } catch (error) {
-                console.error('❌ Approve User Error:', error);
-                showToast('❌ ' + error.message, 'error');
+                console.error(' Approve User Error:', error);
+                showToast(' ' + error.message, 'error');
             }
         }
 
@@ -3355,7 +3391,7 @@
             console.log('🔲 Total checkboxes found:', checkboxCount);
 
             console.log('============================================');
-            console.log('✅ SDFIS Initialized Successfully!');
+            console.log(' SDFIS Initialized Successfully!');
             console.log('============================================');
         });
 
@@ -3519,7 +3555,7 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || 'Failed to add vendor');
 
-                alert('✅ Vendor added successfully!');
+                alert(' Vendor added successfully!');
                 closeAddVendorForm();
                 loadVendors();
             } catch (error) {
@@ -3549,7 +3585,7 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || 'Failed to delete vendor');
 
-                alert('✅ Vendor deleted successfully!');
+                alert(' Vendor deleted successfully!');
                 loadVendors();
             } catch (error) {
                 console.error('Error deleting vendor:', error);
@@ -3570,7 +3606,7 @@
             const infoBox = document.getElementById('orderOverviewInfo');
             if (!tbody) return;
 
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">⏳ Loading order overview...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;"> Loading order overview...</td></tr>';
             if (infoBox) infoBox.style.display = 'none';
 
             try {
@@ -3585,7 +3621,7 @@
                 renderOrderOverviewTable(_orderOverviewData);
             } catch (error) {
                 console.error('loadOrderOverview error:', error);
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#e74c3c;">❌ ' + error.message + '</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#e74c3c;"> ' + error.message + '</td></tr>';
             }
         }
 
@@ -3601,18 +3637,17 @@
                 return;
             }
 
-            const priorityBadge = { High: '#e74c3c', Normal: '#f39c12', Low: '#27ae60' };
+            // const priorityBadge = { High: '#e74c3c', Normal: '#f39c12', Low: '#27ae60' };
             const statusBadge   = { APPROVED: '#3498db', IN_PRODUCTION: '#e67e22', COMPLETED: '#27ae60' };
 
             tbody.innerHTML = rows.map(order => {
                 const pct = order.progressPct || 0;
                 const barColor = pct === 100 ? '#27ae60' : pct >= 50 ? '#f39c12' : '#e74c3c';
-                const priColor = priorityBadge[order.priority] || '#7f8c8d';
+                // const priColor = priorityBadge[order.priority] || '#7f8c8d';
                 const stColor  = statusBadge[order.status] || '#7f8c8d';
                 return `<tr>
                     <td><strong>${order.orderId}</strong></td>
                     <td>${order.customerName}</td>
-                    <td><span style="background:${priColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${order.priority}</span></td>
                     <td><span style="background:${stColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${order.status}</span></td>
                     <td style="text-align:center;">${order.totalDoors}</td>
                     <td style="text-align:center;">${order.completedDoors}</td>
@@ -3624,7 +3659,7 @@
                         <span style="font-size:12px;color:#555;">${pct}%</span>
                     </td>
                     <td>
-                        <button class="btn btn-primary" onclick="viewOrderDoors('${order.orderId}')" style="padding:4px 10px;font-size:12px;">🔍 View Doors</button>
+                        <button class="btn btn-primary" onclick="viewOrderDoors('${order.orderId}')" style="padding:4px 10px;font-size:12px;">View</button>
                     </td>
                 </tr>`;
             }).join('');
@@ -3658,7 +3693,7 @@
             if (!modal || !body) return;
 
             title.textContent = `Door Details — ${orderId}`;
-            body.innerHTML = '<p style="text-align:center;color:#888;">⏳ Loading doors...</p>';
+            body.innerHTML = '<p style="text-align:center;color:#888;"> Loading doors...</p>';
             modal.style.display = 'flex';
 
             try {
@@ -3694,7 +3729,7 @@
                             const statusLabel = d.isRejected
                                 ? '<span style="background:#e74c3c;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Rejected</span>'
                                 : ['PACKING','DELIVERY','COMPLETED'].includes(d.currentStage)
-                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">✅ Done</span>'
+                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;"> Done</span>'
                                     : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
                             return `<tr>
                                 <td style="text-align:center;"><strong>Door ${d.doorNumber}</strong></td>
@@ -3707,7 +3742,7 @@
                     </tbody>
                 </table>`;
             } catch (error) {
-                body.innerHTML = '<p style="text-align:center;color:#e74c3c;">❌ ' + error.message + '</p>';
+                body.innerHTML = '<p style="text-align:center;color:#e74c3c;"> ' + error.message + '</p>';
             }
         }
 
@@ -3750,29 +3785,9 @@
                 tabBtn.classList.add('active');
             }
 
-            // Fetch pending orders when the pending orders tab is clicked
-            if (tabId === 'fa-pending-orders') {
-                fetchPendingOrders();
-            }
-
-            // Fetch production queue when the production queue tab is clicked
-            if (tabId === 'fa-production-queue') {
-                loadProductionQueue();
-            }
-
             // Load vendors when the vendor overview tab is clicked
             if (tabId === 'fa-vendor-overview') {
                 loadVendors();
-            }
-
-            // ADDED: Fetch priority orders when the priority orders tab is clicked
-            if (tabId === 'fa-priority-orders') {
-                loadPriorityOrders();
-            }
-
-            // Load order overview when that tab is clicked
-            if (tabId === 'fa-order-overview') {
-                loadOrderOverview();
             }
         }
 
@@ -3791,7 +3806,7 @@
 
                 // Show loading state
                 const tableBody = document.getElementById('pendingOrdersTableBody');
-                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">⏳ Loading orders...</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;"> Loading orders...</td></tr>';
 
                 // Fetch orders from backend API
                 const response = await fetch(`${API_BASE_URL}/admin/orders`, {
@@ -3812,35 +3827,34 @@
                     throw new Error(result.message || 'No data returned from server');
                 }
 
-                // Clear and populate table
+                // ===== FILTER ONLY PENDING ORDERS =====
+                const pendingOrders = result.data.filter(order => order.status === "CREATED");
+
+                // Clear table
                 tableBody.innerHTML = '';
 
-                if (result.data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">✅ No orders to display</td></tr>';
+                if (pendingOrders.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;"> No pending approvals</td></tr>';
                     updateOrdersSummary(0);
                     return;
                 }
 
-                // Render each order as a table row
-                result.data.forEach(order => {
+                // Render each pending order as a table row
+                pendingOrders.forEach(order => {
                     const createdDate = new Date(order.createdAt).toLocaleDateString('en-IN');
                     const statusClass = 'status-' + order.status.toLowerCase();
                     
-                    // Build action buttons based on status
-                    let actionHTML = '';
-                    if (order.status === 'CREATED') {
-                        actionHTML = `
-                            <button class="btn-approve" onclick="approveOrder('${order.orderId}')">✅ Approve</button>
-                            <button class="btn-reject" onclick="rejectOrder('${order.orderId}')">❌ Reject</button>
-                        `;
-                    } else {
-                        actionHTML = `<span class="status-badge ${statusClass}">${order.status}</span>`;
-                    }
+                    // Build action buttons
+                    let actionHTML = `
+                        <button class="btn-approve" onclick="approveOrder('${order.orderId}')"> Approve</button>
+                        <button class="btn-reject" onclick="rejectOrder('${order.orderId}')"> Reject</button>
+                    `;
 
                     // Create row
                     const row = document.createElement('tr');
                     row.setAttribute('data-orderid', order.orderId);
                     row.setAttribute('data-status', order.status);
+
                     row.innerHTML = `
                         <td><strong>#${order.orderId}</strong></td>
                         <td>${order.customerName}</td>
@@ -3855,14 +3869,14 @@
                 });
 
                 // Update summary
-                updateOrdersSummary(result.data.length);
-                showToast('✅ Orders loaded successfully!', 'success');
+                updateOrdersSummary(pendingOrders.length);
+                showToast(' Pending orders loaded successfully!', 'success');
 
             } catch (error) {
                 console.error('Error fetching orders:', error);
                 const tableBody = document.getElementById('pendingOrdersTableBody');
-                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #e74c3c; padding: 20px;">❌ Error: ' + error.message + '</td></tr>';
-                showToast('❌ Error fetching orders: ' + error.message, 'error');
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #e74c3c; padding: 20px;"> Error: ' + error.message + '</td></tr>';
+                showToast(' Error fetching orders: ' + error.message, 'error');
             }
         }
 
@@ -3871,7 +3885,7 @@
          * @param {string} orderId - The order ID to approve
          */
         async function approveOrder(orderId) {
-            console.log('✅ Factory Admin: Approving order:', orderId);
+            console.log(' Factory Admin: Approving order:', orderId);
             
             // Confirm action
             if (!confirm('Approve order #' + orderId + ' for production?')) {
@@ -3903,7 +3917,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('✅ Order #' + orderId + ' approved for production!', 'success');
+                    showToast(' Order #' + orderId + ' approved for production!', 'success');
                     // Refresh the orders list
                     setTimeout(() => fetchPendingOrders(), 500);
                 } else {
@@ -3912,7 +3926,7 @@
 
             } catch (error) {
                 console.error('Error approving order:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -3921,7 +3935,7 @@
          * @param {string} orderId - The order ID to reject
          */
         async function rejectOrder(orderId) {
-            console.log('❌ Factory Admin: Rejecting order:', orderId);
+            console.log(' Factory Admin: Rejecting order:', orderId);
             
             // Get rejection reason
             const reason = prompt('Enter reason for rejecting order #' + orderId + ':');
@@ -3962,7 +3976,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('❌ Order #' + orderId + ' rejected. Reason: ' + reason, 'error');
+                    showToast(' Order #' + orderId + ' rejected. Reason: ' + reason, 'error');
                     // Refresh the orders list
                     setTimeout(() => fetchPendingOrders(), 500);
                 } else {
@@ -3971,7 +3985,7 @@
 
             } catch (error) {
                 console.error('Error rejecting order:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -3979,12 +3993,12 @@
          * // FACTORY ADMIN DASHBOARD - Update orders summary display
          */
         function updateOrdersSummary(count) {
-            const infoBox = document.querySelector('#fa-pending-orders .info-box');
+            const infoBox = document.querySelector('#pendingOrdersSection .info-box');
             
             if (infoBox) {
                 if (count === 0) {
                     infoBox.className = 'info-box success';
-                    infoBox.innerHTML = '<strong>✅ All Clear:</strong> No pending orders awaiting approval.';
+                    infoBox.innerHTML = '<strong> All Clear:</strong> No pending orders awaiting approval.';
                 } else {
                     infoBox.className = 'info-box warning';
                     infoBox.innerHTML = '<strong>⚠️ Action Required:</strong> ' + count + ' order(s) are awaiting your approval for production.';
@@ -4012,7 +4026,7 @@
                 const infoBox = document.getElementById('productionQueueInfo');
                 
                 // Show loading state
-                container.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;">⏳ Loading production queue...</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;"> Loading production queue...</div>';
                 infoBox.innerHTML = '<strong>ℹ️ Queue Status:</strong> Loading orders from database...';
 
                 // Fetch production queue from backend API
@@ -4033,7 +4047,7 @@
 
                 const result = await response.json();
                 
-                console.log('📦 API Response:', result);
+                console.log('API Response:', result);
 
                 if (!result.success || !result.data) {
                     throw new Error(result.message || 'No data returned from server');
@@ -4042,12 +4056,12 @@
                 // Check if there are any orders
                 if (result.data.length === 0) {
                     container.innerHTML = '<div style="text-align: center; padding: 30px; color: #888;">📭 No orders in production queue</div>';
-                    infoBox.innerHTML = '<strong>✅ Queue Empty:</strong> All approved orders are either pending or completed.';
+                    infoBox.innerHTML = '<strong> Queue Empty:</strong> All approved orders are either pending or completed.';
                     console.log('⚠️ No orders in production queue');
                     return;
                 }
 
-                console.log(`✅ Rendering ${result.data.length} orders in production queue`);
+                console.log(` Rendering ${result.data.length} orders in production queue`);
 
                 // Clear container and render order cards
                 container.innerHTML = '';
@@ -4082,7 +4096,7 @@
                     };
                     
                     titleDiv.appendChild(collapseBtn);
-                    titleDiv.appendChild(document.createTextNode(`📦 Order #${order.orderId}`));
+                    titleDiv.appendChild(document.createTextNode(`Order #${order.orderId}`));
                     
                     // Meta info
                     const metaDiv = document.createElement('div');
@@ -4148,20 +4162,21 @@
                                 <option value="Low" ${currentPriority === 'Low' ? 'selected' : ''}>Low</option>
                             `;
                             prioritySelect.onchange = () => {
+
                                 const newValue = prioritySelect.value;
+
                                 priorityBadge.className = `pq-door-priority-badge pq-priority-${newValue.toLowerCase()}`;
                                 priorityBadge.textContent = newValue.toUpperCase();
+
                                 saveBtn.disabled = false;
-                                saveBtn.style.background = '#27ae60';
+                                saveBtn.classList.add("enabled");
                             };
                             
                             // Save button
                             const saveBtn = document.createElement('button');
                             saveBtn.className = 'pq-btn-save';
-                            saveBtn.textContent = '💾 Save';
+                            saveBtn.textContent = 'Save';
                             saveBtn.disabled = true;
-                            saveBtn.style.background = '#bdc3c7';
-                            saveBtn.onclick = () => saveDoorPriority(order.orderId, doorIndex, prioritySelect.value, saveBtn);
                             
                             priorityControl.appendChild(priorityBadge);
                             priorityControl.appendChild(prioritySelect);
@@ -4179,24 +4194,26 @@
                 });
 
                 // Update info box with queue summary
+                infoBox.className = "info-box";
+
                 infoBox.innerHTML = `
-                    <strong>📊 Queue Summary:</strong> 
-                    ${result.data.length} order(s) in production queue 
-                    (Sorted by Priority: High → Normal → Low, then by creation date)
+                <strong>Queue Summary:</strong> 
+                ${result.data.length} orders in production queue
+                (Sorted by Priority → Date)
                 `;
                 
-                console.log('✅ Production Queue loaded and displayed successfully');
-                showToast('✅ Production queue loaded! ' + result.data.length + ' order(s) ready.', 'success');
+                console.log(' Production Queue loaded and displayed successfully');
+                showToast(' Production queue loaded! ' + result.data.length + ' order(s) ready.', 'success');
 
             } catch (error) {
-                console.error('❌ Error loading production queue:', error);
+                console.error(' Error loading production queue:', error);
                 const container = document.getElementById('productionQueueContainer');
                 const infoBox = document.getElementById('productionQueueInfo');
                 
-                container.innerHTML = `<div style="text-align: center; color: #e74c3c; padding: 30px;">❌ Error: ${error.message}</div>`;
-                infoBox.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                container.innerHTML = `<div style="text-align: center; color: #e74c3c; padding: 30px;"> Error: ${error.message}</div>`;
+                infoBox.innerHTML = `<strong> Error:</strong> ${error.message}`;
                 
-                showToast('❌ Error loading production queue: ' + error.message, 'error');
+                showToast(' Error loading production queue: ' + error.message, 'error');
             }
         }
 
@@ -4225,7 +4242,7 @@
                 // Disable button during save
                 btn.disabled = true;
                 const originalText = btn.textContent;
-                btn.textContent = '⏳ Saving...';
+                btn.textContent = ' Saving...';
                 btn.style.background = '#95a5a6';
 
                 // Call backend API
@@ -4250,14 +4267,14 @@
                 }
 
                 const result = await response.json();
-                console.log('✅ Door priority updated:', result);
+                console.log(' Door priority updated:', result);
 
                 // Show success message
-                showToast(`✅ Door priority updated to ${newPriority}!`, 'success');
+                showToast(` Door priority updated to ${newPriority}!`, 'success');
                 
                 // Update button state
                 btn.disabled = true;
-                btn.textContent = '✅ Saved';
+                btn.textContent = ' Saved';
                 btn.style.background = '#27ae60';
                 
                 // Reset after 2 seconds
@@ -4268,12 +4285,12 @@
                 }, 2000);
 
             } catch (error) {
-                console.error('❌ Error saving door priority:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                console.error(' Error saving door priority:', error);
+                showToast(' Error: ' + error.message, 'error');
                 
                 // Restore button
                 btn.disabled = false;
-                btn.textContent = '💾 Save';
+                btn.textContent = 'Save';
                 btn.style.background = '#27ae60';
             }
         }
@@ -4298,7 +4315,7 @@
             console.log('⚡ Factory Admin: Changing priority for', orderId, 'to', newPriority);
 
             if (!['High', 'Normal', 'Low'].includes(newPriority)) {
-                showToast('❌ Invalid priority value: ' + newPriority, 'error');
+                showToast(' Invalid priority value: ' + newPriority, 'error');
                 return;
             }
 
@@ -4328,7 +4345,7 @@
                     throw new Error(result.message || 'Failed to update priority');
                 }
 
-                showToast('✅ Order #' + orderId + ' priority changed to ' + newPriority + '!', 'success');
+                showToast(' Order #' + orderId + ' priority changed to ' + newPriority + '!', 'success');
 
                 // Refresh whichever list is currently visible
                 const prioTab = document.getElementById('fa-priority-orders');
@@ -4340,8 +4357,8 @@
                 }
 
             } catch (error) {
-                console.error('❌ Change Priority Error:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                console.error(' Change Priority Error:', error);
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -4395,7 +4412,7 @@
                 }
 
                 const result = await response.json();
-                console.log('📦 API Response:', result);
+                console.log('API Response:', result);
 
                 if (!result.success || !result.data) {
                     throw new Error(result.message || 'No data returned from server');
@@ -4404,12 +4421,12 @@
                 // Check if there are any orders
                 if (result.data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: #888;">📭 No orders found for selected priority</td></tr>';
-                    infoBox.innerHTML = '<strong>✅ No Orders:</strong> No ' + (priority ? priority.toLowerCase() + ' priority' : 'priority') + ' orders available.';
+                    infoBox.innerHTML = '<strong> No Orders:</strong> No ' + (priority ? priority.toLowerCase() + ' priority' : 'priority') + ' orders available.';
                     console.log('⚠️ No orders found with selected criteria');
                     return;
                 }
 
-                console.log(`✅ Rendering ${result.data.length} orders`);
+                console.log(` Rendering ${result.data.length} orders`);
 
                 // Clear and render table
                 tbody.innerHTML = '';
@@ -4461,22 +4478,26 @@
 
                 // Update info box with summary
                 const filterText = priority ? `"${priority}" priority` : 'all priority';
+                infoBox.className = "dashboard-success";
+
                 infoBox.innerHTML = `
-                    <strong>✅ Success:</strong> Found ${result.data.length} order(s) with ${totalDoorsRendered} doors matching ${filterText} criteria.
+                <span>✔</span>
+                <strong>${result.data.length} Orders Loaded</strong> — 
+                ${totalDoorsRendered} doors match ${filterText}.
                 `;
                 
-                console.log(`✅ Priority orders loaded and displayed successfully (${totalDoorsRendered} doors rendered)`);
-                showToast(`✅ Loaded ${result.data.length} order(s) with ${totalDoorsRendered} doors!`, 'success');
+                console.log(` Priority orders loaded and displayed successfully (${totalDoorsRendered} doors rendered)`);
+                showToast(` Loaded ${result.data.length} order(s) with ${totalDoorsRendered} doors!`, 'success');
 
             } catch (error) {
-                console.error('❌ Error loading priority orders:', error);
+                console.error(' Error loading priority orders:', error);
                 const tbody = document.getElementById('priorityOrdersTableBody');
                 const infoBox = document.getElementById('priorityOrdersInfo');
                 
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #e74c3c; padding: 20px;">❌ Error: ${error.message}</td></tr>`;
-                infoBox.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #e74c3c; padding: 20px;"> Error: ${error.message}</td></tr>`;
+                infoBox.innerHTML = `<strong> Error:</strong> ${error.message}`;
                 
-                showToast('❌ Error loading priority orders: ' + error.message, 'error');
+                showToast(' Error loading priority orders: ' + error.message, 'error');
             }
         }
 
@@ -4531,7 +4552,7 @@
             const factoryAdminBtn = document.querySelector('.nav-btn[data-module="factoryadmin"]');
             if (factoryAdminBtn) factoryAdminBtn.classList.remove('hidden');
             
-            console.log('✅ Factory Admin permissions applied');
+            console.log(' Factory Admin permissions applied');
         }
 
 
@@ -4542,7 +4563,7 @@
          * Creates customer in database or uses dummy data if API unavailable
          */
         async function saveSalesExecCustomer() {
-            console.log('--- 👥 Sales Executive: Creating Customer ---');
+            console.log('--- Sales Executive: Creating Customer ---');
             
             // Get form values
             const name = document.getElementById('customerName').value.trim();
@@ -4587,18 +4608,18 @@
                     if (!response.ok) {
                         // API failed, show success anyway with dummy data
                         console.log('ℹ️ API not available, using dummy data');
-                        showToast('✅ Customer saved! (Using local data)', 'success');
+                        showToast(' Customer saved! (Using local data)', 'success');
                     } else {
-                        showToast('✅ Customer created successfully!', 'success');
-                        console.log('✅ Customer saved:', data);
+                        showToast(' Customer created successfully!', 'success');
+                        console.log(' Customer saved:', data);
                     }
                 } else {
                     // No token, just store locally
-                    showToast('✅ Customer saved locally!', 'success');
+                    showToast(' Customer saved locally!', 'success');
                 }
 
                 // Show success message
-                successMsg.textContent = '✅ Customer ' + name + ' created successfully!';
+                successMsg.textContent = ' Customer ' + name + ' created successfully!';
                 successMsg.style.display = 'block';
 
                 // Reset form after 2 seconds
@@ -4608,8 +4629,8 @@
                 }, 2000);
 
             } catch (error) {
-                console.error('❌ Customer Creation Error:', error);
-                showToast('✅ Customer saved! (API unavailable, using local data)', 'success');
+                console.error(' Customer Creation Error:', error);
+                showToast(' Customer saved! (API unavailable, using local data)', 'success');
                 
                 // Still show success and reset form - customer data saved locally
                 setTimeout(function() {
@@ -4686,18 +4707,18 @@
                     if (!response.ok) {
                         // API failed, show success anyway
                         console.log('ℹ️ API not available, using dummy data');
-                        showToast('✅ Order created! Status: PENDING_APPROVAL', 'success');
+                        showToast(' Order created! Status: PENDING_APPROVAL', 'success');
                     } else {
-                        showToast('✅ Order created successfully! Status: PENDING_APPROVAL', 'success');
-                        console.log('✅ Order saved:', data);
+                        showToast(' Order created successfully! Status: PENDING_APPROVAL', 'success');
+                        console.log(' Order saved:', data);
                     }
                 } else {
                     // No token, just store locally
-                    showToast('✅ Order created! Status: PENDING_APPROVAL', 'success');
+                    showToast(' Order created! Status: PENDING_APPROVAL', 'success');
                 }
 
                 // Show success message with order details
-                successMsg.textContent = `✅ Order for ${customer} created! Amount: ₹${totalAmount.toLocaleString()} | Status: PENDING_APPROVAL`;
+                successMsg.textContent = ` Order for ${customer} created! Amount: ₹${totalAmount.toLocaleString()} | Status: PENDING_APPROVAL`;
                 successMsg.style.display = 'block';
 
                 // Reset form and reload orders after 1.5 seconds
@@ -4708,8 +4729,8 @@
                 }, 1500);
 
             } catch (error) {
-                console.error('❌ Order Creation Error:', error);
-                showToast('✅ Order created! Status: PENDING_APPROVAL (API unavailable)', 'success');
+                console.error(' Order Creation Error:', error);
+                showToast(' Order created! Status: PENDING_APPROVAL (API unavailable)', 'success');
                 
                 // Still show success and reload orders
                 setTimeout(function() {
@@ -4802,7 +4823,7 @@
                             const data = await response.json();
                             if (data.success && data.data.records) {
                                 orders = data.data.records;
-                                console.log('✅ Orders loaded from backend:', orders);
+                                console.log(' Orders loaded from backend:', orders);
                             }
                         }
                     } catch (apiError) {
@@ -4842,11 +4863,11 @@
                     countBadge.textContent = '0 Orders';
                 }
 
-                console.log('✅ Sales Executive orders loaded');
+                console.log(' Sales Executive orders loaded');
 
             } catch (error) {
-                console.error('❌ Load Orders Error:', error);
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 30px; color: #e74c3c;">❌ Error loading orders</td></tr>';
+                console.error(' Load Orders Error:', error);
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 30px; color: #e74c3c;"> Error loading orders</td></tr>';
             }
         }
 
@@ -4858,7 +4879,7 @@
             console.log('🔄 Initializing Sales Executive Dashboard...');
             loadSalesExecOrders();
             toggleSalesOrderSection(true);
-            console.log('✅ Sales Executive Dashboard initialized');
+            console.log(' Sales Executive Dashboard initialized');
         }
 
 
@@ -4913,24 +4934,24 @@
             // Guard: check DB-permission (production), not just hard-coded role name
             const perms = getUserPermissions();
             if (!currentUser || !perms.production) {
-                console.warn('⛔ initProductionSupervisorDashboard blocked — no production permission for role:', currentUser && currentUser.role);
+                console.warn('initProductionSupervisorDashboard blocked — no production permission for role:', currentUser && currentUser.role);
                 return;
             }
-            console.log('🔄 Initializing Production Supervisor Dashboard...');
+            console.log('Initializing Production Supervisor Dashboard...');
             loadAllDoors();  // Load all doors from all orders
             loadWorkers();  // Load workers for dropdown and management
             loadDoorTypeSummary(); // Load global door type totals across all orders
             
             // Initialize Worker History date picker
-            console.log('🔧 Initializing Worker History date picker...');
+            console.log(' Initializing Worker History date picker...');
             initProductionSupervisorWorkerDate();
             
             // Initialize Worker Performance Report date picker
-            console.log('🔧 Initializing Worker Performance Report date picker...');
+            console.log(' Initializing Worker Performance Report date picker...');
             initWorkerPerformanceReportDate();
 
             // Initialize Monthly Worker Performance month picker
-            console.log('🔧 Initializing Monthly Worker Performance month picker...');
+            console.log(' Initializing Monthly Worker Performance month picker...');
             initMonthlyWorkerPerfMonth();
 
             // Initialize Flatpickr attendance date pickers
@@ -4949,7 +4970,7 @@
                 }
             });
             
-            console.log('✅ Production Supervisor Dashboard initialized');
+            console.log(' Production Supervisor Dashboard initialized');
         }
 
         /**
@@ -5028,7 +5049,7 @@
                 }
 
                 activeWorkers = data.data || [];
-                console.log(`✅ Loaded ${activeWorkers.length} active workers`);
+                console.log(` Loaded ${activeWorkers.length} active workers`);
 
                 // Populate worker list table
                 const tbody = document.getElementById('workerListTable');
@@ -5053,7 +5074,7 @@
                 populateWorkerDropdowns();
 
             } catch (error) {
-                console.error('❌ Load Workers Error:', error);
+                console.error(' Load Workers Error:', error);
             }
         }
 
@@ -5070,7 +5091,7 @@
 
                 // Validation
                 if (!workerId || !name) {
-                    showToast('❌ Worker ID and Name are required', 'error');
+                    showToast(' Worker ID and Name are required', 'error');
                     return;
                 }
 
@@ -5100,7 +5121,7 @@
                     throw new Error(data.message || 'Failed to create worker');
                 }
 
-                showToast(`✅ Worker ${workerId} created successfully`, 'success');
+                showToast(` Worker ${workerId} created successfully`, 'success');
                 
                 // Clear form
                 document.getElementById('workerIdInput').value = '';
@@ -5113,8 +5134,8 @@
                 await loadWorkers();
 
             } catch (error) {
-                console.error('❌ Create Worker Error:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                console.error(' Create Worker Error:', error);
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -5170,7 +5191,7 @@
         async function loadAttendanceMarkingForm() {
             const dateInput = document.getElementById('attMarkDate');
             const date = dateInput ? dateInput.value : '';
-            if (!date) { showToast('❌ Please select a date', 'error'); return; }
+            if (!date) { showToast(' Please select a date', 'error'); return; }
 
             const token = localStorage.getItem('sdfis_token');
             if (!token) { showToast('Please login', 'error'); return; }
@@ -5227,7 +5248,7 @@
                 if (msg) msg.textContent = `${activeWorkers.length} workers loaded. Showing attendance for ${date}.`;
 
             } catch (error) {
-                console.error('❌ loadAttendanceMarkingForm error:', error);
+                console.error(' loadAttendanceMarkingForm error:', error);
                 if (msg) msg.textContent = 'Error loading workers.';
             }
         }
@@ -5259,11 +5280,11 @@
         async function saveAttendance() {
             const dateInput = document.getElementById('attMarkDate');
             const date = dateInput ? dateInput.value : '';
-            if (!date) { showToast('❌ Please select a date', 'error'); return; }
+            if (!date) { showToast(' Please select a date', 'error'); return; }
 
             const selects = document.querySelectorAll('#attMarkTableBody select');
             if (selects.length === 0) {
-                showToast('❌ Load workers first', 'error');
+                showToast(' Load workers first', 'error');
                 return;
             }
 
@@ -5291,12 +5312,12 @@
                 const data = await resp.json();
                 if (!resp.ok || !data.success) throw new Error(data.message || 'Save failed');
 
-                showToast(`✅ Attendance saved for ${date}`, 'success');
-                if (msg) msg.textContent = `✅ Saved attendance for ${attendance.length} workers on ${date}.`;
+                showToast(` Attendance saved for ${date}`, 'success');
+                if (msg) msg.textContent = ` Saved attendance for ${attendance.length} workers on ${date}.`;
 
             } catch (error) {
-                console.error('❌ saveAttendance error:', error);
-                showToast('❌ Error saving attendance: ' + error.message, 'error');
+                console.error(' saveAttendance error:', error);
+                showToast(' Error saving attendance: ' + error.message, 'error');
                 if (msg) msg.textContent = 'Error: ' + error.message;
             }
         }
@@ -5307,7 +5328,7 @@
         async function loadAttendanceByDate() {
             const dateInput = document.getElementById('attViewDate');
             const date = dateInput ? dateInput.value : '';
-            if (!date) { showToast('❌ Please select a date', 'error'); return; }
+            if (!date) { showToast(' Please select a date', 'error'); return; }
 
             const token = localStorage.getItem('sdfis_token');
             const result = document.getElementById('attViewResult');
@@ -5331,8 +5352,8 @@
 
                 result.innerHTML = `
                     <div style="display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
-                        <span style="background:#4caf50; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px; font-weight:bold;">✅ Present: ${presentCount}</span>
-                        <span style="background:#f44336; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px; font-weight:bold;">❌ Absent: ${absentCount}</span>
+                        <span style="background:#4caf50; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px; font-weight:bold;"> Present: ${presentCount}</span>
+                        <span style="background:#f44336; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px; font-weight:bold;"> Absent: ${absentCount}</span>
                         <span style="background:#ff9800; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px; font-weight:bold;">⏰ Half Day: ${halfCount}</span>
                         <span style="background:#444; color:#fff; padding:5px 14px; border-radius:4px; font-size:13px;">Total: ${data.count}</span>
                     </div>
@@ -5361,7 +5382,7 @@
                     </div>`;
 
             } catch (error) {
-                console.error('❌ loadAttendanceByDate error:', error);
+                console.error(' loadAttendanceByDate error:', error);
                 result.innerHTML = `<p style="color:#f44336; padding:10px;">Error: ${error.message}</p>`;
             }
         }
@@ -5372,7 +5393,7 @@
         async function loadMonthlyAttendanceSummary() {
             const month = document.getElementById('attMonthSelect').value;
             const year = document.getElementById('attMonthYear').value;
-            if (!month || !year) { showToast('❌ Select month and year', 'error'); return; }
+            if (!month || !year) { showToast(' Select month and year', 'error'); return; }
 
             const token = localStorage.getItem('sdfis_token');
             const result = document.getElementById('attMonthResult');
@@ -5401,8 +5422,8 @@
                                 <tr style="background:#0b0b0b;">
                                     <th style="padding:10px; text-align:left; color:#aaa; border-bottom:1px solid #444;">Worker ID</th>
                                     <th style="padding:10px; text-align:left; color:#aaa; border-bottom:1px solid #444;">Name</th>
-                                    <th style="padding:10px; text-align:center; color:#4caf50; border-bottom:1px solid #444;">✅ Present</th>
-                                    <th style="padding:10px; text-align:center; color:#f44336; border-bottom:1px solid #444;">❌ Absent</th>
+                                    <th style="padding:10px; text-align:center; color:#4caf50; border-bottom:1px solid #444;"> Present</th>
+                                    <th style="padding:10px; text-align:center; color:#f44336; border-bottom:1px solid #444;"> Absent</th>
                                     <th style="padding:10px; text-align:center; color:#ff9800; border-bottom:1px solid #444;">⏰ Half Day</th>
                                     <th style="padding:10px; text-align:center; color:#aaa; border-bottom:1px solid #444;">Total Days</th>
                                 </tr>
@@ -5422,7 +5443,7 @@
                     </div>`;
 
             } catch (error) {
-                console.error('❌ loadMonthlyAttendanceSummary error:', error);
+                console.error(' loadMonthlyAttendanceSummary error:', error);
                 result.innerHTML = `<p style="color:#f44336; padding:10px;">Error: ${error.message}</p>`;
             }
         }
@@ -5432,7 +5453,7 @@
          */
         async function loadYearlyAttendanceSummary() {
             const year = document.getElementById('attYearInput').value;
-            if (!year) { showToast('❌ Enter a year', 'error'); return; }
+            if (!year) { showToast(' Enter a year', 'error'); return; }
 
             const token = localStorage.getItem('sdfis_token');
             const result = document.getElementById('attYearResult');
@@ -5486,7 +5507,7 @@
                     </div>`;
 
             } catch (error) {
-                console.error('❌ loadYearlyAttendanceSummary error:', error);
+                console.error(' loadYearlyAttendanceSummary error:', error);
                 result.innerHTML = `<p style="color:#f44336; padding:10px;">Error: ${error.message}</p>`;
             }
         }
@@ -5521,7 +5542,7 @@
          * Load approved orders for order selection
          */
         async function loadApprovedOrdersForSelection() {
-            console.log('--- 📋 Loading APPROVED Orders ---');
+            console.log('--- Loading APPROVED Orders ---');
             
             try {
                 const token = localStorage.getItem('sdfis_token');
@@ -5555,11 +5576,11 @@
                         select.appendChild(option);
                     });
 
-                    console.log(`✅ Loaded ${data.data.length} approved orders`);
+                    console.log(` Loaded ${data.data.length} approved orders`);
                 }
 
             } catch (error) {
-                console.error('❌ Error loading orders:', error);
+                console.error(' Error loading orders:', error);
                 showToast('Error loading orders: ' + error.message, 'error');
             }
         }
@@ -5598,7 +5619,7 @@
                     return;
                 }
 
-                // 🆕 Single call to get merged order + production data
+                // Single call to get merged order + production data
                 const response = await fetch(`${API_BASE_URL}/production/order-full-details/${orderId}`, {
                     method: 'GET',
                     headers: {
@@ -5628,7 +5649,7 @@
                     priority: door.priority || 'Normal'
                 }));
 
-                console.log(`✅ Loaded ${psCurrentDoors.length} doors with details`);
+                console.log(` Loaded ${psCurrentDoors.length} doors with details`);
                 
                 // Store full order details for reference
                 psOrderDetails = data.data;
@@ -5675,7 +5696,7 @@
                 
 
             } catch (error) {
-                console.error('❌ Error loading doors:', error);
+                console.error(' Error loading doors:', error);
                 showToast('Error loading doors: ' + error.message, 'error');
                 clearAllStageSections();
             }
@@ -6037,7 +6058,7 @@
         }
 
         /**
-         * 🔒 ENHANCED: Auto-calculate next stage from each door's actual currentStage
+         * ENHANCED: Auto-calculate next stage from each door's actual currentStage
          * This prevents manual stage selection errors
          * 
          * The function:
@@ -6067,7 +6088,7 @@
             // Get table body
             const tbody = document.getElementById(tableBodyId);
             if (!tbody) {
-                showToast(`⚠️ Stage section not found (${tableBodyId})`, 'error');
+                showToast(`Stage section not found (${tableBodyId})`, 'error');
                 return;
             }
 
@@ -6108,13 +6129,13 @@
             });
 
             if (checkedDoors.length === 0) {
-                showToast(`⚠️ Please select at least one door to complete`, 'error');
+                showToast(`Please select at least one door to complete`, 'error');
                 return;
             }
 
             // Summary before submit
             const stageTransitions = checkedDoors.map(d => `${d.currentStage}→${d.nextStage}`).join(', ');
-            console.log(`📦 Submitting ${checkedDoors.length} doors: ${stageTransitions}`);
+            console.log(`Submitting ${checkedDoors.length} doors: ${stageTransitions}`);
 
             try {
                 const token = localStorage.getItem('sdfis_token');
@@ -6141,17 +6162,17 @@
 
                 const data = await response.json();
                 if (!data.success) {
-                    showToast('❌ ' + data.message, 'error');
+                    showToast(' ' + data.message, 'error');
                     return;
                 }
 
                 const uniqueNextStages = [...new Set(checkedDoors.map(d => d.nextStage))].join(', ');
-                showToast(`✅ ${checkedDoors.length} door(s) moved to: ${uniqueNextStages}`, 'success');
+                showToast(` ${checkedDoors.length} door(s) moved to: ${uniqueNextStages}`, 'success');
                 await loadAllDoors();
 
             } catch (error) {
-                console.error('❌ Error updating stages:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                console.error(' Error updating stages:', error);
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -6161,14 +6182,14 @@
          */
         async function loadProductionSupervisorWorkerHistory() {
             try {
-                console.log('\n📊 ========== PRODUCTION SUPERVISOR WORKER HISTORY ==========');
+                console.log('\n========== PRODUCTION SUPERVISOR WORKER HISTORY ==========');
                 
                 // Get selected date
                 const dateInput = document.getElementById('psWorkerHistoryDate').value;
-                console.log('📅 Selected date:', dateInput);
+                console.log('Selected date:', dateInput);
                 
                 if (!dateInput) {
-                    showToast('⚠️ Please select a date', 'warning');
+                    showToast('Please select a date', 'warning');
                     return;
                 }
 
@@ -6181,11 +6202,11 @@
 
                 // Show loading state
                 const container = document.getElementById('workerHistorySummary');
-                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">⏳ Loading worker history...</p>';
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;"> Loading worker history...</p>';
 
                 // Fetch worker history
                 const apiUrl = `${API_BASE_URL}/production/worker-history?date=${dateInput}`;
-                console.log('🌐 API URL:', apiUrl);
+                console.log('API URL:', apiUrl);
                 
                 const response = await fetch(apiUrl, {
                     method: 'GET',
@@ -6195,7 +6216,7 @@
                     }
                 });
 
-                console.log('📡 Response status:', response.status);
+                console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -6203,11 +6224,11 @@
                 }
 
                 const responseData = await response.json();
-                console.log('📥 API Response:', responseData);
+                console.log('API Response:', responseData);
                 
                 // DEBUG: Log the first summary record to check worker data
                 if (responseData.summary && responseData.summary.length > 0) {
-                    console.log(`🔍 DEBUG: First worker record:`, JSON.stringify(responseData.summary[0], null, 2));
+                    console.log(`DEBUG: First worker record:`, JSON.stringify(responseData.summary[0], null, 2));
                     console.log(`   workerName exists:`, 'workerName' in responseData.summary[0]);
                     console.log(`   worker exists:`, 'worker' in responseData.summary[0]);
                     console.log(`   workerName value:`, responseData.summary[0].workerName);
@@ -6221,8 +6242,8 @@
                 const workerData = responseData.data || [];
                 const workerSummary = responseData.summary || [];
                 
-                console.log('📊 Total records:', workerData.length);
-                console.log('👥 Unique workers:', workerSummary.length);
+                console.log('Total records:', workerData.length);
+                console.log('Unique workers:', workerSummary.length);
 
                 // Display results
                 if (workerSummary.length === 0) {
@@ -6259,18 +6280,18 @@
                     }).join('');
 
                     container.innerHTML = html;
-                    showToast(`✅ Loaded ${workerData.length} records for ${dateInput}`, 'success');
-                    console.log('✅ Worker history displayed successfully');
+                    showToast(` Loaded ${workerData.length} records for ${dateInput}`, 'success');
+                    console.log(' Worker history displayed successfully');
                 }
 
                 console.log('========== COMPLETE ==========\n');
 
             } catch (error) {
-                console.error('❌ Error loading worker history:', error);
-                showToast('❌ Failed to load worker history: ' + error.message, 'error');
+                console.error(' Error loading worker history:', error);
+                showToast(' Failed to load worker history: ' + error.message, 'error');
                 
                 const container = document.getElementById('workerHistorySummary');
-                container.innerHTML = '<p style="text-align: center; color: #ff5252; padding: 20px;">❌ Error loading data: ' + error.message + '</p>';
+                container.innerHTML = '<p style="text-align: center; color: #ff5252; padding: 20px;"> Error loading data: ' + error.message + '</p>';
             }
         }
 
@@ -6283,10 +6304,10 @@
                 const dateInput = document.getElementById('psWorkerHistoryDate');
                 if (dateInput) {
                     dateInput.value = today;
-                    console.log('✅ Production Supervisor worker date picker initialized to:', today);
+                    console.log(' Production Supervisor worker date picker initialized to:', today);
                 }
             } catch (error) {
-                console.error('⚠️ Error initializing worker date picker:', error);
+                console.error('Error initializing worker date picker:', error);
             }
         }
 
@@ -6294,7 +6315,7 @@
          * Load Worker Performance Report (Daily, Monthly, Yearly)
          */
         async function loadWorkerPerformanceReport() {
-            console.log('📊 Loading Worker Performance Report...');
+            console.log('Loading Worker Performance Report...');
             
             try {
                 const reportType = document.getElementById('reportType').value;
@@ -6303,7 +6324,7 @@
 
                 // Validate result container exists
                 if (!resultContainer) {
-                    showToast('❌ Worker Performance section not found', 'error');
+                    showToast(' Worker Performance section not found', 'error');
                     return;
                 }
 
@@ -6314,7 +6335,7 @@
                 }
 
                 // Show loading state
-                resultContainer.innerHTML = '<p style="text-align: center; color: #2196f3; padding: 20px;">⏳ Generating report...</p>';
+                resultContainer.innerHTML = '<p style="text-align: center; color: #2196f3; padding: 20px;"> Generating report...</p>';
 
                 // Get JWT token
                 const token = localStorage.getItem('sdfis_token');
@@ -6355,18 +6376,18 @@
                 }
 
                 if (data.success && data.summary) {
-                    console.log('  ✅ Report data received:', data.summary.length, 'workers');
+                    console.log('   Report data received:', data.summary.length, 'workers');
                     renderWorkerPerformanceReport(data.summary, reportType, queryDate);
                 } else {
                     throw new Error('No data received from server');
                 }
 
             } catch (error) {
-                console.error('❌ Error loading report:', error);
+                console.error(' Error loading report:', error);
                 showToast('Failed to load report: ' + error.message, 'error');
                 const resultContainer = document.getElementById('workerPerformanceResult');
                 if (resultContainer) {
-                    resultContainer.innerHTML = '<p style="text-align: center; color: #ff5252; padding: 20px;">❌ Error: ' + error.message + '</p>';
+                    resultContainer.innerHTML = '<p style="text-align: center; color: #ff5252; padding: 20px;"> Error: ' + error.message + '</p>';
                 }
             }
         }
@@ -6427,7 +6448,7 @@
                             'FINISH': '�',
                             'PACKING': '📫',
                             'DELIVERY': '🚚'
-                        }[stage] || '🔧';
+                        }[stage] || '';
 
                         stageCounts.push(`<span style="display: inline-block; margin-right: 12px; color: #2196f3;">${emoji} ${stage}: <strong>${workerData.stages[stage]}</strong></span>`);
                     }
@@ -6499,7 +6520,7 @@
             }
 
             const month = monthInput.value; // YYYY-MM
-            container.innerHTML = '<p style="text-align:center; color:#2196f3; padding:20px;">⏳ Loading performance data...</p>';
+            container.innerHTML = '<p style="text-align:center; color:#2196f3; padding:20px;"> Loading performance data...</p>';
 
             const token = localStorage.getItem('sdfis_token');
             if (!token) {
@@ -6521,8 +6542,8 @@
                 renderMonthlyWorkerPerformanceTable(data.summary || [], month);
 
             } catch (err) {
-                console.error('❌ Monthly performance error:', err);
-                container.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;">❌ ${err.message}</p>`;
+                console.error(' Monthly performance error:', err);
+                container.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;"> ${err.message}</p>`;
             }
         }
 
@@ -6590,7 +6611,7 @@
 
             title.textContent = workerName;
             subtitle.textContent = `Month: ${month}`;
-            content.innerHTML = '<p style="text-align:center; color:#2196f3; padding:30px;">⏳ Loading door details...</p>';
+            content.innerHTML = '<p style="text-align:center; color:#2196f3; padding:30px;"> Loading door details...</p>';
             overlay.style.display = 'flex';
 
             const token = localStorage.getItem('sdfis_token');
@@ -6608,8 +6629,8 @@
                 renderDrillDownContent(data.data, workerName, month, content);
 
             } catch (err) {
-                console.error('❌ Drill-down error:', err);
-                content.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;">❌ ${err.message}</p>`;
+                console.error(' Drill-down error:', err);
+                content.innerHTML = `<p style="text-align:center; color:#ff5252; padding:20px;"> ${err.message}</p>`;
             }
         }
 
@@ -6733,8 +6754,8 @@
                 const detailBody = document.getElementById('workerDetailTableBody');
                 
                 console.log('Clearing tables and showing loading state...');
-                summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">⏳ Loading worker data...</td></tr>';
-                detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">⏳ Loading worker data...</td></tr>';
+                summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;"> Loading worker data...</td></tr>';
+                detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;"> Loading worker data...</td></tr>';
 
                 // Fetch worker history
                 const apiUrl = `${API_BASE_URL}/production/worker-history?date=${dateInput}`;
@@ -6759,7 +6780,7 @@
 
                 if (!responseData.success) {
                     console.error('API error:', responseData.message);
-                    showToast('❌ ' + (responseData.message || 'Failed to fetch worker history'), 'error');
+                    showToast(' ' + (responseData.message || 'Failed to fetch worker history'), 'error');
                     summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">No data available</td></tr>';
                     detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">No data available</td></tr>';
                     return;
@@ -6850,8 +6871,8 @@
                 
                 const summaryBody = document.getElementById('workerSummaryTableBody');
                 const detailBody = document.getElementById('workerDetailTableBody');
-                summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">❌ Error loading data</td></tr>';
-                detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">❌ Error loading data</td></tr>';
+                summaryBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;"> Error loading data</td></tr>';
+                detailBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;"> Error loading data</td></tr>';
             }
         }
 
@@ -6879,7 +6900,7 @@
             }
 
             statusDiv.style.display = 'block';
-            statusDiv.innerHTML = '⏳ Processing document...';
+            statusDiv.innerHTML = ' Processing document...';
             statusDiv.style.color = '#fff';
 
             try {
@@ -6906,7 +6927,7 @@
                     throw new Error(data.message || 'Failed to parse document');
                 }
 
-                statusDiv.innerHTML = '✅ Document parsed successfully!';
+                statusDiv.innerHTML = ' Document parsed successfully!';
                 statusDiv.style.color = '#4CAF50';
 
                 // Store parsed data and show preview
@@ -6922,7 +6943,7 @@
 
             } catch (error) {
                 console.error('Error parsing document:', error);
-                statusDiv.innerHTML = '❌ Error: ' + error.message;
+                statusDiv.innerHTML = ' Error: ' + error.message;
                 statusDiv.style.color = '#f44336';
             }
         }
@@ -7160,6 +7181,17 @@
             const isDirect = soFormState.customerType === 'Direct Customer';
 
             return `
+
+            <div class="so-form-row">
+                <div class="so-form-group">
+                    <label for="soDoorFile-${doorId}">
+                        Door Specification File (.xlsx, .xls, .jpg, .jpeg, .png, .pdf)
+                    </label>
+                    <input type="file" id="soDoorFile-${doorId}" accept=".xlsx,.xls,.jpg,.jpeg,.png,.pdf">
+                    <div class="so-error-msg" data-field="soDoorFile-${doorId}"></div>
+                </div>
+            </div>
+
                 <div class="so-door-header">
                     <span class="so-door-title">Door #${soFormState.doors.indexOf(doorId) + 1}</span>
                     <button type="button" class="so-btn-remove so-remove-door-btn" data-door-id="${doorId}">Remove</button>
@@ -7230,16 +7262,6 @@
                             <option value="Low">Low</option>
                         </select>
                         <div class="so-error-msg" data-field="soPriority-${doorId}"></div>
-                    </div>
-                </div>
-
-                <div class="so-form-row">
-                    <div class="so-form-group">
-                        <label for="soDoorFile-${doorId}">
-                            Door Specification File (.xlsx, .xls, .jpg, .jpeg, .png, .pdf)
-                        </label>
-                        <input type="file" id="soDoorFile-${doorId}" accept=".xlsx,.xls,.jpg,.jpeg,.png,.pdf">
-                        <div class="so-error-msg" data-field="soDoorFile-${doorId}"></div>
                     </div>
                 </div>
 
@@ -7798,14 +7820,14 @@
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    showToast('✅ Order saved successfully! Order #' + data.data.orderId, 'success');
+                    showToast(' Order saved successfully! Order #' + data.data.orderId, 'success');
                     setTimeout(() => {
                         resetSalesOrderForm();
                         loadSalesExecOrders();
                     }, 1000);
                 } else {
                     const errorMsg = data.message || 'Unknown error from backend';
-                    console.error('❌ Backend Error:', errorMsg);
+                    console.error(' Backend Error:', errorMsg);
                     console.error('Backend Response:', data);
                     console.error('Debug Info:', data.debug || data.error || 'No debug info');
                     console.error('Received Data:', data.received || 'No received data logged');
@@ -7818,12 +7840,12 @@
                     if (data.received) {
                         displayError += ' [Received: ' + JSON.stringify(data.received) + ']';
                     }
-                    showToast('❌ ' + displayError, 'error');
+                    showToast(' ' + displayError, 'error');
                 }
 
             } catch (error) {
                 console.error('Fetch Error:', error);
-                showToast('❌ Error: ' + error.message, 'error');
+                showToast(' Error: ' + error.message, 'error');
             }
         }
 
@@ -7892,12 +7914,12 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || 'Failed to save');
 
-                alert('✅ Saved successfully!');
+                alert(' Saved successfully!');
                 clearForm(category);
                 loadAllInventory();
             } catch (error) {
                 console.error('Error:', error);
-                alert('❌ Error: ' + error.message);
+                alert(' Error: ' + error.message);
             }
         }
 
