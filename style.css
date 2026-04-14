@@ -609,18 +609,161 @@ justify-content:flex-end;
 RESPONSIVE
 ================================================= */
 
+@media(max-width:1100px){
+    .dashboard-body{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        min-width:auto;
+        border-right:none;
+        border-bottom:1px solid #2a2a2a;
+        padding:10px 0;
+    }
+
+    .module-nav{
+        flex-direction:row;
+        flex-wrap:wrap;
+        gap:8px;
+        padding:8px 12px;
+    }
+
+    .nav-btn{
+        flex:1 1 auto;
+        min-width:120px;
+        padding:10px 12px;
+    }
+
+    .top-navbar{
+        flex-wrap:wrap;
+        gap:10px;
+        padding:12px 20px;
+    }
+
+    .nav-left,
+    .nav-right{
+        width:100%;
+        justify-content:space-between;
+    }
+
+    .main-content{
+        padding:24px 20px 30px 20px;
+    }
+
+    .production-flow{
+        grid-template-columns:1fr;
+    }
+
+    .ps-tabs{
+        flex-wrap:wrap;
+    }
+}
+
 @media(max-width:900px){
 
-.stats-grid{
-grid-template-columns:1fr;
+    .stats-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .permission-table th,
+    .permission-table td{
+        padding:12px;
+        font-size:12px;
+    }
 }
 
-.permission-table th,
-.permission-table td{
-padding:12px;
-font-size:12px;
+@media(max-width:700px){
+    .top-navbar{
+        padding:12px 16px;
+    }
+
+    .brand{
+        font-size:16px;
+    }
+
+    .logout-btn{
+        padding:8px 12px;
+        font-size:13px;
+    }
+
+    .nav-btn{
+        padding:10px 12px;
+        font-size:13px;
+    }
+
+    .main-content{
+        padding:20px 16px 24px 16px;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .stat-card{
+        padding:18px;
+    }
+
+    .data-table,
+    .ps-card table{
+        display:block;
+        width:100%;
+        overflow-x:auto;
+    }
+
+    .data-table th,
+    .data-table td,
+    .ps-card th,
+    .ps-card td{
+        white-space:nowrap;
+        padding:12px;
+    }
+
+    .stage-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .stage-submit{
+        width:100%;
+    }
+
+    .access-actions,
+    .permission-actions{
+        flex-wrap:wrap;
+        justify-content:flex-start;
+    }
+
+    .permission-footer{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .user-filter-bar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .filter-left{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .users-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
 }
 
+@media(max-width:550px){
+    .login-box{
+        width:90%;
+        padding:30px;
+    }
 }
 
 /* ===============================
@@ -2130,7 +2273,174 @@ SALES ORDER CREATION SECTION
     display: none !important;
 }
 
+/*=============================
+INVENTORY
+===============================*/
 
+/* SECTION TITLES */
+.section-title {
+  margin: 0;
+  color: var(--gold);
+}
+
+/* GOLD BUTTON */
+.gold-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* MODAL */
+.modal-dark {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid #333;
+}
+
+.modal-dark[style*="max-width: 800px"] {
+  max-width: 800px !important;
+}
+
+.modal-dark[style*="max-width: 800px"] .data-table {
+  font-size: 13px;
+}
+
+.modal-dark[style*="max-width: 800px"] .data-table th,
+.modal-dark[style*="max-width: 800px"] .data-table td {
+  padding: 10px;
+}
+
+/* FORM */
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #b3b3b3;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.form-input option {
+  background: #2a2a2a;
+  color: white;
+  padding: 8px;
+}
+
+.form-input option:hover {
+  background: #444;
+}
+
+/* INVENTORY MANAGEMENT CARDS */
+.inventory-category-cards {
+  display: grid;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.inv-category-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inv-category-card:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
+  border-color: #FFD700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.inv-category-card .card-content {
+  flex: 1;
+}
+
+/* SMALL ACTION BUTTONS */
+.btn-small {
+  background: #FFD700;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-small:hover {
+  background: #FFF;
+}
+
+.btn-small:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* EMPTY TABLE */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+/* SECONDARY BUTTON */
+.btn-secondary {
+  background: #3a3a3a;
+  color: white;
+}
+
+.inventory-block {
+  margin-bottom: 40px;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  border-left: 4px solid #d4af37;
+}
+
+.block-title {
+  color: #d4af37;
+  margin-bottom: 15px;
+}
+
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+
+.full-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
 
 
 
@@ -2320,7 +2630,7 @@ SALES ORDER CREATION SECTION
     /* // FACTORY ADMIN DASHBOARD - Custom CSS Styles */
     
     /* Factory Admin Sub-Navigation Tabs */
-    .factory-admin-tabs {
+    .inventory-tabs {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -2329,7 +2639,7 @@ SALES ORDER CREATION SECTION
         padding-bottom: 15px;
     }
 
-    .factory-admin-tabs .tab-btn {
+    .inventory-tabs .tab-btn {
         padding: 10px 18px;
         background: #f8f9fa;
         border: 2px solid #ddd;
@@ -2341,13 +2651,13 @@ SALES ORDER CREATION SECTION
         transition: all 0.3s;
     }
 
-    .factory-admin-tabs .tab-btn:hover {
+    .inventory-tabs .tab-btn:hover {
         background: #e3f2fd;
         border-color: #1565c0;
         color: #1565c0;
     }
 
-    .factory-admin-tabs .tab-btn.active {
+    .inventory-tabs .tab-btn.active {
         background: #0f3460;
         border-color: #0f3460;
         color: white;
@@ -2924,12 +3234,12 @@ SALES ORDER CREATION SECTION
             padding: 10px 5px;
         }
 
-        /* Factory Admin Responsive */
-        .factory-admin-tabs {
+        /* Inventory Tab Responsive */
+        .inventory-tabs {
             flex-direction: column;
         }
 
-        .factory-admin-tabs .tab-btn {
+        .inventory-tabs .tab-btn {
             width: 100%;
             text-align: center;
             border-radius: 8px;

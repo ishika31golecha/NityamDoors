@@ -137,4 +137,71 @@ router.get('/snapshot', protect, authorizeModule('inventory'), async (req, res) 
   }
 });
 
+/**
+ * @route   PUT /api/inventory/:id
+ * @desc    Update inventory item quantity
+ * @access  Private - InventoryManager, SuperAdmin
+ */
+router.put('/:id', protect, authorizeModule('inventory'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    // Validate input
+    if (quantity === undefined || quantity === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity is required'
+      });
+    }
+
+    if (isNaN(quantity) || quantity < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a non-negative number'
+      });
+    }
+
+    // Validate MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid inventory ID'
+      });
+    }
+
+    // Update inventory item
+    const db = mongoose.connection.db;
+    const collection = db.collection('inventories');
+    const objectId = mongoose.Types.ObjectId(id);
+
+    const result = await collection.findOneAndUpdate(
+      { _id: objectId },
+      { $set: { quantity: parseInt(quantity), updatedAt: new Date() } },
+      { returnDocument: 'after' }
+    );
+
+    if (!result.value) {
+      return res.status(404).json({
+        success: false,
+        message: 'Inventory item not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Inventory quantity updated successfully',
+      data: result.value
+    });
+
+  } catch (error) {
+    console.error('Error updating inventory:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update inventory quantity',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

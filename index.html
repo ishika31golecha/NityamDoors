@@ -121,7 +121,6 @@
             <div class="module-nav" id="moduleNav">
                 <button class="nav-btn active" data-module="dashboard" onclick="showModule('dashboard')">Dashboard</button>
                 <button class="nav-btn" data-module="salesexec" data-permission="orders" onclick="showModule('salesexec')">Orders</button>
-                <button class="nav-btn" data-module="factoryadmin" data-roles="FactoryAdmin" onclick="showModule('factoryadmin')">Factory Admin</button>
                 <button class="nav-btn" data-module="productionsupervisor" data-permission="production" onclick="showModule('productionsupervisor')">Production</button>
                 <button class="nav-btn" data-module="inventory" data-permission="inventory" onclick="showModule('inventory')">Inventory</button>
                 <button class="nav-btn" data-module="accounts" data-permission="accounts" onclick="showModule('accounts')">Accounts</button>
@@ -153,7 +152,6 @@
             <div id="reports-module" class="module" style="display:none;"></div>
             <div id="accesscontrol-module" class="module" style="display:none;"></div>
             <div id="usermanagement-module" class="module" style="display:none;"></div>
-            <div id="factoryadmin-module" class="module" style="display:none;"></div>
             <div id="salesexec-module" class="module" style="display:none;"></div>
             <div id="productionsupervisor-module" class="module" style="display:none;"></div>
             <div id="worker-history-module" class="module" style="display:none;"></div>
@@ -164,15 +162,19 @@
             <div id="module-dashboard" class="module-section active">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value">156</div>
+                        <div class="stat-value" id="dashboardTotalOrders">156</div>
                         <div class="stat-label">Total Orders</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">42</div>
-                        <div class="stat-label">In Production</div>
+                        <div class="stat-value" id="dashboardInProduction">42</div>
+                        <div class="stat-label">Production Orders</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">1,250</div>
+                        <div class="stat-value" id="dashboardProductionDoors">44</div>
+                        <div class="stat-label">Doors in Production</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="dashboardItemsInStock">1,250</div>
                         <div class="stat-label">Items in Stock</div>
                     </div>
                     <div class="stat-card">
@@ -306,181 +308,200 @@
             <div id="module-inventory" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Inventory Management</h2>
+                        <h2>Inventory</h2>
                     </div>
                     
                     <div class="card-body">
-                        <!-- FLUSH DOOR SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e94560;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">🚪 Flush Door</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Length (mm)</label>
-                                    <input type="text" id="fdLength" placeholder="Length" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Breadth (mm)</label>
-                                    <input type="text" id="fdBreadth" placeholder="Breadth" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Thickness</label>
-                                    <select id="fdThickness" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                        <option value="">Select</option>
-                                        <option value="30">30</option>
-                                        <option value="35">35</option>
-                                        <option value="40">40</option>
-                                        <option value="45">45</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="fdQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" onclick="saveFlushDoor()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="fdTable" style="margin-top: 15px;">
-                                <thead><tr><th>Length</th><th>Breadth</th><th>Thickness</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="5" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
+                        <div class="ps-tabs">
+                            <button class="ps-tab active" data-tab="inventory-vendor-management" onclick="showInventoryTab('inventory-vendor-management')">Vendor Management</button>
+                            <button class="ps-tab" data-tab="inventory-stock-update" onclick="showInventoryTab('inventory-stock-update')">Stock Update</button>
+                            <button class="ps-tab" data-tab="inventory-management" onclick="showInventoryTab('inventory-management')">Inventory Management</button>
                         </div>
 
-                        <!-- LAMINATE SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #3498db;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">🎨 Laminate</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Code</label>
-                                    <input type="text" id="lamCode" placeholder="Code" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Color</label>
-                                    <input type="text" id="lamColor" placeholder="Color" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="lamQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
+                        <div id="inventory-vendor-management" class="fa-subsection active">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 class="section-title">Vendor Management</h3>
+                                <button class="btn btn-primary gold-btn" onclick="openAddVendorForm()" style="padding: 8px 16px; font-size: 14px;">+ Add Vendor</button>
+                            </div>
+
+                            <div id="vendorList" class="vendor-list">
+                                <!-- Vendors will be loaded dynamically -->
+                            </div>
+
+                            <!-- Add Vendor Modal -->
+                            <div id="addVendorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+                                <div class="modal-dark">
+                                    <h3 style="margin-top: 0; margin-bottom: 20px; color: #333;">Add New Vendor</h3>
+                                    <form onsubmit="submitAddVendor(event)">
+                                        <div style="margin-bottom: 15px;">
+                                            <label class="form-label">Vendor Name</label>
+                                            <input class="form-input" type="text" id="vendorName" placeholder="Enter vendor name" required>
+                                        </div>
+                                        <div style="margin-bottom: 15px;">
+                                            <label class="form-label">Phone Number</label>
+                                            <input class="form-input" type="tel" id="vendorPhone" placeholder="Enter phone number" required>
+                                        </div>
+                                        <div style="margin-bottom: 15px;">
+                                            <label class="form-label">Email</label>
+                                            <input class="form-input" type="email" id="vendorEmail" placeholder="Enter email" required>
+                                        </div>
+                                        <div style="margin-bottom: 20px;">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-input" id="vendorCategory" required>
+                                                <option value="">Select a category</option>
+                                                <option value="Raw Material - Wood">Raw Material - Wood</option>
+                                                <option value="Raw Material - Steel">Raw Material - Steel</option>
+                                                <option value="Raw Material - MDF">Raw Material - MDF</option>
+                                                <option value="Hardware & Fittings">Hardware & Fittings</option>
+                                                <option value="Glass Panels">Glass Panels</option>
+                                                <option value="Paints & Polish">Paints & Polish</option>
+                                                <option value="Chemicals & Adhesives">Chemicals & Adhesives</option>
+                                            </select>
+                                        </div>
+                                        <div style="display: flex; gap: 10px;">
+                                            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 10px;">Save Vendor</button>
+                                            <button type="button" class="btn btn-secondary" onclick="closeAddVendorForm()">Cancel</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" onclick="saveLaminate()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="lamTable" style="margin-top: 15px;">
-                                <thead><tr><th>Code</th><th>Color</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="4" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
                         </div>
 
-                        <!-- ADHESIVE SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #27ae60;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">💧 Adhesive</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Brand</label>
-                                    <input type="text" id="adhBrand" placeholder="Brand" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
+                        <div id="inventory-stock-update" class="fa-subsection">
+                            <h3 class="section-title" style="margin-bottom: 25px;">Add Stock Update</h3>
+
+                            <!-- FLUSH DOOR -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Flush Door</h3>
+                                <div class="grid-4">
+                                    <div>
+                                        <label class="form-label">Length (mm)</label>
+                                        <input type="text" id="fdLength" class="form-input" placeholder="Length">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Breadth (mm)</label>
+                                        <input type="text" id="fdBreadth" class="form-input" placeholder="Breadth">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Thickness</label>
+                                        <select id="fdThickness" class="form-input">
+                                            <option value="">Select</option>
+                                            <option value="30">30</option>
+                                            <option value="35">35</option>
+                                            <option value="40">40</option>
+                                            <option value="45">45</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Quantity</label>
+                                        <input type="number" id="fdQuantity" class="form-input" placeholder="Qty">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="adhQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
+                                <button class="btn btn-primary full-btn" onclick="saveFlushDoor()">Save</button>
                             </div>
-                            <button class="btn btn-primary" onclick="saveAdhesive()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="adhTable" style="margin-top: 15px;">
-                                <thead><tr><th>Brand</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="3" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
-                        </div>
 
-                        <!-- B.T.C SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #f39c12;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">⚙️ B.T.C</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Size</label>
-                                    <input type="text" id="btcSize" placeholder="Size" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
+                            <!-- LAMINATE -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Laminate</h3>
+                                <div class="grid-3">
+                                    <input type="text" id="lamCode" class="form-input" placeholder="Code">
+                                    <input type="text" id="lamColor" class="form-input" placeholder="Color">
+                                    <input type="number" id="lamQuantity" class="form-input" placeholder="Qty">
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="btcQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
+                                <button class="btn btn-primary full-btn" onclick="saveLaminate()">Save</button>
                             </div>
-                            <button class="btn btn-primary" onclick="saveBTC()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="btcTable" style="margin-top: 15px;">
-                                <thead><tr><th>Size</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="3" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
-                        </div>
 
-                        <!-- MACHINERY SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e74c3c;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">🏭 Machinery</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Machine Name</label>
-                                    <input type="text" id="mchName" placeholder="Name" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
+                            <!-- ADHESIVE -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Adhesive</h3>
+                                <div class="grid-2">
+                                    <input type="text" id="adhBrand" class="form-input" placeholder="Brand">
+                                    <input type="number" id="adhQuantity" class="form-input" placeholder="Qty">
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Status</label>
-                                    <select id="mchStatus" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                        <option value="">Select</option>
+                                <button class="btn btn-primary full-btn" onclick="saveAdhesive()">Save</button>
+                            </div>
+
+                            <!-- BTC -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">B.T.C</h3>
+                                <div class="grid-2">
+                                    <input type="text" id="btcSize" class="form-input" placeholder="Size">
+                                    <input type="number" id="btcQuantity" class="form-input" placeholder="Qty">
+                                </div>
+                                <button class="btn btn-primary full-btn" onclick="saveBTC()">Save</button>
+                            </div>
+
+                            <!-- MACHINERY -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Machinery</h3>
+                                <div class="grid-3">
+                                    <input type="text" id="mchName" class="form-input" placeholder="Machine Name">
+                                    <select id="mchStatus" class="form-input">
+                                        <option value="">Status</option>
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                         <option value="Maintenance">Maintenance</option>
                                     </select>
+                                    <input type="number" id="mchQuantity" class="form-input" placeholder="Qty">
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="mchQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
+                                <button class="btn btn-primary full-btn" onclick="saveMachinery()">Save</button>
                             </div>
-                            <button class="btn btn-primary" onclick="saveMachinery()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="mchTable" style="margin-top: 15px;">
-                                <thead><tr><th>Name</th><th>Status</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="4" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
-                        </div>
 
-                        <!-- GRINDER PAPER SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #8e44ad;">
-                            <h3 style="color: #2c3e50; margin-top: 0;">📄 Grinder Paper</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Grit</label>
-                                    <select id="grpGrit" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                        <option value="">Select</option>
+                            <!-- GRINDER -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Grinder Paper</h3>
+                                <div class="grid-2">
+                                    <select id="grpGrit" class="form-input">
+                                        <option value="">Grit</option>
                                         <option value="36">36</option>
                                         <option value="60">60</option>
                                         <option value="80">80</option>
                                     </select>
+                                    <input type="number" id="grpQuantity" class="form-input" placeholder="Qty">
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="grpQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
+                                <button class="btn btn-primary full-btn" onclick="saveGrinderPaper()">Save</button>
+                            </div>
+
+                            <!-- HARDWARE -->
+                            <div class="inventory-block">
+                                <h3 class="block-title">Hardware</h3>
+                                <div class="grid-2">
+                                    <input type="text" id="hwType" class="form-input" placeholder="Type">
+                                    <input type="number" id="hwQuantity" class="form-input" placeholder="Qty">
+                                </div>
+                                <button class="btn btn-primary full-btn" onclick="saveHardware()">Save</button>
+                            </div>
+
+                        </div>
+                        <div id="inventory-management" class="fa-subsection">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h3 style="margin: 0; color: #FFF;">Stock Details</h3>
+                                <button class="btn btn-primary gold-btn" onclick="loadInventorySnapshot()" style="padding: 8px 16px; font-size: 14px;">Refresh</button>
+                            </div>
+                            <div id="categorySummaryCards" class="inventory-category-cards">
+                                <!-- Category cards loaded dynamically -->
+                            </div>
+
+                            <!-- Stock Details Modal -->
+                            <div id="stockDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
+                                <div class="modal-dark" style="max-width: 800px; margin: 30px auto; max-height: 80vh; overflow-y: auto;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                        <h3 id="modalCategoryTitle" style="margin: 0; color: #FFF;"></h3>
+                                        <button type="button" class="btn btn-secondary" onclick="closeStockDetailsModal()" style="padding: 6px 12px;">Close</button>
+                                    </div>
+                                    
+                                    <table class="data-table" id="modalStockTable" style="width: 100%;">
+                                        <thead>
+                                            <tr id="modalTableHeader"></tr>
+                                        </thead>
+                                        <tbody id="modalStockBody">
+                                            <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" onclick="saveGrinderPaper()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="grpTable" style="margin-top: 15px;">
-                                <thead><tr><th>Grit</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="3" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
                         </div>
 
-                        <!-- HARDWARE SECTION -->
-                        <div style="margin-bottom: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #16a085;">
-                            <h3 style="color: #2c3e50; margin-top: 0;"> Hardware</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Type</label>
-                                    <input type="text" id="hwType" placeholder="Type" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #2c3e50;">Quantity</label>
-                                    <input type="number" id="hwQuantity" placeholder="Qty" style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px;">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" onclick="saveHardware()" style="width: 100%; padding: 12px;">Save</button>
-                            <table class="data-table" id="hwTable" style="margin-top: 15px;">
-                                <thead><tr><th>Type</th><th>Quantity</th><th>Date</th></tr></thead>
-                                <tbody><tr><td colspan="3" style="text-align: center; padding: 20px; color: #95a5a6;">No items</td></tr></tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -490,18 +511,16 @@
             <div id="module-accounts" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>💰 Accounts Management</h2>
+                        <h2>Accounts Management</h2>
                         <button class="btn btn-primary">+ Record Payment</button>
                     </div>
                     <div class="card-body">
                         <div class="stats-grid" style="margin-bottom: 20px;">
                             <div class="stat-card">
-                                <div class="stat-icon">📥</div>
                                 <div class="stat-value">₹12.5L</div>
                                 <div class="stat-label">Total Receivables</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">📤</div>
                                 <div class="stat-value">₹4.2L</div>
                                 <div class="stat-label">Total Payables</div>
                             </div>
@@ -553,34 +572,30 @@
             <div id="module-reports" class="module-section">
                 <div class="card">
                     <div class="card-header">
-                        <h2>📈 Reports & Analytics</h2>
+                        <h2>Reports & Analytics</h2>
                     </div>
                     <div class="card-body">
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-icon">📊</div>
                                 <div class="stat-value">+23%</div>
                                 <div class="stat-label">Sales Growth</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">⏱️</div>
                                 <div class="stat-value">4.2 days</div>
                                 <div class="stat-label">Avg Production</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon"></div>
                                 <div class="stat-value">98.5%</div>
                                 <div class="stat-label">Fulfillment Rate</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-icon">⭐</div>
                                 <div class="stat-value">4.8/5</div>
                                 <div class="stat-label">Customer Rating</div>
                             </div>
                         </div>
                         
                         <div class="info-box">
-                            <strong>📈 Monthly Summary (January 2026):</strong><br><br>
+                            <strong>Monthly Summary (January 2026):</strong><br><br>
                             • Total Orders: 156 (+12% from last month)<br>
                             • Revenue: ₹8.5 Lakhs<br>
                             • Production Efficiency: 94%<br>
@@ -740,206 +755,7 @@
             <!-- This dashboard is for Factory Admin (Plant Manager) role -->
             <!-- Shows: Pending Orders, Production Queue, Priority Orders, Inventory Snapshot, Factory Reports, Vendor Overview -->
             <!-- Hides: Accounts, User Management, Access Control -->
-            <div id="module-factoryadmin" class="module-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Factory Admin Dashboard</h2>
-                    </div>
-                    <div class="card-body">
-
-                        <!-- // FACTORY ADMIN DASHBOARD - Sub-Navigation Tabs -->
-                        <div class="factory-admin-tabs">
-                            <button class="tab-btn" data-tab="fa-inventory-snapshot" onclick="showFactoryAdminTab('fa-inventory-snapshot')">
-                                Inventory Snapshot
-                            </button>
-                            <button class="tab-btn" data-tab="fa-vendor-overview" onclick="showFactoryAdminTab('fa-vendor-overview')">
-                                Vendor Overview
-                            </button>
-                        </div> 
-
-                        <!-- ========== SUB-SECTION 3: INVENTORY SNAPSHOT ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Inventory Snapshot Section -->
-                        <!-- Shows raw material and finished goods inventory levels -->
-                        <div id="fa-inventory-snapshot" class="fa-subsection">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; color: #333;">Inventory Snapshot</h3>
-                                <button class="btn btn-primary" onclick="loadInventorySnapshot()" style="padding: 8px 16px; font-size: 14px;">🔄 Refresh</button>
-                            </div>
-                            <div class="info-box warning">
-                                <strong>⚠️ Low Stock Alert:</strong> Teak Wood and Steel Sheets are below minimum levels!
-                            </div>
-
-                            <div id="snapshotContainer" class="inventory-snapshot-grid">
-                                <!-- Raw Materials Card -->
-                                <div class="inventory-category-card raw-material">
-                                    <h4>🪵 Raw Materials</h4>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Teak Wood</span>
-                                        <span class="item-qty low-stock">50 Cu.Ft ⚠️</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Pine Wood</span>
-                                        <span class="item-qty">180 Cu.Ft</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">MDF Boards</span>
-                                        <span class="item-qty">320 Sheets</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Steel Sheets</span>
-                                        <span class="item-qty low-stock">25 Sheets ⚠️</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Glass Panels</span>
-                                        <span class="item-qty">75 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">PVC Sheets</span>
-                                        <span class="item-qty">200 Sheets</span>
-                                    </div>
-                                </div>
-
-                                <!-- Hardware & Fittings Card -->
-                                <div class="inventory-category-card">
-                                    <h4> Hardware & Fittings</h4>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Door Handles</span>
-                                        <span class="item-qty">500 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Hinges (Heavy)</span>
-                                        <span class="item-qty">1,200 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Hinges (Light)</span>
-                                        <span class="item-qty">800 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Locks (Mortise)</span>
-                                        <span class="item-qty">350 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Screws & Bolts</span>
-                                        <span class="item-qty">5,000 Pcs</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Door Seals</span>
-                                        <span class="item-qty">400 Meters</span>
-                                    </div>
-                                </div>
-
-                                <!-- Finished Goods Card -->
-                                <div class="inventory-category-card finished-goods">
-                                    <h4> Finished Goods (Ready to Ship)</h4>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Wooden Door - Premium</span>
-                                        <span class="item-qty">18 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Steel Door - Security</span>
-                                        <span class="item-qty">12 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Flush Door - Standard</span>
-                                        <span class="item-qty">45 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Fire Rated Door</span>
-                                        <span class="item-qty">8 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">PVC Door - Economy</span>
-                                        <span class="item-qty">60 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Glass Panel Door</span>
-                                        <span class="item-qty">6 Units</span>
-                                    </div>
-                                </div>
-
-                                <!-- Work In Progress Card -->
-                                <div class="inventory-category-card">
-                                    <h4>🔄 Work In Progress (WIP)</h4>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Wooden Doors</span>
-                                        <span class="item-qty">25 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Steel Doors</span>
-                                        <span class="item-qty">8 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Flush Doors</span>
-                                        <span class="item-qty">50 Units</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <span class="item-name">Fire Rated Doors</span>
-                                        <span class="item-qty">10 Units</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        
-                        <!-- ========== SUB-SECTION 4: VENDOR OVERVIEW ========== -->
-                        <!-- // FACTORY ADMIN DASHBOARD - Vendor Overview Section -->
-                        <!-- Basic vendor list (view only) -->
-                        <div id="fa-vendor-overview" class="fa-subsection">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; color: #333;">🏪 Vendor Overview</h3>
-                                <button class="btn btn-primary" onclick="openAddVendorForm()" style="padding: 8px 16px; font-size: 14px;">+ Add Vendor</button>
-                            </div>
-                            <div class="info-box">
-                                <strong>ℹ️ Vendor Directory:</strong> View and manage vendors. Click delete icon to remove a vendor.
-                            </div>
-
-                            <div id="vendorList" class="vendor-list">
-                                <!-- Vendors will be loaded dynamically -->
-                            </div>
-
-                            <!-- Add Vendor Modal -->
-                            <div id="addVendorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-                                <div style="background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-                                    <h3 style="margin-top: 0; margin-bottom: 20px; color: #333;">Add New Vendor</h3>
-                                    <form onsubmit="submitAddVendor(event)">
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #2c3e50;">Vendor Name</label>
-                                            <input type="text" id="vendorName" placeholder="Enter vendor name" required style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
-                                        </div>
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #2c3e50;">Phone Number</label>
-                                            <input type="tel" id="vendorPhone" placeholder="Enter phone number" required style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
-                                        </div>
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #2c3e50;">Email</label>
-                                            <input type="email" id="vendorEmail" placeholder="Enter email" required style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
-                                        </div>
-                                        <div style="margin-bottom: 20px;">
-                                            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #2c3e50;">Category</label>
-                                            <select id="vendorCategory" required style="width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
-                                                <option value="">Select a category</option>
-                                                <option value="Raw Material - Wood">Raw Material - Wood</option>
-                                                <option value="Raw Material - Steel">Raw Material - Steel</option>
-                                                <option value="Raw Material - MDF">Raw Material - MDF</option>
-                                                <option value="Hardware & Fittings">Hardware & Fittings</option>
-                                                <option value="Glass Panels">Glass Panels</option>
-                                                <option value="Paints & Polish">Paints & Polish</option>
-                                                <option value="Chemicals & Adhesives">Chemicals & Adhesives</option>
-                                            </select>
-                                        </div>
-                                        <div style="display: flex; gap: 10px;">
-                                            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 10px;">Save Vendor</button>
-                                            <button type="button" class="btn" onclick="closeAddVendorForm()" style="flex: 1; padding: 10px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-
-                    </div><!-- End card-body -->
-                </div><!-- End card -->
-            </div><!-- End module-factoryadmin -->
+                    <!-- Removed legacy Factory Admin dashboard section to merge functionality into Inventory -->
 
             <!-- ==================== SALES EXECUTIVE DASHBOARD MODULE ==================== -->
             <!-- This dashboard is for Sales Executive role -->
@@ -1291,7 +1107,12 @@
                             <!-- ==================== CONTACT PERSON ==================== -->
                             <div class="so-section">
 
-                                <h3>Contact Person (POC)</h3>
+                                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                                    <h3 style="margin:0;">Contact Person (POC)</h3>
+                                    <button type="button" id="soCopyCustomerToPocBtn" style="padding:8px 12px; border:none; border-radius:4px; background:#ffd700; color:#000; font-weight:700; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.2); white-space:nowrap;">
+                                        Copy customer contact
+                                    </button>
+                                </div>
 
                                 <div class="so-form-row">
 
@@ -1375,44 +1196,16 @@
                                 <h3>Pricing & Calculation</h3>
 
                                 <div class="so-info-box">
-                                    Enter manual rates for each door type. Each door row auto-calculates rate, area, and amount.
-                                </div>
-
-
-                                <div class="so-form-row">
-                                    <div class="so-form-group">
-                                        <label for="soRateBTC">BTC Price (₹/cm²) <span class="required">*</span></label>
-                                        <input type="number" id="soRateBTC" placeholder="BTC price" min="0" step="0.01">
-                                        <div class="so-error-msg" data-field="soRateBTC"></div>
-                                    </div>
-                                    <div class="so-form-group">
-                                        <label for="soRateKitchenDoor">Kitchen Door Price (₹/cm²) <span class="required">*</span></label>
-                                        <input type="number" id="soRateKitchenDoor" placeholder="Kitchen Door price" min="0" step="0.01">
-                                        <div class="so-error-msg" data-field="soRateKitchenDoor"></div>
-                                    </div>
+                                    Enter the door price per square centimeter. All doors use the same rate, regardless of type.
                                 </div>
 
                                 <div class="so-form-row">
                                     <div class="so-form-group">
-                                        <label for="soRateBedroomDoor">Bedroom Door Price (₹/cm²) <span class="required">*</span></label>
-                                        <input type="number" id="soRateBedroomDoor" placeholder="Bedroom Door price" min="0" step="0.01">
-                                        <div class="so-error-msg" data-field="soRateBedroomDoor"></div>
-                                    </div>
-                                    <div class="so-form-group">
-                                        <label for="soRateMainDoor">Main Door Price (₹/cm²) <span class="required">*</span></label>
-                                        <input type="number" id="soRateMainDoor" placeholder="Main Door price" min="0" step="0.01">
-                                        <div class="so-error-msg" data-field="soRateMainDoor"></div>
+                                        <label for="soRatePerCm">Door Price (₹/cm²) <span class="required">*</span></label>
+                                        <input type="number" id="soRatePerCm" placeholder="Price per cm²" min="0" step="0.01">
+                                        <div class="so-error-msg" data-field="soRatePerCm"></div>
                                     </div>
                                 </div>
-
-                                <div class="so-form-row">
-                                    <div class="so-form-group">
-                                        <label for="soRateWardrobeDoor">Wardrobe Door Price (₹/cm²) <span class="required">*</span></label>
-                                        <input type="number" id="soRateWardrobeDoor" placeholder="Wardrobe Door price" min="0" step="0.01">
-                                        <div class="so-error-msg" data-field="soRateWardrobeDoor"></div>
-                                    </div>
-                                </div>
-
 
                                 <div class="so-calculation-display">
 
@@ -3052,15 +2845,94 @@
             // ADDED: Auto-load inventory when switching to Inventory module
             if (moduleName === 'inventory') {
                 const perms = getUserPermissions();
-                if (perms.inventory) loadAllInventory();
+                if (perms.inventory) {
+                    showInventoryTab('inventory-vendor-management');
+                    setTimeout(() => {
+                        loadInventorySnapshot();
+                    }, 100);
+                }
             }
 
-            // Load production pipeline on dashboard only for users with production permission
             if (moduleName === 'dashboard') {
+                loadDashboardStats();
                 const perms = getUserPermissions();
                 if (currentUser && perms.production) {
                     loadDashboardPipelines();
                 }
+            }
+        }
+
+        async function loadDashboardStats() {
+            const totalOrdersEl = document.getElementById('dashboardTotalOrders');
+            const inProductionEl = document.getElementById('dashboardInProduction');
+            const productionDoorsEl = document.getElementById('dashboardProductionDoors');
+            if (totalOrdersEl) totalOrdersEl.textContent = '...';
+            if (inProductionEl) inProductionEl.textContent = '...';
+            if (productionDoorsEl) productionDoorsEl.textContent = '...';
+
+            const token = localStorage.getItem('sdfis_token');
+            if (!token) {
+                if (totalOrdersEl) totalOrdersEl.textContent = '0';
+                if (inProductionEl) inProductionEl.textContent = '0';
+                if (productionDoorsEl) productionDoorsEl.textContent = '0';
+                return;
+            }
+
+            try {
+                const [ordersResp, productionResp] = await Promise.all([
+                    fetch(`${API_BASE_URL}/orders`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }),
+                    fetch(`${API_BASE_URL}/production/approved-orders`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                ]);
+
+                const ordersData = ordersResp.ok ? await ordersResp.json() : null;
+                const productionData = productionResp.ok ? await productionResp.json() : null;
+
+                const orders = ordersData && ordersData.success
+                    ? (Array.isArray(ordersData.data)
+                        ? ordersData.data
+                        : (Array.isArray(ordersData.data?.orders) ? ordersData.data.orders : []))
+                    : [];
+
+                let inProductionCount = 0;
+                let productionDoorsCount = 0;
+                let productionDoorsAvailable = false;
+
+                if (productionData && productionData.success && Array.isArray(productionData.data)) {
+                    inProductionCount = productionData.data.length;
+                    productionData.data.forEach(order => {
+                        if (typeof order.totalDoors === 'number') {
+                            productionDoorsAvailable = true;
+                            productionDoorsCount += order.totalDoors;
+                        } else if (Array.isArray(order.doors)) {
+                            productionDoorsAvailable = true;
+                            productionDoorsCount += order.doors.length;
+                        }
+                    });
+                } else {
+                    inProductionCount = orders.filter(order => String(order.status).toUpperCase() === 'IN_PRODUCTION').length;
+                }
+
+                if (totalOrdersEl) totalOrdersEl.textContent = orders.length.toLocaleString();
+                if (inProductionEl) inProductionEl.textContent = inProductionCount.toLocaleString();
+                if (productionDoorsEl) {
+                    productionDoorsEl.textContent = productionDoorsAvailable
+                        ? productionDoorsCount.toLocaleString()
+                        : (inProductionCount > 0 ? 'N/A' : '0');
+                }
+            } catch (error) {
+                console.error('Failed to load dashboard stats:', error);
+                if (totalOrdersEl) totalOrdersEl.textContent = '0';
+                if (inProductionEl) inProductionEl.textContent = '0';
+                if (productionDoorsEl) productionDoorsEl.textContent = '0';
             }
         }
 
@@ -3127,12 +2999,13 @@
 
             const stageWeight = {
                 PENDING: 0,
-                CUTTING: 15,
-                BTC: 30,
-                LAMINATE: 45,
-                PRESS: 60,
-                FINISH: 75,
-                PACKING: 90,
+                CUTTING: 20,
+                BTC: 40,
+                LAMINATE: 60,
+                PRESS: 80,
+                FINISH: 100,
+                PACKING: 100,
+                DELIVERY_PENDING: 100,
                 DELIVERY: 100
             };
 
@@ -3256,7 +3129,7 @@
 
             // --- Step 3: FactoryAdmin role-specific view ---
             if (role === 'FactoryAdmin') {
-                show('factoryadmin');
+                show('inventory');
                 show('usermanagement');
             }
 
@@ -3610,40 +3483,200 @@
                     return;
                 }
 
-                const response = await fetch(`${API_BASE_URL}/inventory/snapshot`, {
+                const response = await fetch(`${API_BASE_URL}/inventory`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Failed to load snapshot');
+                if (!response.ok) throw new Error(data.message || 'Failed to load');
 
-                displayInventorySnapshot(data.data || []);
+                const items = data.data || [];
+                displayCategoryCards(items);
             } catch (error) {
-                console.error('Error loading inventory snapshot:', error);
+                console.error('Error loading inventory:', error);
                 alert('Error: ' + error.message);
             }
         }
 
-        /**
-         * Display inventory snapshot in table format
-         */
-        function displayInventorySnapshot(snapshotData) {
-            const container = document.getElementById('snapshotContainer');
+        function displayCategoryCards(allItems) {
+            const categories = ['Flush Door', 'Laminate', 'Adhesive', 'B.T.C', 'Machinery', 'Grinder Paper', 'Hardware'];
+            const container = document.getElementById('categorySummaryCards');
+            
             if (!container) return;
 
-            if (!snapshotData || snapshotData.length === 0) {
-                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #95a5a6; grid-column: 1 / -1;">No inventory data available</div>';
-                return;
-            }
-
-            let html = '<div style="grid-column: 1 / -1; margin-bottom: 20px;"><table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"><thead style="background: #3498db; color: white;"><tr><th style="padding: 12px; text-align: left; font-weight: 600;">Category</th><th style="padding: 12px; text-align: right; font-weight: 600;">Total Stock</th></tr></thead><tbody>';
-
-            snapshotData.forEach(item => {
-                html += '<tr style="border-bottom: 1px solid #ecf0f1;"><td style="padding: 12px; color: #2c3e50;">' + (item.category || 'Unknown') + '</td><td style="padding: 12px; text-align: right; font-weight: 600; color: #27ae60;">' + (item.totalStock || 0) + ' Units</td></tr>';
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">';
+            
+            categories.forEach(category => {
+                const categoryItems = allItems.filter(i => i.category === category);
+                const totalQty = categoryItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                html += `
+                <div class="inv-category-card" onclick="openStockDetailsModal('${category}', ${JSON.stringify(categoryItems).replace(/"/g, '&quot;')})">
+                    <div class="card-content">
+                        <h4 style="margin: 0 0 10px 0; color: #FFD700; font-size: 16px;">${category}</h4>
+                        <div style="font-size: 28px; font-weight: bold; color: #FFF; margin: 10px 0;">${totalQty}</div>
+                        <div style="font-size: 12px; color: #95a5a6;">Total Units</div>
+                        <div style="font-size: 12px; color: #95a5a6; margin-top: 8px;">${categoryItems.length} item(s)</div>
+                    </div>
+                    <div style="text-align: right; color: #FFD700; font-size: 20px;">→</div>
+                </div>
+                `;
             });
-
-            html += '</tbody></table></div>';
+            
+            html += '</div>';
             container.innerHTML = html;
+        }
+
+        function openStockDetailsModal(category, itemsStr) {
+            try {
+                const items = typeof itemsStr === 'string' ? JSON.parse(itemsStr) : itemsStr;
+                const modal = document.getElementById('stockDetailsModal');
+                const title = document.getElementById('modalCategoryTitle');
+                const tableHeader = document.getElementById('modalTableHeader');
+                const tbody = document.getElementById('modalStockBody');
+                
+                title.textContent = category;
+                
+                // Set headers based on category
+                let headerHTML = '';
+                let rowHTML = '';
+                
+                if (category === 'Flush Door') {
+                    headerHTML = '<th>Length</th><th>Breadth</th><th>Thickness</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.length || '-'}</td>
+                            <td>${i.breadth || '-'}</td>
+                            <td>${i.thickness || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'Laminate') {
+                    headerHTML = '<th>Code</th><th>Color</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.code || '-'}</td>
+                            <td>${i.color || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'Adhesive') {
+                    headerHTML = '<th>Brand</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.brand || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'B.T.C') {
+                    headerHTML = '<th>Size</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.itemName || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'Machinery') {
+                    headerHTML = '<th>Name</th><th>Status</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.itemName || '-'}</td>
+                            <td>${i.status || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'Grinder Paper') {
+                    headerHTML = '<th>Grit</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.grit || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                } else if (category === 'Hardware') {
+                    headerHTML = '<th>Type</th><th>Quantity</th><th>Date</th><th>Action</th>';
+                    rowHTML = items.map(i => `
+                        <tr>
+                            <td>${i.itemName || '-'}</td>
+                            <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
+                            <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
+                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                        </tr>
+                    `).join('');
+                }
+                
+                tableHeader.innerHTML = headerHTML;
+                tbody.innerHTML = rowHTML || '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #95a5a6;">No items found</td></tr>';
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('Error opening modal:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function closeStockDetailsModal() {
+            const modal = document.getElementById('stockDetailsModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function updateInventoryQty(itemId, button) {
+            try {
+                const input = button.parentElement.parentElement.querySelector('.qty-update');
+                const newQty = parseInt(input.value);
+                
+                if (newQty === undefined || newQty === null) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+
+                const token = localStorage.getItem('sdfis_token');
+                if (!token) {
+                    alert('Please login first');
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = 'Updating...';
+
+                const response = await fetch(`${API_BASE_URL}/inventory/${itemId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ quantity: newQty })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to update');
+
+                alert('Quantity updated successfully!');
+                loadInventorySnapshot();
+            } catch (error) {
+                console.error('Error updating quantity:', error);
+                alert('Error: ' + error.message);
+                button.disabled = false;
+                button.textContent = 'Update';
+            }
+        }
+
+        /**
+         * Display inventory snapshot in table format - REMOVED (using card display now)
+         */
+        function displayInventorySnapshot(snapshotData) {
+            // This function is now replaced by displayCategoryCards
         }
 
         /**
@@ -3973,16 +4006,16 @@
          * // FACTORY ADMIN DASHBOARD - Switch between sub-tabs
          * @param {string} tabId - The ID of the tab to show
          */
-        function showFactoryAdminTab(tabId) {
-            console.log('📌 Factory Admin: Switching to tab:', tabId);
+        function showInventoryTab(tabId) {
+            console.log('📌 Inventory: Switching to tab:', tabId);
             
-            // Hide all sub-sections
+            // Hide all inventory sub-sections
             document.querySelectorAll('.fa-subsection').forEach(function(section) {
                 section.classList.remove('active');
             });
             
-            // Remove active state from all tab buttons
-            document.querySelectorAll('.factory-admin-tabs .tab-btn').forEach(function(btn) {
+            // Remove active state from all inventory tab buttons
+            document.querySelectorAll('.ps-tabs .ps-tab').forEach(function(btn) {
                 btn.classList.remove('active');
             });
             
@@ -3993,14 +4026,19 @@
             }
             
             // Activate tab button
-            const tabBtn = document.querySelector('.factory-admin-tabs .tab-btn[data-tab="' + tabId + '"]');
+            const tabBtn = document.querySelector('.ps-tabs .ps-tab[data-tab="' + tabId + '"]');
             if (tabBtn) {
                 tabBtn.classList.add('active');
             }
 
-            // Load vendors when the vendor overview tab is clicked
-            if (tabId === 'fa-vendor-overview') {
+            // Load vendors for Vendor Management tab
+            if (tabId === 'inventory-vendor-management') {
                 loadVendors();
+            }
+            
+            // Load inventory snapshot for Inventory Management tab
+            if (tabId === 'inventory-management') {
+                loadInventorySnapshot();
             }
         }
 
@@ -6432,6 +6470,12 @@
                 const uniqueNextStages = [...new Set(checkedDoors.map(d => d.nextStage))].join(', ');
                 showToast(` ${checkedDoors.length} door(s) moved to: ${uniqueNextStages}`, 'success');
                 await loadAllDoors();
+                
+                // Refresh dashboard pipeline if user has permission
+                const perms = getUserPermissions();
+                if (perms.production) {
+                    loadDashboardPipelines();
+                }
 
             } catch (error) {
                 console.error(' Error updating stages:', error);
@@ -6887,6 +6931,12 @@
                 await loadAllDoors();
                 await onOrderSelect();
                 await loadOrders();
+                
+                // Refresh dashboard pipeline
+                const perms = getUserPermissions();
+                if (perms.production) {
+                    loadDashboardPipelines();
+                }
             } catch (error) {
                 console.error('Error confirming delivery:', error);
                 showToast('Error: ' + error.message, 'error');
@@ -6926,6 +6976,12 @@
 
                 showToast('Packing completed successfully', 'success');
                 await loadAllDoors();
+                
+                // Refresh dashboard pipeline
+                const perms = getUserPermissions();
+                if (perms.production) {
+                    loadDashboardPipelines();
+                }
             } catch (error) {
                 console.error('Error completing packing:', error);
                 alert('Error: ' + error.message);
@@ -8094,7 +8150,8 @@
 
         let soFormState = {
             customerType: '',
-            doors: []
+            doors: [],
+            tableMode: false
         };
 
         let soDoorIdCounter = 0;
@@ -8186,7 +8243,7 @@
 
                     const thickness = parseNumberFromCell(row[thicknessCol]) || 30;
                     const rawType = typeCol !== -1 ? String(row[typeCol] || '').trim() : '';
-                    const type = rawType || 'BTC';
+                    const type = rawType || '';
 
                     doors.push({
                         type,
@@ -8213,7 +8270,7 @@
                     });
 
                     doors.push({
-                        type: rawType ? String(rawType).trim() : 'BTC',
+                        type: rawType ? String(rawType).trim() : '',
                         length,
                         breadth,
                         thickness,
@@ -8433,43 +8490,8 @@
                     }
                 }
 
-                // Clear existing doors
-                const doorsContainer = getDoorsContainer();
-                if (doorsContainer) {
-                    doorsContainer.innerHTML = '';
-                    soFormState.doors = [];
-                    soDoorIdCounter = 0;
-                }
-
-                // Add parsed doors
-                if (data.doors && Array.isArray(data.doors)) {
-                    data.doors.forEach(doorData => {
-                        soAddDoorBlock();
-                    });
-
-                    // Fill door details
-                    data.doors.forEach((doorData, index) => {
-                        const doorId = soFormState.doors[index];
-                        
-                        const lengthInput = document.getElementById(`soLength-${doorId}`);
-                        const breadthInput = document.getElementById(`soBreadth-${doorId}`);
-                        const thicknessInput = document.getElementById(`soThickness-${doorId}`);
-                        const typeSelect = document.getElementById(`soDoorType-${doorId}`);
-                        const laminateSelect = document.getElementById(`soLaminate-${doorId}`);
-                        const prioritySelect = document.getElementById(`soPriority-${doorId}`);
-
-                        if (lengthInput) lengthInput.value = doorData.length || '';
-                        if (breadthInput) breadthInput.value = doorData.breadth || '';
-                        if (thicknessInput) thicknessInput.value = doorData.thickness || 30;
-                        if (typeSelect) {
-                            const desiredType = doorData.doorType || doorData.type || 'BTC';
-                            const hasOption = Array.from(typeSelect.options).some(opt => opt.value === desiredType);
-                            typeSelect.value = hasOption ? desiredType : 'BTC';
-                        }
-                        if (laminateSelect && !laminateSelect.value) laminateSelect.value = 'Matte Oak';
-                        if (prioritySelect && !prioritySelect.value) prioritySelect.value = 'Normal';
-                    });
-
+                renderDoorTable(Array.isArray(data.doors) ? data.doors : []);
+                if (Array.isArray(data.doors)) {
                     updateDoorNumbers();
                     updateTotalCalculations();
                     showToast('Form auto-filled with ' + data.doors.length + ' doors', 'success');
@@ -8501,6 +8523,142 @@
                 }
             }
             return thicknessInput;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function soAddDoorTableRow(doorId, doorData = {}) {
+            const doorsTableBody = document.getElementById('soDoorsTableBody');
+            if (!doorsTableBody) return;
+
+            const isDirect = soFormState.customerType === 'Direct Customer';
+            const row = document.createElement('tr');
+            row.id = `soDoor-${doorId}`;
+            row.dataset.doorId = doorId;
+            row.className = 'so-door-row';
+
+            const doorTypeValue = escapeHtml(doorData.doorType || doorData.type || '');
+            const lengthValue = escapeHtml(doorData.length || '');
+            const breadthValue = escapeHtml(doorData.breadth || '');
+            const thicknessValue = escapeHtml(doorData.thickness || 30);
+            const laminateValue = escapeHtml(doorData.laminate || '');
+            const priorityValue = escapeHtml(doorData.priority || '');
+            const flatNoValue = escapeHtml(doorData.flatNo || '');
+
+            row.innerHTML = `
+                <td class="door-number">${soFormState.doors.indexOf(doorId) + 1}</td>
+                <td id="soFlatNoGroup-${doorId}" style="${isDirect ? 'display:none;' : ''}">
+                    <input type="text" id="soFlatNo-${doorId}" placeholder="Flat No" value="${flatNoValue}">
+                </td>
+                <td>
+                    <input type="text" id="soDoorType-${doorId}" class="type" placeholder="Door Type" value="${doorTypeValue}">
+                </td>
+                <td>
+                    <input type="number" id="soLength-${doorId}" class="length" placeholder="Length" min="10" max="300" step="0.1" value="${lengthValue}">
+                </td>
+                <td>
+                    <input type="number" id="soBreadth-${doorId}" class="breadth" placeholder="Breadth" min="10" max="200" step="0.1" value="${breadthValue}">
+                </td>
+                <td>
+                    <input type="number" id="soThickness-${doorId}" placeholder="Thickness" min="1" max="100" step="1" value="${thicknessValue}">
+                </td>
+                <td>
+                    <select id="soLaminate-${doorId}">
+                        <option value="">-- Select --</option>
+                        <option value="Matte Oak" ${laminateValue === 'Matte Oak' ? 'selected' : ''}>Matte Oak</option>
+                        <option value="Glossy Walnut" ${laminateValue === 'Glossy Walnut' ? 'selected' : ''}>Glossy Walnut</option>
+                        <option value="Teak" ${laminateValue === 'Teak' ? 'selected' : ''}>Teak</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="soPriority-${doorId}">
+                        <option value="">-- Select --</option>
+                        <option value="High" ${priorityValue === 'High' ? 'selected' : ''}>High</option>
+                        <option value="Normal" ${priorityValue === 'Normal' ? 'selected' : ''}>Normal</option>
+                        <option value="Low" ${priorityValue === 'Low' ? 'selected' : ''}>Low</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" id="soDoorArea-${doorId}" class="area" value="0" readonly>
+                    <input type="hidden" id="soDoorAmount-${doorId}" class="amount" value="0">
+                </td>
+                <td>
+                    <button type="button" class="so-remove-door-btn">Remove</button>
+                </td>
+            `;
+
+            doorsTableBody.appendChild(row);
+            soAttachDoorBlockListeners(doorId);
+            soUpdateDoorBlockVisibility(doorId);
+            soUpdateRemoveButtonStates();
+            updateDoorNumbers();
+            calculateRow(doorId);
+            calculateTotal();
+        }
+
+        function renderDoorTable(doors = []) {
+            const doorsContainer = getDoorsContainer();
+            if (!doorsContainer) return;
+
+            soFormState.tableMode = true;
+            soFormState.doors = [];
+            soDoorIdCounter = 0;
+
+            doorsContainer.innerHTML = `
+                <div class="so-table-bulk-controls" style="display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+                    <label for="soBulkPriority" style="margin:0; color:#fff; font-weight:600;">Apply Priority to All Doors</label>
+                    <select id="soBulkPriority" style="min-width:160px; padding:6px 10px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="">-- Select priority --</option>
+                        <option value="High">High</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Low">Low</option>
+                    </select>
+                    <button type="button" id="soApplyBulkPriorityBtn" style="padding:8px 14px; border:none; border-radius:4px; background:#ffc107; color:#000; cursor:pointer;">Apply to all</button>
+                </div>
+                <div class="so-table-wrapper" style="overflow-x:auto; margin-bottom: 20px;">
+                    <table class="data-table so-door-table" style="min-width: 1200px; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Flat No</th>
+                                <th>Door Type</th>
+                                <th>Length (cm)</th>
+                                <th>Breadth (cm)</th>
+                                <th>Thickness (mm)</th>
+                                <th>Laminate</th>
+                                <th>Priority</th>
+                                <th>Area</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="soDoorsTableBody"></tbody>
+                    </table>
+                </div>
+            `;
+
+            const bulkPrioritySelect = document.getElementById('soBulkPriority');
+            const bulkApplyBtn = document.getElementById('soApplyBulkPriorityBtn');
+            if (bulkApplyBtn && bulkPrioritySelect) {
+                bulkApplyBtn.addEventListener('click', function() {
+                    const selected = bulkPrioritySelect.value;
+                    if (selected) {
+                        applyPriorityToAll(selected);
+                    }
+                });
+            }
+
+            if (doors.length === 0) {
+                soAddDoorBlock();
+            } else {
+                doors.forEach(doorData => soAddDoorBlock(doorData));
+            }
         }
 
         /**
@@ -8560,6 +8718,8 @@
                 excelFileInput.dataset.listenerAttached = 'true';
             }
 
+            initPocCopyButton();
+
             const parseBtn = document.getElementById('soParseDocumentBtn');
             if (parseBtn) {
                 parseBtn.addEventListener('click', function(e) {
@@ -8586,9 +8746,14 @@
         /**
          * Add door block
          */
-        function soAddDoorBlock() {
+        function soAddDoorBlock(doorData = {}) {
             const doorId = soDoorIdCounter++;
             soFormState.doors.push(doorId);
+
+            if (soFormState.tableMode) {
+                soAddDoorTableRow(doorId, doorData);
+                return;
+            }
 
             const doorsContainer = getDoorsContainer();
             const doorBlock = document.createElement('div');
@@ -8630,9 +8795,9 @@
                 <div class="so-form-row">
                     <div class="so-form-group" id="soFlatNoGroup-${doorId}" ${isDirect ? 'class="so-form-group so-hidden"' : ''}>
                         <label for="soFlatNo-${doorId}">
-                            Flat No ${!isDirect ? '<span class="required">*</span>' : ''}
+                            Flat No
                         </label>
-                        <input type="text" id="soFlatNo-${doorId}" placeholder="Flat number or unit" ${!isDirect ? 'required' : ''}>
+                        <input type="text" id="soFlatNo-${doorId}" placeholder="Flat number or unit">
                         <div class="so-error-msg" data-field="soFlatNo-${doorId}"></div>
                     </div>
 
@@ -8641,6 +8806,7 @@
                             Door Type <span class="required">*</span>
                         </label>
                         <select id="soDoorType-${doorId}" class="type" required>
+                            <option value="">-- Select Door Type --</option>
                             <option value="BTC">BTC</option>
                             <option value="Kitchen Door">Kitchen Door</option>
                             <option value="Bedroom Door">Bedroom Door</option>
@@ -8673,8 +8839,8 @@
 
                 <div class="so-form-row">
                     <div class="so-form-group">
-                        <label for="soLaminate-${doorId}">Laminate Finish <span class="required">*</span></label>
-                        <select id="soLaminate-${doorId}" required>
+                        <label for="soLaminate-${doorId}">Laminate Finish</label>
+                        <select id="soLaminate-${doorId}">
                             <option value="">-- Select --</option>
                             <option value="Matte Oak">Matte Oak</option>
                             <option value="Glossy Walnut">Glossy Walnut</option>
@@ -8720,11 +8886,14 @@
          * Attach door block listeners
          */
         function soAttachDoorBlockListeners(doorId) {
-            const removeBtn = document.querySelector(`[data-door-id="${doorId}"]`);
-            removeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                soRemoveDoorBlock(doorId);
-            });
+            const doorElement = document.getElementById(`soDoor-${doorId}`);
+            const removeBtn = doorElement ? doorElement.querySelector('.so-remove-door-btn') : null;
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    soRemoveDoorBlock(doorId);
+                });
+            }
 
             // Add listeners for area calculation
             const lengthInput = document.getElementById(`soLength-${doorId}`);
@@ -8772,22 +8941,35 @@
             updateDoorArea();
         }
 
+        function getRatePerCm() {
+            return parseFloat(document.getElementById('soRatePerCm')?.value) || 0;
+        }
+
+        function applyPriorityToAll(priority) {
+            if (!priority) return;
+            soFormState.doors.forEach(doorId => {
+                const priorityEl = document.getElementById(`soPriority-${doorId}`);
+                if (priorityEl) {
+                    priorityEl.value = priority;
+                }
+            });
+        }
+
         function getRates() {
+            const rate = getRatePerCm();
             return {
-                'BTC': parseFloat(document.getElementById('soRateBTC')?.value) || 0,
-                'Kitchen Door': parseFloat(document.getElementById('soRateKitchenDoor')?.value) || 0,
-                'Bedroom Door': parseFloat(document.getElementById('soRateBedroomDoor')?.value) || 0,
-                'Main Door': parseFloat(document.getElementById('soRateMainDoor')?.value) || 0,
-                'Wardrobe Door': parseFloat(document.getElementById('soRateWardrobeDoor')?.value) || 0
+                'BTC': rate,
+                'Kitchen Door': rate,
+                'Bedroom Door': rate,
+                'Main Door': rate,
+                'Wardrobe Door': rate
             };
         }
 
         function calculateRow(doorId) {
-            const rates = getRates();
-            const type = document.getElementById(`soDoorType-${doorId}`)?.value || '';
+            const rate = getRatePerCm();
             const length = parseFloat(document.getElementById(`soLength-${doorId}`)?.value) || 0;
             const breadth = parseFloat(document.getElementById(`soBreadth-${doorId}`)?.value) || 0;
-            const rate = rates[type] || 0;
             const area = length * breadth;
             const amount = area * rate;
 
@@ -9068,20 +9250,29 @@
         }
 
         function initManualPricingListeners() {
-            const rateIds = [
-                'soRateBTC',
-                'soRateKitchenDoor',
-                'soRateBedroomDoor',
-                'soRateMainDoor',
-                'soRateWardrobeDoor'
-            ];
+            const rateInput = document.getElementById('soRatePerCm');
+            if (!rateInput || rateInput.dataset.manualPricingBound === 'true') return;
+            rateInput.addEventListener('input', calculateTotal);
+            rateInput.addEventListener('change', calculateTotal);
+            rateInput.dataset.manualPricingBound = 'true';
+        }
 
-            rateIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el || el.dataset.manualPricingBound === 'true') return;
-                el.addEventListener('input', calculateTotal);
-                el.addEventListener('change', calculateTotal);
-                el.dataset.manualPricingBound = 'true';
+        function initPocCopyButton() {
+            const copyButton = document.getElementById('soCopyCustomerToPocBtn');
+            if (!copyButton) return;
+
+            copyButton.addEventListener('click', () => {
+                const customerName = document.getElementById('soCustomerName')?.value || '';
+                const customerPhone = document.getElementById('soPrimaryPhone')?.value || '';
+                const customerEmail = document.getElementById('soPrimaryEmail')?.value || '';
+
+                const pocNameInput = document.getElementById('soPocName');
+                const pocPhoneInput = document.getElementById('soPocPhone');
+                const pocEmailInput = document.getElementById('soPocEmail');
+
+                if (pocNameInput) pocNameInput.value = customerName;
+                if (pocPhoneInput) pocPhoneInput.value = customerPhone;
+                if (pocEmailInput) pocEmailInput.value = customerEmail;
             });
         }
 
@@ -9114,14 +9305,11 @@
         function soUpdateDoorBlockVisibility(doorId) {
             const isDirect = soFormState.customerType === 'Direct Customer';
             const flatNoGroup = document.getElementById(`soFlatNoGroup-${doorId}`);
-            const flatNoInput = document.getElementById(`soFlatNo-${doorId}`);
 
             if (isDirect) {
                 flatNoGroup.classList.add('so-hidden');
-                flatNoInput.removeAttribute('required');
             } else {
                 flatNoGroup.classList.remove('so-hidden');
-                flatNoInput.setAttribute('required', 'required');
             }
         }
 
@@ -9134,6 +9322,12 @@
             doorBlocks.forEach((block, index) => {
                 const title = block.querySelector('.so-door-title');
                 if (title) title.textContent = 'Door #' + (index + 1);
+            });
+
+            const doorRows = document.querySelectorAll('#doorsContainer .so-door-row');
+            doorRows.forEach((row, index) => {
+                const numberCell = row.querySelector('.door-number');
+                if (numberCell) numberCell.textContent = index + 1;
             });
         }
 
@@ -9363,33 +9557,16 @@
             validDoorIds.forEach((doorId, index) => {
                 const doorBlockNum = doorIds.indexOf(doorId) + 1;
 
-                if (!isDirect) {
-                    const flatNoEl = document.getElementById(`soFlatNo-${doorId}`);
-                    if (!flatNoEl || !flatNoEl.value.trim()) {
-                        errors.push(`Door #${doorBlockNum}: Flat No is required`);
-                        if (flatNoEl) soShowFieldError(`soFlatNo-${doorId}`, 'Required');
-                    }
-                }
-
                 const doorTypeEl = document.getElementById(`soDoorType-${doorId}`);
                 if (!doorTypeEl || !doorTypeEl.value) {
                     errors.push(`Door #${doorBlockNum}: Door Type is required`);
                     if (doorTypeEl) soShowFieldError(`soDoorType-${doorId}`, 'Required');
                 }
 
-                const doorRates = getRates();
-                const selectedDoorType = doorTypeEl ? doorTypeEl.value : '';
-                if (selectedDoorType && !(doorRates[selectedDoorType] > 0)) {
-                    errors.push(`Door #${doorBlockNum}: Enter rate for ${selectedDoorType}`);
-                    const rateFieldMap = {
-                        'BTC': 'soRateBTC',
-                        'Kitchen Door': 'soRateKitchenDoor',
-                        'Bedroom Door': 'soRateBedroomDoor',
-                        'Main Door': 'soRateMainDoor',
-                        'Wardrobe Door': 'soRateWardrobeDoor'
-                    };
-                    const rateFieldId = rateFieldMap[selectedDoorType];
-                    if (rateFieldId) soShowFieldError(rateFieldId, 'Required for selected type');
+                const pricePerCm = getRatePerCm();
+                if (pricePerCm <= 0) {
+                    errors.push('Enter a valid door price per cm²');
+                    soShowFieldError('soRatePerCm', 'Required');
                 }
 
                 const lengthEl = document.getElementById(`soLength-${doorId}`);
@@ -9417,12 +9594,6 @@
                 if (!thickness) {
                     errors.push(`Door #${doorBlockNum}: Thickness is required`);
                     if (thicknessEl) soShowFieldError(`soThickness-${doorId}`, 'Required');
-                }
-
-                const laminateEl = document.getElementById(`soLaminate-${doorId}`);
-                if (!laminateEl || !laminateEl.value) {
-                    errors.push(`Door #${doorBlockNum}: Laminate Finish is required`);
-                    if (laminateEl) soShowFieldError(`soLaminate-${doorId}`, 'Required');
                 }
 
                 const priorityEl = document.getElementById(`soPriority-${doorId}`);
@@ -9467,7 +9638,7 @@
                     length: parseFloat(length),
                     breadth: parseFloat(breadth),
                     thickness: thicknessEl ? parseFloat(thicknessEl.value) : 0,
-                    rate: parseFloat(document.getElementById(`soDoorRate-${doorId}`)?.value) || 0,
+                    rate: getRatePerCm(),
                     area: parseFloat(document.getElementById(`soDoorArea-${doorId}`)?.value) || 0,
                     amount: parseFloat(document.getElementById(`soDoorAmount-${doorId}`)?.value) || 0,
                     laminate: laminateEl ? laminateEl.value : '',
@@ -10041,6 +10212,10 @@
         window.initWorkerHistoryDate = initWorkerHistoryDate;
         // INVENTORY MANAGER - Export functions
         window.loadAllInventory = loadAllInventory;
+        window.loadInventorySnapshot = loadInventorySnapshot;
+        window.openStockDetailsModal = openStockDetailsModal;
+        window.closeStockDetailsModal = closeStockDetailsModal;
+        window.updateInventoryQty = updateInventoryQty;
         // PRODUCTION SUPERVISOR INVENTORY USAGE
         window.submitInventoryUsage = submitInventoryUsage;
         window.loadDoorTypeSummary = loadDoorTypeSummary;
