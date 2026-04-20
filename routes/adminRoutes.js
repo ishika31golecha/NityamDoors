@@ -603,17 +603,50 @@ router.get('/order-overview', protect, authorize('FactoryAdmin', 'SuperAdmin', '
     const overviewPromises = orders.map(async (order) => {
       const totalDoors = order.doors ? order.doors.length : 0;
       const doorUnits = await DoorUnit.find({ orderId: order.orderId })
-        .select('currentStage')
+        .select('doorNumber currentStage')
         .lean();
-      const DONE_STAGES = ['PACKING', 'DELIVERY', 'COMPLETED'];
-      const completedDoors = doorUnits.filter(d => DONE_STAGES.includes(d.currentStage)).length;
+      const DONE_STAGES = ['DELIVERY_DONE', 'COMPLETED'];
+
+      const doorUnitMap = doorUnits.reduce((map, door) => {
+        if (door.doorNumber != null) map[door.doorNumber] = door;
+        return map;
+      }, {});
+
+      const allDoorStages = (order.doors || []).map((door, index) => {
+        const production = doorUnitMap[index + 1];
+        return production?.currentStage || 'PENDING';
+      });
+
+      const completedDoors = allDoorStages.filter(stage => DONE_STAGES.includes(stage) || stage === 'DELIVERY_DONE').length;
+
+      const stageOrder = [
+        'PENDING',
+        'CUTTING',
+        'BTC',
+        'LAMINATE',
+        'PRESS',
+        'FINISH',
+        'PACKING',
+        'DELIVERY_PENDING',
+        'DELIVERY',
+        'DELIVERY_DONE'
+      ];
+      const lastStageIndex = stageOrder.length - 1;
+
+      const totalProgress = allDoorStages.reduce((sum, stage) => {
+        let normalizedStage = stage || 'PENDING';
+        if (normalizedStage === 'DELIVERY' || normalizedStage === 'COMPLETED') normalizedStage = 'DELIVERY_DONE';
+        const stageIndex = stageOrder.indexOf(normalizedStage);
+        return sum + (stageIndex >= 0 ? (stageIndex / lastStageIndex) * 100 : 0);
+      }, 0);
+
       return {
         orderId: order.orderId,
         customerName: order.customer?.name || 'N/A',
         totalDoors,
         completedDoors,
         remainingDoors: totalDoors - completedDoors,
-        progressPct: totalDoors > 0 ? Math.round((completedDoors / totalDoors) * 100) : 0,
+        progressPct: totalDoors > 0 ? Math.round(totalProgress / totalDoors) : 0,
         status: order.status,
         priority: order.priority || 'Normal',
         createdAt: order.createdAt

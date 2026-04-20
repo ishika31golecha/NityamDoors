@@ -2922,25 +2922,30 @@
 
         //============= Calculate for Production Pipeline on dashboard ===========
         function calculateOrderPipelineProgress(doors){
+            const stageOrder = [
+                'PENDING',
+                'CUTTING',
+                'BTC',
+                'LAMINATE',
+                'PRESS',
+                'FINISH',
+                'PACKING',
+                'DELIVERY_PENDING',
+                'DELIVERY',
+                'DELIVERY_DONE'
+            ];
 
-            const stageWeight = {
-                PENDING: 0,
-                CUTTING: 15,
-                BTC: 30,
-                LAMINATE: 45,
-                PRESS: 60,
-                FINISH: 75,
-                PACKING: 90,
-                DELIVERY: 100
-            };
+            const lastStageIndex = stageOrder.length - 1;
 
-            let total=0;
+            const totalProgress = doors.reduce((sum, door) => {
+                let stage = door.currentStage || 'PENDING';
+                if (stage === 'DELIVERY' || stage === 'COMPLETED') stage = 'DELIVERY_DONE';
 
-            doors.forEach(d=>{
-                total += stageWeight[d.currentStage] || 0;
-            });
+                const stageIndex = stageOrder.indexOf(stage);
+                return sum + (stageIndex >= 0 ? (stageIndex / lastStageIndex) * 100 : 0);
+            }, 0);
 
-            return doors.length ? Math.round(total / doors.length) : 0;
+            return doors.length ? Math.round(totalProgress / doors.length) : 0;
         }
 
 
@@ -3728,9 +3733,11 @@
                             const stColor = stageColors[d.currentStage] || '#7f8c8d';
                             const statusLabel = d.isRejected
                                 ? '<span style="background:#e74c3c;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Rejected</span>'
-                                : ['PACKING','DELIVERY','COMPLETED'].includes(d.currentStage)
-                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;"> Done</span>'
-                                    : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
+                                : ['DELIVERY_DONE', 'COMPLETED'].includes(d.currentStage)
+                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Delivered</span>'
+                                    : d.currentStage === 'DELIVERY_PENDING' || d.currentStage === 'DELIVERY'
+                                        ? '<span style="background:#f1c40f;color:#111;padding:2px 8px;border-radius:12px;font-size:11px;">Out for Delivery</span>'
+                                        : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
                             return `<tr>
                                 <td style="text-align:center;"><strong>Door ${d.doorNumber}</strong></td>
                                 <td><span style="background:${stColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${d.currentStage}</span></td>
@@ -5705,20 +5712,26 @@
             // PRODUCTION PIPELINE PROGRESS
             // ===============================
 
-            const stageWeight = {
-                PENDING: 0,
-                CUTTING: 20,
-                BTC: 40,
-                LAMINATE: 60,
-                PRESS: 80,
-                FINISH: 100
-            };
+            const stageOrder = [
+                'PENDING',
+                'CUTTING',
+                'BTC',
+                'LAMINATE',
+                'PRESS',
+                'FINISH',
+                'PACKING',
+                'DELIVERY_PENDING',
+                'DELIVERY',
+                'DELIVERY_DONE'
+            ];
+            const lastStageIndex = stageOrder.length - 1;
 
-            let totalProgress = 0;
-
-            psCurrentDoors.forEach(door => {
-                totalProgress += stageWeight[door.currentStage] || 0;
-            });
+            const totalProgress = psCurrentDoors.reduce((sum, door) => {
+                let stage = door.currentStage || 'PENDING';
+                if (stage === 'DELIVERY' || stage === 'COMPLETED') stage = 'DELIVERY_DONE';
+                const stageIndex = stageOrder.indexOf(stage);
+                return sum + (stageIndex >= 0 ? (stageIndex / lastStageIndex) * 100 : 0);
+            }, 0);
 
             const progress = psCurrentDoors.length === 0
                 ? 0

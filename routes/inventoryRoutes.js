@@ -138,6 +138,44 @@ router.get('/snapshot', protect, authorizeModule('inventory'), async (req, res) 
 });
 
 /**
+ * @route   GET /api/inventory/debug/:id
+ * @desc    Debug endpoint - check if an item exists in database
+ * @access  Private
+ */
+router.get('/debug/:id', protect, authorizeModule('inventory'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid inventory ID format'
+      });
+    }
+
+    const db = mongoose.connection.db;
+    const collection = db.collection('inventories');
+    const objectId = new mongoose.Types.ObjectId(id);
+    
+    const item = await collection.findOne({ _id: objectId });
+    
+    res.status(200).json({
+      success: true,
+      found: !!item,
+      data: item,
+      totalInventoryCount: await collection.countDocuments({})
+    });
+  } catch (error) {
+    console.error('Debug error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Debug check failed',
+      error: error.message
+    });
+  }
+});
+
+/**
  * @route   PUT /api/inventory/:id
  * @desc    Update inventory item quantity
  * @access  Private - InventoryManager, SuperAdmin
@@ -170,18 +208,38 @@ router.put('/:id', protect, authorizeModule('inventory'), async (req, res) => {
       });
     }
 
-    // Update inventory item
+    console.log('Inventory update request:', { id, quantity });
+
+    // Update inventory item with driver-compatible return option
     const db = mongoose.connection.db;
     const collection = db.collection('inventories');
-    const objectId = mongoose.Types.ObjectId(id);
+    const objectId = new mongoose.Types.ObjectId(id);
 
-    const result = await collection.findOneAndUpdate(
-      { _id: objectId },
-      { $set: { quantity: parseInt(quantity), updatedAt: new Date() } },
-      { returnDocument: 'after' }
-    );
+    let result;
+    try {
+      result = await collection.findOneAndUpdate(
+        { _id: objectId },
+        { $set: { quantity: parseInt(quantity), updatedAt: new Date() } },
+        { returnDocument: 'after' }
+      );
+    } catch (driverError) {
+      // Fallback for older driver versions that do not support returnDocument
+      if (driverError.message && driverError.message.includes('returnDocument')) {
+        result = await collection.findOneAndUpdate(
+          { _id: objectId },
+          { $set: { quantity: parseInt(quantity), updatedAt: new Date() } },
+          { returnOriginal: false }
+        );
+      } else {
+        throw driverError;
+      }
+    }
 
-    if (!result.value) {
+    // Handle result - check both response structures for compatibility
+    const updatedDoc = result?.value || result;
+    
+    if (!updatedDoc) {
+      console.log('Inventory item not found for ID:', id);
       return res.status(404).json({
         success: false,
         message: 'Inventory item not found'
@@ -191,7 +249,7 @@ router.put('/:id', protect, authorizeModule('inventory'), async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Inventory quantity updated successfully',
-      data: result.value
+      data: updatedDoc
     });
 
   } catch (error) {

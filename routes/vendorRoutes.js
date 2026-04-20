@@ -133,4 +133,71 @@ router.delete('/:id', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (r
   }
 });
 
+/**
+ * @route   PUT /api/vendors/:id
+ * @desc    Update vendor by ID
+ * @access  Private - FactoryAdmin, SuperAdmin
+ */
+router.put('/:id', protect, authorize('FactoryAdmin', 'SuperAdmin'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, phone, email, category } = req.body;
+
+    console.log('PUT /vendors/:id called with id:', id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log('Invalid ObjectId format:', id);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid vendor ID'
+      });
+    }
+
+    if (!name || !phone || !email || !category) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
+    const db = mongoose.connection.db;
+    const collection = db.collection('vendors');
+
+    const objectId = new mongoose.Types.ObjectId(id);
+    console.log('Looking for vendor with _id:', objectId);
+
+    // Update the vendor
+    const updateResult = await collection.updateOne(
+      { _id: objectId },
+      { $set: { name, phone, email, category, updatedAt: new Date() } }
+    );
+
+    console.log('updateOne result:', updateResult);
+
+    if (updateResult.matchedCount === 0) {
+      console.log('Vendor not found for id:', id);
+      return res.status(404).json({
+        success: false,
+        message: 'Vendor not found'
+      });
+    }
+
+    // Fetch the updated vendor to return in response
+    const updatedVendor = await collection.findOne({ _id: objectId });
+    
+    res.status(200).json({
+      success: true,
+      message: 'Vendor updated successfully',
+      data: updatedVendor
+    });
+  } catch (error) {
+    console.error('Error updating vendor:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update vendor',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

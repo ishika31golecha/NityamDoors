@@ -312,7 +312,7 @@
                     </div>
                     
                     <div class="card-body">
-                        <div class="ps-tabs">
+                        <div class="ps-tabs" id="inventoryTabGroup">
                             <button class="ps-tab active" data-tab="inventory-vendor-management" onclick="showInventoryTab('inventory-vendor-management')">Vendor Management</button>
                             <button class="ps-tab" data-tab="inventory-stock-update" onclick="showInventoryTab('inventory-stock-update')">Stock Update</button>
                             <button class="ps-tab" data-tab="inventory-management" onclick="showInventoryTab('inventory-management')">Inventory Management</button>
@@ -331,8 +331,9 @@
                             <!-- Add Vendor Modal -->
                             <div id="addVendorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
                                 <div class="modal-dark">
-                                    <h3 style="margin-top: 0; margin-bottom: 20px; color: #333;">Add New Vendor</h3>
+                                    <h3 id="addVendorModalTitle" style="margin-top: 0; margin-bottom: 20px; color: #333;">Add New Vendor</h3>
                                     <form onsubmit="submitAddVendor(event)">
+                                        <input type="hidden" id="vendorId" value="">
                                         <div style="margin-bottom: 15px;">
                                             <label class="form-label">Vendor Name</label>
                                             <input class="form-input" type="text" id="vendorName" placeholder="Enter vendor name" required>
@@ -801,6 +802,19 @@
                                     See Priority
                                 </button>
 
+                            </div>
+
+                            <div class="search-bar">
+                                <input
+                                    id="orderSearchInput"
+                                    class="input-field"
+                                    type="text"
+                                    placeholder="Search by Order ID or Customer Name..."
+                                    oninput="filterOrders()"
+                                />
+                                <button type="button" class="btn-secondary" onclick="clearOrderSearch()">
+                                    Clear
+                                </button>
                             </div>
 
 
@@ -1283,15 +1297,15 @@
                     </div>
                     <div class="card-body">
 
-                    <div class="ps-tabs">
-                        <button class="ps-tab" onclick="switchPsTab('approved')">
+                    <div class="ps-tabs" id="productionSupervisorTabs">
+                        <button class="ps-tab" data-tab="approved" onclick="switchPsTab('approved')">
                             Approved Orders
                         </button>
-                        <button class="ps-tab active" onclick="switchPsTab('production')">
+                        <button class="ps-tab active" data-tab="production" onclick="switchPsTab('production')">
                             Door Production
                         </button>
 
-                        <button class="ps-tab" onclick="switchPsTab('workers')">
+                        <button class="ps-tab" data-tab="workers" onclick="switchPsTab('workers')">
                             Worker Management
                         </button>
                     </div>       
@@ -1309,15 +1323,17 @@
                             </div>
 
                             <!-- Search -->
-                            <div style="margin-bottom:15px;">
+                            <div class="search-bar">
                                 <input
                                     type="text"
                                     id="orderOverviewSearch"
                                     class="input-field"
                                     placeholder="Search by Order ID or Customer Name..."
                                     oninput="filterOrderOverview()"
-                                    style="width:100%;max-width:420px;padding:8px 12px;font-size:14px;"
                                 >
+                                <button type="button" class="btn-secondary" onclick="clearOrderOverviewSearch()">
+                                    Clear
+                                </button>
                             </div>
 
                             <table class="data-table" id="orderOverviewTable">
@@ -1412,6 +1428,17 @@
                                                 <option value="Main Door">Main Door</option>
                                             </select>
                                         </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-cutting" type="text" oninput="applyStageFilters('cutting')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('cutting')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-cutting" onchange="assignWorkerToStage('cutting')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div style="overflow-x: auto;">
                                         <table style="width: 100%; border-collapse: collapse;">
@@ -1467,6 +1494,17 @@
                                                 <option value="Bedroom Door">Bedroom Door</option>
                                                 <option value="Wardrobe Door">Wardrobe Door</option>
                                                 <option value="Main Door">Main Door</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-BTC" type="text" oninput="applyStageFilters('BTC')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('BTC')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-BTC" onchange="assignWorkerToStage('BTC')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1526,6 +1564,17 @@
                                                 <option value="Main Door">Main Door</option>
                                             </select>
                                         </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-laminate" type="text" oninput="applyStageFilters('laminate')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('laminate')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-laminate" onchange="assignWorkerToStage('laminate')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div style="overflow-x: auto;">
                                         <table style="width: 100%; border-collapse: collapse;">
@@ -1581,6 +1630,17 @@
                                                 <option value="Bedroom Door">Bedroom Door</option>
                                                 <option value="Wardrobe Door">Wardrobe Door</option>
                                                 <option value="Main Door">Main Door</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-press" type="text" oninput="applyStageFilters('press')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('press')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-press" onchange="assignWorkerToStage('press')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1640,6 +1700,17 @@
                                                 <option value="Main Door">Main Door</option>
                                             </select>
                                         </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-finish" type="text" oninput="applyStageFilters('finish')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('finish')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-finish" onchange="assignWorkerToStage('finish')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div style="overflow-x: auto;">
                                         <table style="width: 100%; border-collapse: collapse;">
@@ -1696,6 +1767,17 @@
                                                 <option value="Bedroom Door">Bedroom Door</option>
                                                 <option value="Wardrobe Door">Wardrobe Door</option>
                                                 <option value="Main Door">Main Door</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-packing" type="text" oninput="applyStageFilters('packing')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('packing')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-packing" onchange="assignWorkerToStage('packing')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1783,6 +1865,17 @@
                                                 <option value="Bedroom Door">Bedroom Door</option>
                                                 <option value="Wardrobe Door">Wardrobe Door</option>
                                                 <option value="Main Door">Main Door</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Search:</label>
+                                            <input id="filterSearch-delivery" type="text" oninput="applyStageFilters('delivery')" placeholder="Order ID or Customer" style="flex:1; min-width:0; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px;">
+                                            <button type="button" onclick="clearStageSearch('delivery')" style="padding:5px 10px; background:#1f1f1f; color:#fff; border:1px solid #444; border-radius:4px; cursor:pointer; font-size:12px;">Clear</button>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:6px; min-width:220px;">
+                                            <label style="color:#888; font-size:12px; font-weight:bold; white-space:nowrap;">Bulk Worker:</label>
+                                            <select id="bulkWorker-delivery" onchange="assignWorkerToStage('delivery')" style="min-width:150px; padding:5px 10px; background:#0b0b0b; color:#fff; border:1px solid #444; border-radius:4px; font-size:12px; cursor:pointer;">
+                                                <option value="">-- Assign Worker --</option>
                                             </select>
                                         </div>
                                     </div>
@@ -2271,6 +2364,9 @@
         // Backend API base URL
         const API_BASE_URL = 'http://localhost:5000/api';
 
+        // Global variable to track current editing vendor
+        let currentEditingVendorId = null;
+
         // Default permissions - each role's access to modules
         // UPDATED: reports can be true, false, or 'OWN_ONLY' for limited access
         const DEFAULT_PERMISSIONS = {
@@ -2323,23 +2419,23 @@
             document.getElementById("ps-production").style.display="none";
             document.getElementById("ps-workers-section").style.display="none";
 
-            document.querySelectorAll(".ps-tab").forEach(t=>t.classList.remove("active"));
+            const psTabs = document.querySelectorAll("#productionSupervisorTabs .ps-tab");
+            psTabs.forEach(t => t.classList.remove("active"));
 
             if(tab==="approved"){
                 document.getElementById("ps-approved-orders").style.display="block";
-                document.querySelectorAll(".ps-tab")[0].classList.add("active");
-
+                if (psTabs[0]) psTabs[0].classList.add("active");
                 loadOrderOverview(); // load approved orders
             }
 
             else if(tab==="production"){
                 document.getElementById("ps-production").style.display="block";
-                document.querySelectorAll(".ps-tab")[1].classList.add("active");
+                if (psTabs[1]) psTabs[1].classList.add("active");
             }
 
             else if(tab==="workers"){
                 document.getElementById("ps-workers-section").style.display="block";
-                document.querySelectorAll(".ps-tab")[2].classList.add("active");
+                if (psTabs[2]) psTabs[2].classList.add("active");
             }
         }
 
@@ -2405,6 +2501,136 @@
                 document.querySelectorAll(".orders-tab")[2].classList.add("active");
 
                 loadPriorityOrders();
+            }
+
+            // Keep search active while switching tabs
+            filterOrders();
+        }
+
+        function showAllOrders() {
+            const pendingSection = document.getElementById('pendingOrdersSection');
+            const prioritySection = document.getElementById('seePrioritySection');
+            const productionSection = document.getElementById('setPrioritySection');
+
+            if (pendingSection && getComputedStyle(pendingSection).display !== 'none') {
+                const tbody = document.getElementById('pendingOrdersTableBody');
+                if (!tbody) return;
+                tbody.querySelectorAll('tr').forEach(row => {
+                    if (row.classList.contains('no-results')) return;
+                    row.style.display = '';
+                });
+                const emptyRow = tbody.querySelector('.no-results');
+                if (emptyRow) emptyRow.remove();
+            }
+
+            if (prioritySection && getComputedStyle(prioritySection).display !== 'none') {
+                const tbody = document.getElementById('priorityOrdersTableBody');
+                if (!tbody) return;
+                tbody.querySelectorAll('tr').forEach(row => {
+                    if (row.classList.contains('no-results')) return;
+                    row.style.display = '';
+                });
+                const emptyRow = tbody.querySelector('.no-results');
+                if (emptyRow) emptyRow.remove();
+            }
+
+            if (productionSection && getComputedStyle(productionSection).display !== 'none') {
+                document.querySelectorAll('#productionQueueContainer .pq-order-card').forEach(card => {
+                    card.style.display = '';
+                });
+                const noResults = document.getElementById('productionQueueNoResults');
+                if (noResults) noResults.remove();
+            }
+        }
+
+        function clearOrderSearch() {
+            const input = document.getElementById('orderSearchInput');
+            if (!input) return;
+            input.value = '';
+            showAllOrders();
+        }
+
+        function clearOrderOverviewSearch() {
+            const input = document.getElementById('orderOverviewSearch');
+            if (!input) return;
+            input.value = '';
+            filterOrderOverview();
+        }
+
+        function filterOrders() {
+            const input = document.getElementById('orderSearchInput');
+            if (!input) return;
+            const query = input.value.trim().toLowerCase();
+            if (query === '') {
+                showAllOrders();
+                return;
+            }
+
+            const pendingSection = document.getElementById('pendingOrdersSection');
+            const prioritySection = document.getElementById('seePrioritySection');
+            const productionSection = document.getElementById('setPrioritySection');
+
+            if (pendingSection && getComputedStyle(pendingSection).display !== 'none') {
+                filterOrderTable('pendingOrdersTableBody', query, 7);
+            } else if (prioritySection && getComputedStyle(prioritySection).display !== 'none') {
+                filterOrderTable('priorityOrdersTableBody', query, 5);
+            } else if (productionSection && getComputedStyle(productionSection).display !== 'none') {
+                filterProductionQueue(query);
+            }
+        }
+
+        function filterOrderTable(tbodyId, query, colSpan) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+
+            let visibleCount = 0;
+            tbody.querySelectorAll('tr').forEach(row => {
+                if (row.classList.contains('no-results')) return;
+                const orderId = (row.getAttribute('data-orderid') || row.textContent).toLowerCase();
+                const customer = (row.getAttribute('data-customer') || row.textContent).toLowerCase();
+                const matches = orderId.includes(query) || customer.includes(query);
+                row.style.display = matches ? '' : 'none';
+                if (matches) visibleCount++;
+            });
+
+            const existingMessage = tbody.querySelector('.no-results');
+            if (visibleCount === 0) {
+                if (!existingMessage) {
+                    const noRow = document.createElement('tr');
+                    noRow.className = 'no-results';
+                    noRow.innerHTML = `<td colspan="${colSpan}" style="text-align:center;padding:20px;color:#ccc;">No matching orders found.</td>`;
+                    tbody.appendChild(noRow);
+                }
+            } else if (existingMessage) {
+                existingMessage.remove();
+            }
+        }
+
+        function filterProductionQueue(query) {
+            const cards = Array.from(document.querySelectorAll('#productionQueueContainer .pq-order-card'));
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const orderId = (card.getAttribute('data-orderid') || '').toLowerCase();
+                const customer = (card.getAttribute('data-customer') || '').toLowerCase();
+                const matches = orderId.includes(query) || customer.includes(query);
+                card.style.display = matches ? '' : 'none';
+                if (matches) visibleCount++;
+            });
+
+            const container = document.getElementById('productionQueueContainer');
+            if (!container) return;
+            let noResults = document.getElementById('productionQueueNoResults');
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.id = 'productionQueueNoResults';
+                    noResults.style.cssText = 'text-align:center;padding:30px;color:#ccc;';
+                    noResults.textContent = 'No matching orders found.';
+                    container.appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
             }
         }
         document.addEventListener("DOMContentLoaded", function () {
@@ -2997,25 +3223,31 @@
         //============= Calculate for Production Pipeline on dashboard ===========
         function calculateOrderPipelineProgress(doors){
 
-            const stageWeight = {
-                PENDING: 0,
-                CUTTING: 20,
-                BTC: 40,
-                LAMINATE: 60,
-                PRESS: 80,
-                FINISH: 100,
-                PACKING: 100,
-                DELIVERY_PENDING: 100,
-                DELIVERY: 100
-            };
+            const stageOrder = [
+                'PENDING',
+                'CUTTING',
+                'BTC',
+                'LAMINATE',
+                'PRESS',
+                'FINISH',
+                'PACKING',
+                'DELIVERY_PENDING',
+                'DELIVERY',
+                'DELIVERY_DONE'
+            ];
 
-            let total=0;
+            const lastStageIndex = stageOrder.length - 1;
 
-            doors.forEach(d=>{
-                total += stageWeight[d.currentStage] || 0;
-            });
+            const totalProgress = doors.reduce((sum, door) => {
+                let stage = door.currentStage || 'PENDING';
+                if (stage === 'DELIVERY' || stage === 'COMPLETED') stage = 'DELIVERY_DONE';
 
-            return doors.length ? Math.round(total / doors.length) : 0;
+                const stageIndex = stageOrder.indexOf(stage);
+                const progress = stageIndex >= 0 ? (stageIndex / lastStageIndex) * 100 : 0;
+                return sum + progress;
+            }, 0);
+
+            return doors.length ? Math.round(totalProgress / doors.length) : 0;
         }
 
 
@@ -3550,7 +3782,7 @@
                             <td>${i.thickness || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'Laminate') {
@@ -3561,7 +3793,7 @@
                             <td>${i.color || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'Adhesive') {
@@ -3571,7 +3803,7 @@
                             <td>${i.brand || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'B.T.C') {
@@ -3581,7 +3813,7 @@
                             <td>${i.itemName || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'Machinery') {
@@ -3592,7 +3824,7 @@
                             <td>${i.status || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'Grinder Paper') {
@@ -3602,7 +3834,7 @@
                             <td>${i.grit || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 } else if (category === 'Hardware') {
@@ -3612,7 +3844,7 @@
                             <td>${i.itemName || '-'}</td>
                             <td><input type="number" class="qty-update" value="${i.quantity}" data-id="${i._id}" style="width: 60px; padding: 5px;"></td>
                             <td>${new Date(i.createdAt).toLocaleDateString('en-IN')}</td>
-                            <td><button class="btn-small" onclick="updateInventoryQty('${i._id}', this)">Update</button></td>
+                            <td><button class="btn-small" data-id="${i._id}" onclick="updateInventoryQty(this)">Update</button></td>
                         </tr>
                     `).join('');
                 }
@@ -3631,13 +3863,41 @@
             if (modal) modal.style.display = 'none';
         }
 
-        async function updateInventoryQty(itemId, button) {
+        async function updateInventoryQty(itemIdOrButton, button) {
             try {
-                const input = button.parentElement.parentElement.querySelector('.qty-update');
-                const newQty = parseInt(input.value);
-                
-                if (newQty === undefined || newQty === null) {
-                    alert('Please enter a valid quantity');
+                let itemId = null;
+                if (button === undefined && itemIdOrButton instanceof Element) {
+                    button = itemIdOrButton;
+                }
+
+                if (typeof itemIdOrButton === 'string') {
+                    itemId = itemIdOrButton;
+                }
+
+                if (!button || !(button instanceof Element)) {
+                    alert('Unable to determine which item to update.');
+                    return;
+                }
+
+                const row = button.closest('tr');
+                const input = row?.querySelector('.qty-update');
+                if (!input) {
+                    alert('Quantity input not found for this item.');
+                    return;
+                }
+
+                if (!itemId) {
+                    itemId = button.dataset.id || input.dataset.id || row?.dataset.id;
+                }
+
+                const newQty = parseInt(input.value, 10);
+                if (Number.isNaN(newQty) || newQty < 0) {
+                    alert('Please enter a valid non-negative quantity');
+                    return;
+                }
+
+                if (!itemId) {
+                    alert('Unable to update item quantity because item ID is missing.');
                     return;
                 }
 
@@ -3648,9 +3908,12 @@
                 }
 
                 button.disabled = true;
+                const originalText = button.textContent;
                 button.textContent = 'Updating...';
 
-                const response = await fetch(`${API_BASE_URL}/inventory/${itemId}`, {
+                const endpoint = `${API_BASE_URL}/inventory/${itemId}`;
+                console.log('Updating inventory item:', { itemId, newQty, endpoint });
+                const response = await fetch(endpoint, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3659,16 +3922,48 @@
                     body: JSON.stringify({ quantity: newQty })
                 });
 
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Failed to update');
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (parseError) {
+                    console.error('Failed to parse update response:', parseError, 'raw:', text);
+                    throw new Error(`Failed to update inventory quantity (status ${response.status})`);
+                }
+
+                if (!response.ok) {
+                    console.error('Inventory update failed response:', response.status, data);
+                    
+                    // Try to debug why item wasn't found
+                    if (response.status === 404) {
+                        try {
+                            const debugResponse = await fetch(`${API_BASE_URL}/inventory/debug/${itemId}`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            const debugData = await debugResponse.json();
+                            console.log('Debug info:', debugData);
+                            const backendMessage = `Item not found. Debug: found=${debugData.found}, totalItems=${debugData.totalInventoryCount}`;
+                            throw new Error(backendMessage);
+                        } catch (debugError) {
+                            console.error('Debug check failed:', debugError);
+                        }
+                    }
+                    
+                    const backendMessage = data.message || data.error || `Failed to update inventory quantity (status ${response.status})`;
+                    throw new Error(backendMessage);
+                }
 
                 alert('Quantity updated successfully!');
+                button.textContent = originalText;
+                button.disabled = false;
                 loadInventorySnapshot();
             } catch (error) {
                 console.error('Error updating quantity:', error);
                 alert('Error: ' + error.message);
-                button.disabled = false;
-                button.textContent = 'Update';
+                if (button && button instanceof Element) {
+                    button.disabled = false;
+                    button.textContent = 'Update';
+                }
             }
         }
 
@@ -3693,6 +3988,7 @@
 
                 const data = await response.json();
                 const vendors = data.data || [];
+                window.currentVendors = vendors;
 
                 displayVendors(vendors);
             } catch (error) {
@@ -3717,15 +4013,16 @@
                 const avatar = '🏢';
                 html += `
                     <div class="vendor-card">
-                        <div style="position: relative;">
-                            <div class="vendor-avatar">${avatar}</div>
-                            <button style="position: absolute; top: 0; right: 0; background: #e74c3c; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px;" onclick="deleteVendor('${vendor._id}')">×</button>
-                        </div>
+                        <div class="vendor-avatar">${avatar}</div>
                         <div class="vendor-info">
                             <h4>${vendor.name}</h4>
                             <p>📞 ${vendor.phone}</p>
                             <p>📧 ${vendor.email}</p>
                             <span class="vendor-category">${vendor.category}</span>
+                            <div class="vendor-actions">
+                                <button type="button" class="vendor-action-btn btn-secondary" onclick="editVendor('${vendor._id}')">Edit</button>
+                                <button type="button" class="vendor-action-btn btn-danger" onclick="deleteVendor('${vendor._id}')">Delete</button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -3739,6 +4036,32 @@
          */
         function openAddVendorForm() {
             const modal = document.getElementById('addVendorModal');
+            const title = document.getElementById('addVendorModalTitle');
+            const vendorId = document.getElementById('vendorId');
+            if (vendorId) vendorId.value = '';
+            if (title) title.textContent = 'Add New Vendor';
+            if (modal) modal.style.display = 'flex';
+        }
+
+        /**
+         * Open edit vendor form modal
+         */
+        function editVendor(vendorId) {
+            const vendor = window.currentVendors?.find(v => String(v._id) === String(vendorId));
+            if (!vendor) return alert('Vendor record not available');
+
+            const modal = document.getElementById('addVendorModal');
+            const title = document.getElementById('addVendorModalTitle');
+            const hiddenId = document.getElementById('vendorId');
+
+            currentEditingVendorId = String(vendor._id);
+            if (hiddenId) hiddenId.value = currentEditingVendorId;
+            if (title) title.textContent = 'Edit Vendor Information';
+            document.getElementById('vendorName').value = vendor.name || '';
+            document.getElementById('vendorPhone').value = vendor.phone || '';
+            document.getElementById('vendorEmail').value = vendor.email || '';
+            document.getElementById('vendorCategory').value = vendor.category || '';
+
             if (modal) modal.style.display = 'flex';
         }
 
@@ -3747,7 +4070,12 @@
          */
         function closeAddVendorForm() {
             const modal = document.getElementById('addVendorModal');
+            const title = document.getElementById('addVendorModalTitle');
+            const hiddenId = document.getElementById('vendorId');
             if (modal) modal.style.display = 'none';
+            if (title) title.textContent = 'Add New Vendor';
+            if (hiddenId) hiddenId.value = '';
+            currentEditingVendorId = null;
             // Clear form fields
             document.getElementById('vendorName').value = '';
             document.getElementById('vendorPhone').value = '';
@@ -3756,7 +4084,7 @@
         }
 
         /**
-         * Submit add vendor form
+         * Submit add or edit vendor form
          */
         async function submitAddVendor(event) {
             event.preventDefault();
@@ -3778,19 +4106,25 @@
                     return;
                 }
 
-                const response = await fetch(`${API_BASE_URL}/vendors/add`, {
-                    method: 'POST',
+                let vendorId = document.getElementById('vendorId').value || currentEditingVendorId || '';
+                vendorId = vendorId.trim();
+                const body = { name, phone, email, category };
+                const endpoint = vendorId ? `${API_BASE_URL}/vendors/${vendorId}` : `${API_BASE_URL}/vendors/add`;
+                const method = vendorId ? 'PUT' : 'POST';
+
+                const response = await fetch(endpoint, {
+                    method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ name, phone, email, category })
+                    body: JSON.stringify(body)
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Failed to add vendor');
+                if (!response.ok) throw new Error(data.message || `Failed to ${vendorId ? 'update' : 'add'} vendor`);
 
-                alert(' Vendor added successfully!');
+                alert(vendorId ? 'Vendor updated successfully!' : 'Vendor added successfully!');
                 closeAddVendorForm();
                 loadVendors();
             } catch (error) {
@@ -3974,9 +4308,11 @@
                             const stColor = stageColors[d.currentStage] || '#7f8c8d';
                             const statusLabel = d.isRejected
                                 ? '<span style="background:#e74c3c;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Rejected</span>'
-                                : ['PACKING','DELIVERY','COMPLETED'].includes(d.currentStage)
-                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;"> Done</span>'
-                                    : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
+                                : ['DELIVERY_DONE', 'COMPLETED'].includes(d.currentStage)
+                                    ? '<span style="background:#27ae60;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">Delivered</span>'
+                                    : d.currentStage === 'DELIVERY_PENDING' || d.currentStage === 'DELIVERY'
+                                        ? '<span style="background:#f1c40f;color:#111;padding:2px 8px;border-radius:12px;font-size:11px;">Out for Delivery</span>'
+                                        : '<span style="background:#3498db;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;">In Progress</span>';
                             return `<tr>
                                 <td style="text-align:center;"><strong>Door ${d.doorNumber}</strong></td>
                                 <td><span style="background:${stColor};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;">${d.currentStage}</span></td>
@@ -4010,12 +4346,12 @@
             console.log('📌 Inventory: Switching to tab:', tabId);
             
             // Hide all inventory sub-sections
-            document.querySelectorAll('.fa-subsection').forEach(function(section) {
+            document.querySelectorAll('#module-inventory .fa-subsection').forEach(function(section) {
                 section.classList.remove('active');
             });
             
-            // Remove active state from all inventory tab buttons
-            document.querySelectorAll('.ps-tabs .ps-tab').forEach(function(btn) {
+            // Remove active state from inventory tab buttons only
+            document.querySelectorAll('#inventoryTabGroup .ps-tab').forEach(function(btn) {
                 btn.classList.remove('active');
             });
             
@@ -4025,8 +4361,8 @@
                 tabSection.classList.add('active');
             }
             
-            // Activate tab button
-            const tabBtn = document.querySelector('.ps-tabs .ps-tab[data-tab="' + tabId + '"]');
+            // Activate tab button in inventory tab group
+            const tabBtn = document.querySelector('#inventoryTabGroup .ps-tab[data-tab="' + tabId + '"]');
             if (tabBtn) {
                 tabBtn.classList.add('active');
             }
@@ -4104,6 +4440,7 @@
                     // Create row
                     const row = document.createElement('tr');
                     row.setAttribute('data-orderid', order.orderId);
+                    row.setAttribute('data-customer', order.customerName || '');
                     row.setAttribute('data-status', order.status);
 
                     row.innerHTML = `
@@ -4337,6 +4674,7 @@
                     const card = document.createElement('div');
                     card.className = 'pq-order-card';
                     card.setAttribute('data-orderid', order.orderId);
+                    card.setAttribute('data-customer', order.customerName || order.customer?.name || '');
                     
                     // Card header
                     const cardHeader = document.createElement('div');
@@ -5114,7 +5452,7 @@
                         else if (order.status === 'COMPLETED') statusClass = 'status-completed';
 
                         return `
-                            <tr>
+                            <tr data-orderid="${orderId}" data-customer="${customerName}">
                                 <td><strong>${orderId}</strong></td>
                                 <td>${customerName}</td>
                                 <td>${customerType}</td>
@@ -5349,8 +5687,9 @@
                     }
                 }
 
-                // Repopulate worker dropdowns in stage sections
+                // Repopulate worker dropdowns and bulk worker selects in stage sections
                 populateWorkerDropdowns();
+                populateBulkWorkerSelectors();
 
             } catch (error) {
                 console.error(' Load Workers Error:', error);
@@ -5795,7 +6134,7 @@
          * Populate worker dropdowns in all stage sections
          */
         function populateWorkerDropdowns() {
-            const stages = ['CUTTING', 'BTC', 'LAMINATE', 'PRESS', 'FINISH'];
+            const stages = ['CUTTING', 'BTC', 'LAMINATE', 'PRESS', 'FINISH', 'PACKING'];
             
             stages.forEach(stage => {
                 const tbody = document.getElementById(stage.toLowerCase() + 'TableBody');
@@ -5814,6 +6153,47 @@
                     });
                     if (currentValue) select.value = currentValue;
                 });
+            });
+        }
+
+        function getStageTableBodyId(stageKey) {
+            return stageKey === 'BTC' ? 'BTCTableBody' : `${stageKey.toLowerCase()}TableBody`;
+        }
+
+        function clearStageSearch(stageKey) {
+            const searchInput = document.getElementById(`filterSearch-${stageKey}`);
+            if (!searchInput) return;
+            searchInput.value = '';
+            applyStageFilters(stageKey);
+        }
+
+        function assignWorkerToStage(stageKey) {
+            const workerSelect = document.getElementById(`bulkWorker-${stageKey}`);
+            if (!workerSelect) return;
+            const workerId = workerSelect.value;
+            const tbodyId = getStageTableBodyId(stageKey);
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+            const selects = tbody.querySelectorAll('select.worker-dropdown');
+            selects.forEach(select => {
+                select.value = workerId;
+            });
+        }
+
+        function populateBulkWorkerSelectors() {
+            const stageKeys = ['cutting', 'BTC', 'laminate', 'press', 'finish', 'packing', 'delivery'];
+            stageKeys.forEach(stageKey => {
+                const select = document.getElementById(`bulkWorker-${stageKey}`);
+                if (!select) return;
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">-- Assign Worker --</option>';
+                activeWorkers.forEach(worker => {
+                    const option = document.createElement('option');
+                    option.value = worker._id;
+                    option.textContent = `${worker.workerId} - ${worker.name}`;
+                    select.appendChild(option);
+                });
+                if (currentValue) select.value = currentValue;
             });
         }
 
@@ -5984,20 +6364,26 @@
             // PRODUCTION PIPELINE PROGRESS
             // ===============================
 
-            const stageWeight = {
-                PENDING: 0,
-                CUTTING: 20,
-                BTC: 40,
-                LAMINATE: 60,
-                PRESS: 80,
-                FINISH: 100
-            };
+            const stageOrder = [
+                'PENDING',
+                'CUTTING',
+                'BTC',
+                'LAMINATE',
+                'PRESS',
+                'FINISH',
+                'PACKING',
+                'DELIVERY_PENDING',
+                'DELIVERY',
+                'DELIVERY_DONE'
+            ];
+            const lastStageIndex = stageOrder.length - 1;
 
-            let totalProgress = 0;
-
-            psCurrentDoors.forEach(door => {
-                totalProgress += stageWeight[door.currentStage] || 0;
-            });
+            const totalProgress = psCurrentDoors.reduce((sum, door) => {
+                let stage = door.currentStage || 'PENDING';
+                if (stage === 'DELIVERY' || stage === 'COMPLETED') stage = 'DELIVERY_DONE';
+                const stageIndex = stageOrder.indexOf(stage);
+                return sum + (stageIndex >= 0 ? (stageIndex / lastStageIndex) * 100 : 0);
+            }, 0);
 
             const progress = psCurrentDoors.length === 0
                 ? 0
@@ -6107,12 +6493,20 @@
             const entry = psStageDoorsMap[stageKey];
             if (!entry) return;
 
-            const priFilter  = (document.getElementById('filterPriority-' + stageKey) || {}).value || '';
-            const typeFilter = (document.getElementById('filterType-'     + stageKey) || {}).value || '';
+            const priFilter    = (document.getElementById('filterPriority-' + stageKey) || {}).value || '';
+            const typeFilter   = (document.getElementById('filterType-'     + stageKey) || {}).value || '';
+            const searchFilter = ((document.getElementById('filterSearch-' + stageKey) || {}).value || '').trim().toLowerCase();
 
             let filtered = entry.doors;
             if (priFilter)  filtered = filtered.filter(d => (d.priority || 'Normal') === priFilter);
             if (typeFilter) filtered = filtered.filter(d => (d.type || '') === typeFilter);
+            if (searchFilter) {
+                filtered = filtered.filter(d => {
+                    const orderId = (d.orderId || '').toString().toLowerCase();
+                    const customerName = ((d.customerName || d.customer?.name || '')).toString().toLowerCase();
+                    return orderId.includes(searchFilter) || customerName.includes(searchFilter);
+                });
+            }
 
             // Sort High → Normal → Low
             filtered = filtered.slice().sort((a, b) => {
@@ -6255,7 +6649,12 @@
             if (thead) {
                 if (stage === 'DELIVERY') {
                     thead.innerHTML = `<tr style="background: #0b0b0b;">
-                        <th style="padding: 10px 8px; text-align: center; color: #aaa; border-bottom: 2px solid #444; width:80px;">Select</th>
+                        <th style="padding: 10px 8px; text-align: center; color: #aaa; border-bottom: 2px solid #444; width:80px;">
+                            <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                                <span>Select</span>
+                                <input type="checkbox" onchange="toggleStageSelectAll('${stageElementId}', this)" title="Select all doors in this stage" style="width:16px; height:16px; cursor:pointer;">
+                            </div>
+                        </th>
                         <th style="padding: 10px 8px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Door ID</th>
                         <th style="padding: 10px 8px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Order ID</th>
                         <th style="padding: 10px 8px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Stage</th>
@@ -6269,7 +6668,12 @@
                         <th style="padding: 10px 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Width</th>
                         <th style="padding: 10px 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Priority</th>
                         <th style="padding: 10px 12px; text-align: left; color: #aaa; border-bottom: 2px solid #444;">Worker</th>
-                        <th style="padding: 10px 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">Done</th>
+                        <th style="padding: 10px 12px; text-align: center; color: #aaa; border-bottom: 2px solid #444;">
+                            <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                                <span>Done</span>
+                                <input type="checkbox" onchange="toggleStageSelectAll('${stageElementId}', this)" title="Select all doors in this stage" style="width:16px; height:16px; cursor:pointer;">
+                            </div>
+                        </th>
                     </tr>`;
                 }
             }
@@ -6357,6 +6761,16 @@
                 alert('Please select worker first');
                 checkbox.checked = false;
             }
+        }
+
+        function toggleStageSelectAll(tableBodyId, sourceCheckbox) {
+            const tbody = document.getElementById(tableBodyId);
+            if (!tbody) return;
+
+            const doorCheckboxes = tbody.querySelectorAll('input[type="checkbox"]');
+            doorCheckboxes.forEach((checkbox) => {
+                checkbox.checked = sourceCheckbox.checked;
+            });
         }
 
         /**

@@ -11,6 +11,7 @@ html,body{
 height:100%;
 background:#000000;
 color:#ffffff;
+overflow:hidden;
 }
 
 
@@ -114,6 +115,7 @@ DASHBOARD
 display:none;
 min-height:100vh;
 flex-direction:column;
+height:100vh;
 }
 
 .dashboard.active{
@@ -131,6 +133,9 @@ align-items:center;
 padding:12px 25px;
 background:#000000;
 border-bottom:1px solid #2a2a2a;
+position:sticky;
+top:0;
+z-index:20;
 }
 
 .nav-left{
@@ -183,6 +188,8 @@ BODY
 .dashboard-body{
 display:flex;
 flex:1;
+height:calc(100vh - 64px);
+overflow:hidden;
 }
 
 /* =================================================
@@ -195,6 +202,8 @@ min-width:240px;
 background:#0d0d0d;
 border-right:1px solid #2a2a2a;
 padding:5px 0;
+height:100%;
+overflow-y:auto;
 }
 
 .module-nav{
@@ -295,6 +304,7 @@ padding:30px 40px 30px 0px;
 background:#000;
 max-width:100%;
 overflow-x:hidden;
+overflow-y:auto;
 }
 
 /* =================================================
@@ -1090,9 +1100,13 @@ PRODUCTION FLOW GRID
 
 .production-flow{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr;
 gap:25px;
 margin-top:25px;
+}
+
+.ps-card{
+min-width:0;
 }
 
 
@@ -1631,6 +1645,38 @@ SALES EXECUTIVE ORDERS DASHBOARD
     margin-bottom:20px;
 }
 
+.search-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.search-bar .input-field{
+    flex:1;
+    min-width:200px;
+    padding:6px 10px;
+    border-radius:6px;
+    border:1px solid #333;
+    background:#111;
+    color:#fff;
+    outline:none;
+    transition: border-color 0.2s, background 0.2s;
+    font-size:13px;
+}
+
+.search-bar .input-field:focus{
+    border-color:#FFD700;
+    background:#121212;
+}
+
+.search-bar .btn-secondary{
+    min-width:80px;
+    padding:6px 12px;
+    font-size:13px;
+}
+
 .orders-tab{
     padding:8px 16px;
     background:#111;
@@ -1639,11 +1685,26 @@ SALES EXECUTIVE ORDERS DASHBOARD
     border-radius:8px;
     cursor:pointer;
     font-size:14px;
+    transition:0.2s;
+}
+
+.orders-tab:hover{
+    border-color:#FFD700;
+    color:#FFD700;
 }
 
 .orders-tab.active{
-    background:#facc15;
+    background:#FFD700;
     color:#000;
+    border-color:#FFD700;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.tab-btn.active{
+    background:#FFD700;
+    color:#000;
+    border-color:#FFD700;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 
@@ -2785,8 +2846,8 @@ INVENTORY
     }
 
     .vendor-card {
-        background: white;
-        border: 1px solid #eee;
+        background: #1a1a1a;
+        border: 2px solid #FFD700;
         border-radius: 10px;
         padding: 20px;
         display: flex;
@@ -2796,13 +2857,14 @@ INVENTORY
     }
 
     .vendor-card:hover {
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
     }
 
     .vendor-avatar {
         width: 50px;
         height: 50px;
-        background: #e3f2fd;
+        background: #333;
+        border: 2px solid #FFD700;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -2812,23 +2874,67 @@ INVENTORY
 
     .vendor-info h4 {
         margin: 0 0 5px 0;
-        color: #333;
+        color: #FFD700;
         font-size: 1rem;
+        font-weight: 600;
     }
 
     .vendor-info p {
         margin: 0;
-        color: #666;
+        color: #b3b3b3;
         font-size: 0.85rem;
     }
 
     .vendor-info .vendor-category {
         display: inline-block;
-        background: #f0f0f0;
-        padding: 2px 8px;
+        background: transparent;
+        border: 1px solid #FFD700;
+        color: #FFD700;
+        padding: 4px 10px;
         border-radius: 10px;
         font-size: 0.75rem;
         margin-top: 5px;
+    }
+
+    .vendor-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .vendor-action-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .vendor-action-btn.btn-secondary {
+        background: #333;
+        color: #FFD700;
+        border: 1px solid #FFD700;
+    }
+
+    .vendor-action-btn.btn-secondary:hover {
+        background: #FFD700;
+        color: #000;
+    }
+
+    .vendor-action-btn.btn-danger {
+        background: #c0392b;
+        color: white;
+    }
+
+    .vendor-action-btn.btn-danger:hover {
+        background: #e74c3c;
+    }
+
+    .vendor-card .vendor-info {
+        flex: 1;
     }
 
     /* Queue Number Styling */
